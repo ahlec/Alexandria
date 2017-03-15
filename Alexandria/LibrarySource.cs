@@ -14,16 +14,17 @@ namespace Alexandria
 	{
 		protected enum WebPageParseResult
 		{
-			UnknownError = -1,
-
 			Success = 0,
 
 			FileNotFound = 1,
+			UnknownWebError = 99,
+
+			UnknownDeserializationError = 199
 		}
 
 		protected LibrarySource()
 		{
-			IsCaching = true;
+			IsCachingWebResults = true;
 			CacheDirectory = Path.Combine( "cache", GetType().Name );
 			CacheLifetime = TimeSpan.FromDays( 1.0D );
 		}
@@ -32,15 +33,16 @@ namespace Alexandria
 
 		public abstract IFanfic GetFanfic( String handle );
 
-		protected WebPageParseResult GetWebPage( String cacheHandle, String endpoint, out HtmlDocument document )
+		protected WebPageParseResult GetWebPage( String cacheHandle, String endpoint, Boolean ignoreCache, out Uri responseUrl, out HtmlDocument document )
 		{
-			if ( IsCaching )
+			if ( IsCachingWebResults && !ignoreCache )
 			{
 				String cacheFilename = Path.Combine( CacheDirectory, cacheHandle + ".htm" );
 				if ( File.Exists( cacheFilename ) )
 				{
 					document = new HtmlDocument();
 					document.Load( cacheFilename );
+					responseUrl = null;
 					return WebPageParseResult.Success;
 				}
 			}
@@ -48,6 +50,7 @@ namespace Alexandria
 			HttpWebRequest request = (HttpWebRequest) WebRequest.Create( endpoint );
 			request.Method = "GET";
 			HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+			responseUrl = response.ResponseUri;
 			
 			switch ( response.StatusCode )
 			{
@@ -63,7 +66,7 @@ namespace Alexandria
 				default:
 					{
 						document = null;
-						return WebPageParseResult.UnknownError;
+						return WebPageParseResult.UnknownWebError;
 					}
 			}
 
@@ -74,14 +77,21 @@ namespace Alexandria
 				text = reader.ReadToEnd();
 			}
 
+			// There's some super-bizzaro thing with HtmlAgilityPack where it doesn't recognise </option>. I know that sounds
+			// like I'm making bullshit up to cover my arse because "I'm not using it right" but here
+			// http://stackoverflow.com/questions/293342/htmlagilitypack-drops-option-end-tags
+			// Just replacing the tag name altogether to something else, it doesn't matter, we're not going to pay attention
+			// to it right now.
+			text = text.Replace( "<option ", "<my_option " ).Replace( "option>", "my_option>" );
+
 			document = new HtmlDocument();
 			document.LoadHtml( text );
 			if ( document.ParseErrors.Any() )
 			{
-				return WebPageParseResult.UnknownError;
+				return WebPageParseResult.UnknownDeserializationError;
 			}
 
-			if ( IsCaching )
+			if ( IsCachingWebResults )
 			{
 				WriteToCache( cacheHandle, text );
 			}
@@ -91,7 +101,7 @@ namespace Alexandria
 
 		#region Caching
 
-		public Boolean IsCaching { get; private set; }
+		public Boolean IsCachingWebResults { get; private set; }
 
 		public String CacheDirectory { get; private set; }
 

@@ -19,7 +19,7 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( fanfic.Title, "Prince Among Wolves" );
 			Assert.AreEqual( fanfic.Rating, MaturityRating.Explicit );
 			Assert.AreEqual( fanfic.ContentWarnings, ContentWarnings.Undetermined );
-			Assert.AreEqual( fanfic.NumberWords, 10100 );
+			//Assert.AreEqual( fanfic.NumberWords, 10100 );
 		}
 
 		[TestMethod]
@@ -33,7 +33,7 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( fanfic.Title, "The Possibility of Silence and the Reality of Sound" );
 			Assert.AreEqual( fanfic.Rating, MaturityRating.Teen );
 			Assert.AreEqual( fanfic.ContentWarnings, ContentWarnings.None );
-			Assert.AreEqual( fanfic.NumberWords, 4084 );
+			//Assert.AreEqual( fanfic.NumberWords, 4084 );
 		}
 	}
 }

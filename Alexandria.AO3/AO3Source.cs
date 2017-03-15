@@ -23,20 +23,30 @@ namespace Alexandria.AO3
 				throw new ArgumentNullException( nameof( handle ) );
 			}
 
-			String endpoint = $"http://archiveofourown.org/works/{handle}?view_adult=true";
-			WebPageParseResult result = GetWebPage( handle, endpoint, out HtmlDocument document );
+			String endpoint = $"http://www.archiveofourown.org/works/{handle}?view_adult=true";
+			return GetFanficInternal( handle, endpoint, true );
+		}
+
+		IFanfic GetFanficInternal( String handle, String endpoint, Boolean isRetryingOnResponseUrl )
+		{
+			WebPageParseResult result = GetWebPage( handle, endpoint, !isRetryingOnResponseUrl, out Uri responseUrl, out HtmlDocument document );
 			if ( result != WebPageParseResult.Success )
 			{
 				throw new ApplicationException( result.ToString() );
 			}
 
-			HtmlNode primaryRoot = document.DocumentNode.SelectSingleNode( "/html/body/div/div[@id='inner']/div" );
-			if ( primaryRoot.SelectSingleNode( "p[@class='caution']" ) != null )
+			if ( document.DocumentNode.SelectSingleNode( "//div[@id='workskin']" ) != null )
 			{
-				throw new ApplicationException( "Could not get past the adult content wall!" );
+				return AO3Fanfic.Parse( document );
 			}
 
-			return AO3Fanfic.Parse( primaryRoot );
+			if ( isRetryingOnResponseUrl )
+			{
+				return GetFanficInternal( handle, responseUrl + "?view_adult=true", false );
+			}
+
+			throw new ApplicationException( "Could not get past the adult content wall!" );
 		}
+
 	}
 }

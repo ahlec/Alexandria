@@ -33,7 +33,7 @@ namespace Alexandria.AO3.Utils
 		{
 			ContentWarnings parsed = ContentWarnings.None;
 
-			foreach ( HtmlNode li in list.ChildNodes )
+			foreach ( HtmlNode li in list.Elements( "li" ) )
 			{
 				String tag = li.FirstChild.InnerText;
 				switch ( tag.ToLowerInvariant() )

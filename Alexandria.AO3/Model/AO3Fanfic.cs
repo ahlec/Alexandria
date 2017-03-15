@@ -41,18 +41,17 @@ namespace Alexandria.AO3.Model
 			return parsed;
 		}*/
 
-		public static AO3Fanfic Parse( HtmlNode tree )
+		public static AO3Fanfic Parse( HtmlDocument document )
 		{
-			HtmlNode workMetaGroup = tree.SelectSingleNode( "div[@class='wrapper']/dl" );
-			HtmlNode workskin = tree.SelectSingleNode( "div[@id='workskin']" );
-			HtmlNode prefaceGroup = workskin.SelectSingleNode( "div[@class='preface group']" );
+			AO3Fanfic parsed = new AO3Fanfic();
 
-			AO3Fanfic parsed = new AO3Fanfic
-			{
-				Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).InnerText.Trim(),
-				Rating = ParseUtils.ParseMaturityRatingFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='rating tags']//a").InnerText ),
-				ContentWarnings = ParseUtils.ParseContentWarningsFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='warning tags']/ul" ) )
-			};
+			HtmlNode workMetaGroup = document.DocumentNode.SelectSingleNode( "//dl[@class='work meta group']" );
+			parsed.Rating = ParseUtils.ParseMaturityRatingFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='rating tags']//a" ).InnerText );
+			parsed.ContentWarnings = ParseUtils.ParseContentWarningsFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='warning tags']/ul" ) );
+
+			HtmlNode prefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='preface group']" );
+			parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).InnerText.Trim();
+
 			return parsed;
 		}
 	}
