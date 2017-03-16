@@ -49,6 +49,7 @@
     <Compile Include="Model\ICharacter.cs" />
     <Compile Include="Model\IFanfic.cs" />
     <Compile Include="Model\ISeries.cs" />
+    <Compile Include="Model\ISeriesEntry.cs" />
     <Compile Include="Model\IShip.cs" />
     <Compile Include="Model\ITag.cs" />
     <Compile Include="Model\MaturityRating.cs" />

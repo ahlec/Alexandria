@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Alexandria.Model
 {
@@ -10,21 +6,22 @@ namespace Alexandria.Model
 	{
 		String Title { get; }
 
+		//IAuthor Author { get; }
+
 		MaturityRating Rating { get; }
 
 		ContentWarnings ContentWarnings { get; }
 
 		Int32 NumberWords { get; }
 
-		/*
-		 * Boolean IsCompleted { get; }
-
 		DateTime DateStartedUtc { get; }
 
-		DateTime DateLastUpdatedUtc { get; }
+		//DateTime DateLastUpdatedUtc { get; }
 
 		Int32 NumberLikes { get; }
 
-		Int32 NumberComments { get; }*/
+		Int32 NumberComments { get; }
+
+		ISeriesEntry SeriesInfo { get; }
 	}
 }
