@@ -15,13 +15,13 @@ namespace Alexandria.AO3.Model
 
 		#region ISeriesEntry
 
-		public ISeries Series { get; private set; }
+		public IRequestHandle<ISeries> Series { get; private set; }
 
 		public Int32 EntryNumber { get; private set; }
 
-		public String PreviousEntryHandle { get; private set; }
+		public IRequestHandle<IFanfic> PreviousEntry { get; private set; }
 
-		public String NextEntryHandle { get; private set; }
+		public IRequestHandle<IFanfic> NextEntry { get; private set; }
 
 		#endregion
 
@@ -33,19 +33,22 @@ namespace Alexandria.AO3.Model
 			// The text comes in the format of "Part XXX of the [name] series"
 			String entryNumberText = positionSpan.InnerText.Substring( "Part ".Length, positionSpan.InnerText.IndexOf( "of" ) - "Part ".Length );
 			parsed.EntryNumber = Int32.Parse( entryNumberText );
+			HtmlNode seriesA = positionSpan.Element( "a" );
+			String[] seriesHrefPieces = seriesA.GetAttributeValue( "href", null ).Split( '/', '\\' );
+			parsed.Series = new AO3SeriesRequestHandle( seriesHrefPieces[seriesHrefPieces.Length - 1] );
 
 			HtmlNode previousLink = seriesSpan.SelectSingleNode( "a[@class='previous']" );
 			if ( previousLink != null )
 			{
 				String[] hrefPieces = previousLink.GetAttributeValue( "href", null ).Split( '/', '\\' );
-				parsed.PreviousEntryHandle = hrefPieces.Last();
+				parsed.PreviousEntry = new AO3FanficRequestHandle( hrefPieces.Last() );
 			}
 
 			HtmlNode nextLink = seriesSpan.SelectSingleNode( "a[@class='next']" );
 			if ( nextLink != null )
 			{
 				String[] hrefPieces = nextLink.GetAttributeValue( "href", null ).Split( '/', '\\' );
-				parsed.NextEntryHandle = hrefPieces.Last();
+				parsed.NextEntry = new AO3FanficRequestHandle( hrefPieces.Last() );
 			}
 
 			return parsed;

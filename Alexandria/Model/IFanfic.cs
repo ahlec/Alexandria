@@ -2,11 +2,11 @@
 
 namespace Alexandria.Model
 {
-	public interface IFanfic
+	public interface IFanfic : IRequestable
 	{
 		String Title { get; }
 
-		//IAuthor Author { get; }
+		IRequestHandle<IAuthor> Author { get; }
 
 		MaturityRating Rating { get; }
 
@@ -15,8 +15,6 @@ namespace Alexandria.Model
 		Int32 NumberWords { get; }
 
 		DateTime DateStartedUtc { get; }
-
-		//DateTime DateLastUpdatedUtc { get; }
 
 		Int32 NumberLikes { get; }
 

@@ -19,6 +19,8 @@ namespace Alexandria.AO3.Model
 
 		public String Title { get; private set; }
 
+		public IRequestHandle<IAuthor> Author { get; private set; }
+
 		public MaturityRating Rating { get; private set; }
 
 		public ContentWarnings ContentWarnings { get; private set; }
@@ -84,6 +86,7 @@ namespace Alexandria.AO3.Model
 
 			HtmlNode prefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='preface group']" );
 			parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).InnerText.Trim();
+			parsed.Author = AO3AuthorRequestHandle.Parse( prefaceGroup.SelectSingleNode( "//a[@rel='author']" ) );
 
 			return parsed;
 		}

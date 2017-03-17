@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ParseExceptions.cs" />
+    <Compile Include="IRequestable.cs" />
+    <Compile Include="IRequestHandle.cs" />
     <Compile Include="Model\ContentWarnings.cs" />
     <Compile Include="Model\IAuthor.cs" />
     <Compile Include="Model\ICharacter.cs" />

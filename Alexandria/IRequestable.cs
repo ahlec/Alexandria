@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Alexandria.Model
+namespace Alexandria
 {
-	public interface IAuthor : IRequestable
+	public interface IRequestable
 	{
-		String Name { get; }
 	}
 }

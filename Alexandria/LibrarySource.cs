@@ -29,9 +29,7 @@ namespace Alexandria
 			CacheLifetime = TimeSpan.FromDays( 1.0D );
 		}
 
-		public abstract IAuthor GetAuthor( String name );
-
-		public abstract IFanfic GetFanfic( String handle );
+		public abstract T MakeRequest<T>( IRequestHandle<T> request ) where T : IRequestable;
 
 		protected WebPageParseResult GetWebPage( String cacheHandle, String endpoint, Boolean ignoreCache, out Uri responseUrl, out HtmlDocument document )
 		{

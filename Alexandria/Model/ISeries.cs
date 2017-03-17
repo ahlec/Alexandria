@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Alexandria.Model
 {
-	public interface ISeries
+	public interface ISeries : IRequestable
 	{
 		IAuthor Author { get; }
 

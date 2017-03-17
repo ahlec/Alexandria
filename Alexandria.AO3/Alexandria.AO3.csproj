@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AO3AuthorRequestHandle.cs" />
+    <Compile Include="AO3FanficRequestHandle.cs" />
+    <Compile Include="AO3SeriesRequestHandle.cs" />
     <Compile Include="AO3Source.cs" />
     <Compile Include="Model\AO3Fanfic.cs" />
     <Compile Include="Model\AO3SeriesEntry.cs" />

@@ -11,12 +11,36 @@ namespace Alexandria.AO3
 {
 	public class AO3Source : LibrarySource
 	{
-		public override IAuthor GetAuthor( String name )
+		public override T MakeRequest<T>( IRequestHandle<T> request )
+		{
+			if ( request == null )
+			{
+				throw new ArgumentNullException( nameof( request ) );
+			}
+
+#pragma warning disable IDE0019 // Use pattern matching
+			AO3FanficRequestHandle fanficRequest = request as AO3FanficRequestHandle;
+			if ( fanficRequest != null )
+			{
+				return (T) GetFanfic( fanficRequest.Handle );
+			}
+
+			AO3AuthorRequestHandle authorRequest = request as AO3AuthorRequestHandle;
+			if ( authorRequest != null )
+			{
+				return (T) GetAuthor( authorRequest.Username, authorRequest.Pseud );
+			}
+#pragma warning restore IDE0019 // Use pattern matching
+
+			throw new NotSupportedException( $"Unable to support {nameof( IRequestHandle<T> )} with an input `{nameof( request )}` of type {request.GetType().Name}" );
+		}
+
+		IAuthor GetAuthor( String username, String pseud )
 		{
 			throw new NotImplementedException();
 		}
 
-		public override IFanfic GetFanfic( String handle )
+		IFanfic GetFanfic( String handle )
 		{
 			if ( String.IsNullOrEmpty( handle ) )
 			{
@@ -47,6 +71,5 @@ namespace Alexandria.AO3
 
 			throw new ApplicationException( "Could not get past the adult content wall!" );
 		}
-
 	}
 }
