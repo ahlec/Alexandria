@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Alexandria.Model;
 using HtmlAgilityPack;
+using Alexandria.Model;
+using Alexandria.AO3.RequestHandles;
 
 namespace Alexandria.AO3.Model
 {

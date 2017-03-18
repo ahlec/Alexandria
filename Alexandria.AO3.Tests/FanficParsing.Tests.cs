@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Alexandria.AO3;
 using Alexandria.Model;
+using Alexandria.AO3.RequestHandles;
 
 namespace Alexandria.AO3.Tests
 {
@@ -22,6 +22,19 @@ namespace Alexandria.AO3.Tests
 			Assert.IsNotNull( fanfic.Author );
 			Assert.AreEqual( fanfic.Rating, MaturityRating.Explicit );
 			Assert.AreEqual( fanfic.ContentWarnings, ContentWarnings.Undetermined );
+
+			Assert.IsNotNull( fanfic.Ships );
+			Assert.AreEqual( fanfic.Ships.Count, 1 );
+			Assert.IsNotNull( fanfic.Ships[0] );
+			Assert.AreEqual( fanfic.Ships[0].Name, "Derek Hale/Stiles Stilinski" );
+			Assert.AreEqual( fanfic.Ships[0].Type, ShipType.Romantic );
+			Assert.IsNotNull( fanfic.Ships[0].Characters );
+			Assert.AreEqual( fanfic.Ships[0].Characters.Count, 2 );
+			Assert.IsNotNull( fanfic.Ships[0].Characters[0] as AO3CharacterRequestHandle );
+			Assert.AreEqual( ( (AO3CharacterRequestHandle) fanfic.Ships[0].Characters[0] ).Name, "Derek Hale" );
+			Assert.IsNotNull( fanfic.Ships[0].Characters[1] as AO3CharacterRequestHandle );
+			Assert.AreEqual( ( (AO3CharacterRequestHandle) fanfic.Ships[0].Characters[1] ).Name, "Stiles Stilinski" );
+
 			Assert.AreEqual( fanfic.NumberWords, 101000 );
 			Assert.AreEqual( fanfic.DateStartedUtc.Date, new DateTime( 2012, 10, 16 ) );
 			Assert.IsTrue( fanfic.NumberComments > 2000 );

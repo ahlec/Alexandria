@@ -34,6 +34,9 @@
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -43,12 +46,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AO3AuthorRequestHandle.cs" />
-    <Compile Include="AO3FanficRequestHandle.cs" />
-    <Compile Include="AO3SeriesRequestHandle.cs" />
+    <Compile Include="RequestHandles\AO3AuthorRequestHandle.cs" />
+    <Compile Include="RequestHandles\AO3CharacterRequestHandle.cs" />
+    <Compile Include="RequestHandles\AO3FanficRequestHandle.cs" />
+    <Compile Include="RequestHandles\AO3SeriesRequestHandle.cs" />
+    <Compile Include="RequestHandles\AO3ShipInfoRequestHandle.cs" />
     <Compile Include="AO3Source.cs" />
     <Compile Include="Model\AO3Fanfic.cs" />
     <Compile Include="Model\AO3SeriesEntry.cs" />
+    <Compile Include="Model\AO3Ship.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\ParseUtils.cs" />
   </ItemGroup>

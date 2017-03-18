@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Alexandria.Model
 {
-	public interface ICharacter
+	public interface ICharacter : IRequestable
 	{
 
 	}

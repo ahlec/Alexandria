@@ -2,7 +2,7 @@
 using Alexandria.Model;
 using HtmlAgilityPack;
 
-namespace Alexandria.AO3
+namespace Alexandria.AO3.RequestHandles
 {
 	public sealed class AO3AuthorRequestHandle : IRequestHandle<IAuthor>
 	{

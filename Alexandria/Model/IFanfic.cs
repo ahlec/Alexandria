@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Alexandria.Model
 {
@@ -11,6 +12,8 @@ namespace Alexandria.Model
 		MaturityRating Rating { get; }
 
 		ContentWarnings ContentWarnings { get; }
+
+		IReadOnlyList<IShip> Ships { get; }
 
 		Int32 NumberWords { get; }
 

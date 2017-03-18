@@ -53,8 +53,10 @@
     <Compile Include="Model\ISeries.cs" />
     <Compile Include="Model\ISeriesEntry.cs" />
     <Compile Include="Model\IShip.cs" />
+    <Compile Include="Model\IShipInfo.cs" />
     <Compile Include="Model\ITag.cs" />
     <Compile Include="Model\MaturityRating.cs" />
+    <Compile Include="Model\ShipType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LibrarySource.cs" />
   </ItemGroup>

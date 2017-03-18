@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Alexandria.Model;
+using System.Collections.Immutable;
 using HtmlAgilityPack;
+using Alexandria.Model;
+using Alexandria.AO3.RequestHandles;
 
 namespace Alexandria.AO3.Utils
 {
@@ -75,5 +74,45 @@ namespace Alexandria.AO3.Utils
 
 			return parsed;
 		}
+
+		public static IReadOnlyList<IRequestHandle<ICharacter>> ParseShipCharacters( String shipTag, out ShipType type )
+		{
+			foreach ( KeyValuePair<String, ShipType> separator in _shipNameSeparators )
+			{
+				Int32 currentStartIndex = 0;
+				Int32 nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex );
+				if ( nextSeparatorIndex < 0 )
+				{
+					continue;
+				}
+
+
+				List<IRequestHandle<ICharacter>> characters = new List<IRequestHandle<ICharacter>>();
+
+				while ( nextSeparatorIndex >= 0 )
+				{
+					characters.Add( new AO3CharacterRequestHandle( shipTag.Substring( currentStartIndex, nextSeparatorIndex - currentStartIndex ) ) );
+					currentStartIndex = nextSeparatorIndex + separator.Key.Length;
+					nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex );
+				}
+
+				if ( currentStartIndex < shipTag.Length - 1 )
+				{
+					characters.Add( new AO3CharacterRequestHandle( shipTag.Substring( currentStartIndex ) ) );
+				}
+
+				type = separator.Value;
+				return characters;
+			}
+
+			throw new NotImplementedException();
+		}
+
+		static readonly ImmutableDictionary<String, ShipType> _shipNameSeparators = new Dictionary<String, ShipType>
+		{
+			{ "/", ShipType.Romantic },
+			{ "\\", ShipType.Romantic },
+			{ "&", ShipType.Platonic }
+		}.ToImmutableDictionary();
 	}
 }

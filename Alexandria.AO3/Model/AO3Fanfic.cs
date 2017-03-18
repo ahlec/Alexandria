@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Alexandria.Model;
+using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
 
 namespace Alexandria.AO3.Model
@@ -24,6 +25,8 @@ namespace Alexandria.AO3.Model
 		public MaturityRating Rating { get; private set; }
 
 		public ContentWarnings ContentWarnings { get; private set; }
+
+		public IReadOnlyList<IShip> Ships { get; private set; }
 
 		public Int32 NumberWords { get; private set; }
 
@@ -46,6 +49,18 @@ namespace Alexandria.AO3.Model
 			HtmlNode workMetaGroup = document.DocumentNode.SelectSingleNode( "//dl[@class='work meta group']" );
 			parsed.Rating = ParseUtils.ParseMaturityRatingFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='rating tags']//a" ).InnerText );
 			parsed.ContentWarnings = ParseUtils.ParseContentWarningsFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='warning tags']/ul" ) );
+
+			HtmlNode relationshipsUl = workMetaGroup.SelectSingleNode( "dd[@class='relationship tags']/ul" );
+			List<IShip> ships = new List<IShip>();
+			if ( relationshipsUl != null )
+			{
+				foreach ( HtmlNode li in relationshipsUl.Elements( "li" ) )
+				{
+					String shipTag = li.Element( "a" ).InnerText.Trim();
+					ships.Add( AO3Ship.Parse( shipTag ) );
+				}
+			}
+			parsed.Ships = ships;
 
 			// We wind up looking at every <dd> anyways, so this is more efficient than needing to make a lot of XPath calls over the same datasets
 			HtmlNode statsDl = workMetaGroup.SelectSingleNode( "dd[@class='stats']/dl" );
