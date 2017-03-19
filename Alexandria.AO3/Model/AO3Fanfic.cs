@@ -28,6 +28,8 @@ namespace Alexandria.AO3.Model
 
 		public IReadOnlyList<IShip> Ships { get; private set; }
 
+		public IReadOnlyList<ITag> Tags { get; private set; }
+
 		public Int32 NumberWords { get; private set; }
 
 		public Boolean IsCompleted { get; private set; }
@@ -56,11 +58,23 @@ namespace Alexandria.AO3.Model
 			{
 				foreach ( HtmlNode li in relationshipsUl.Elements( "li" ) )
 				{
-					String shipTag = li.Element( "a" ).InnerText.Trim();
+					String shipTag = li.Element( "a" ).ReadableInnerText().Trim();
 					ships.Add( AO3Ship.Parse( shipTag ) );
 				}
 			}
 			parsed.Ships = ships;
+
+			HtmlNode freeformTagsUl = workMetaGroup.SelectSingleNode( "dd[@class='freeform tags']/ul" );
+			List<ITag> tags = new List<ITag>();
+			if ( freeformTagsUl != null )
+			{
+				foreach ( HtmlNode li in freeformTagsUl.Elements( "li" ) )
+				{
+					String tag = li.Element( "a" ).ReadableInnerText().Trim();
+					tags.Add( new AO3Tag( tag ) );
+				}
+			}
+			parsed.Tags = tags;
 
 			// We wind up looking at every <dd> anyways, so this is more efficient than needing to make a lot of XPath calls over the same datasets
 			HtmlNode statsDl = workMetaGroup.SelectSingleNode( "dd[@class='stats']/dl" );
@@ -100,7 +114,7 @@ namespace Alexandria.AO3.Model
 			}
 
 			HtmlNode prefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='preface group']" );
-			parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).InnerText.Trim();
+			parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();
 			parsed.Author = AO3AuthorRequestHandle.Parse( prefaceGroup.SelectSingleNode( "//a[@rel='author']" ) );
 
 			return parsed;

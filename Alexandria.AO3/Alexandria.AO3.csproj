@@ -46,16 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\AO3Tag.cs" />
     <Compile Include="RequestHandles\AO3AuthorRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3CharacterRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3FanficRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3SeriesRequestHandle.cs" />
-    <Compile Include="RequestHandles\AO3ShipInfoRequestHandle.cs" />
     <Compile Include="AO3Source.cs" />
     <Compile Include="Model\AO3Fanfic.cs" />
     <Compile Include="Model\AO3SeriesEntry.cs" />
     <Compile Include="Model\AO3Ship.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestHandles\AO3TagInfoRequestHandle.cs" />
     <Compile Include="Utils\ParseUtils.cs" />
   </ItemGroup>
   <ItemGroup>

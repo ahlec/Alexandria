@@ -55,6 +55,7 @@
     <Compile Include="Model\IShip.cs" />
     <Compile Include="Model\IShipInfo.cs" />
     <Compile Include="Model\ITag.cs" />
+    <Compile Include="Model\ITagInfo.cs" />
     <Compile Include="Model\MaturityRating.cs" />
     <Compile Include="Model\ShipType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

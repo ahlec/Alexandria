@@ -3,9 +3,9 @@ using Alexandria.Model;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	public sealed class AO3ShipInfoRequestHandle : IRequestHandle<IShipInfo>
+	public sealed class AO3TagInfoRequestHandle : IRequestHandle<IShipInfo>, IRequestHandle<ITagInfo>
 	{
-		public AO3ShipInfoRequestHandle( String tagName )
+		public AO3TagInfoRequestHandle( String tagName )
 		{
 			TagName = tagName;
 		}

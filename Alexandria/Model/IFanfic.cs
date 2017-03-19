@@ -15,6 +15,8 @@ namespace Alexandria.Model
 
 		IReadOnlyList<IShip> Ships { get; }
 
+		IReadOnlyList<ITag> Tags { get; }
+
 		Int32 NumberWords { get; }
 
 		DateTime DateStartedUtc { get; }

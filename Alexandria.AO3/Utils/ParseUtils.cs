@@ -91,21 +91,29 @@ namespace Alexandria.AO3.Utils
 
 				while ( nextSeparatorIndex >= 0 )
 				{
-					characters.Add( new AO3CharacterRequestHandle( shipTag.Substring( currentStartIndex, nextSeparatorIndex - currentStartIndex ) ) );
+					String character = shipTag.Substring( currentStartIndex, nextSeparatorIndex - currentStartIndex );
+					characters.Add( new AO3CharacterRequestHandle( character.Trim() ) );
 					currentStartIndex = nextSeparatorIndex + separator.Key.Length;
 					nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex );
 				}
 
 				if ( currentStartIndex < shipTag.Length - 1 )
 				{
-					characters.Add( new AO3CharacterRequestHandle( shipTag.Substring( currentStartIndex ) ) );
+					characters.Add( new AO3CharacterRequestHandle( shipTag.Substring( currentStartIndex ).Trim() ) );
 				}
 
 				type = separator.Value;
 				return characters;
 			}
 
-			throw new NotImplementedException();
+			type = ShipType.Unknown;
+			return new List<IRequestHandle<ICharacter>>();
+		}
+
+		public static String ReadableInnerText( this HtmlNode node )
+		{
+			String text = node.InnerText;
+			return text.Replace( "&amp;", "&" );
 		}
 
 		static readonly ImmutableDictionary<String, ShipType> _shipNameSeparators = new Dictionary<String, ShipType>
