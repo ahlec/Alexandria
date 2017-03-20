@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Alexandria.Model;
+using Alexandria.Utils;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
 
@@ -28,6 +29,8 @@ namespace Alexandria.AO3.Model
 
 		public IReadOnlyList<IShip> Ships { get; private set; }
 
+		public IReadOnlyList<IRequestHandle<ICharacter>> Characters { get; private set; }
+
 		public IReadOnlyList<ITag> Tags { get; private set; }
 
 		public Int32 NumberWords { get; private set; }
@@ -41,6 +44,8 @@ namespace Alexandria.AO3.Model
 		public Int32 NumberComments { get; private set; }
 
 		public ISeriesEntry SeriesInfo { get; private set; }
+
+		public Language Language { get; private set; }
 
 		#endregion // IFanfic
 
@@ -64,6 +69,18 @@ namespace Alexandria.AO3.Model
 			}
 			parsed.Ships = ships;
 
+			HtmlNode charactersUl = workMetaGroup.SelectSingleNode( "dd[@class='character tags']/ul" );
+			List<IRequestHandle<ICharacter>> characters = new List<IRequestHandle<ICharacter>>();
+			if ( charactersUl != null )
+			{
+				foreach ( HtmlNode li in charactersUl.Elements( "li" ) )
+				{
+					String characterName = li.Element( "a" ).ReadableInnerText().Trim();
+					characters.Add( new AO3CharacterRequestHandle( characterName ) );
+				}
+			}
+			parsed.Characters = characters;
+
 			HtmlNode freeformTagsUl = workMetaGroup.SelectSingleNode( "dd[@class='freeform tags']/ul" );
 			List<ITag> tags = new List<ITag>();
 			if ( freeformTagsUl != null )
@@ -75,6 +92,7 @@ namespace Alexandria.AO3.Model
 				}
 			}
 			parsed.Tags = tags;
+			parsed.Language = LanguageUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='language']" ).ReadableInnerText().Trim() );
 
 			// We wind up looking at every <dd> anyways, so this is more efficient than needing to make a lot of XPath calls over the same datasets
 			HtmlNode statsDl = workMetaGroup.SelectSingleNode( "dd[@class='stats']/dl" );

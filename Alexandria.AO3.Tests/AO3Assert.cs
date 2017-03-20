@@ -7,7 +7,7 @@ namespace Alexandria.AO3.Tests
 {
 	internal static class AO3Assert
 	{
-		public static void MatchesTag( ITag tag, String text )
+		public static void MatchesTag( String text, ITag tag )
 		{
 			Assert.IsNotNull( tag );
 			Assert.AreEqual( text, tag.Text );
@@ -22,11 +22,15 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( ShipType.Romantic, ship.Type );
 			Assert.IsNotNull( ship.Characters );
 			Assert.AreEqual( 2, ship.Characters.Count );
-			Assert.IsNotNull( ship.Characters[0] as AO3CharacterRequestHandle );
-			Assert.AreEqual( ( isDerekFirst ? "Derek Hale" : "Stiles Stilinski" ), ( (AO3CharacterRequestHandle) ship.Characters[0] ).Name );
-			Assert.IsNotNull( ship.Characters[1] as AO3CharacterRequestHandle );
-			Assert.AreEqual( ( isDerekFirst ? "Stiles Stilinski" : "Derek Hale" ), ( (AO3CharacterRequestHandle) ship.Characters[1] ).Name );
+			IsCharacterRequest( ( isDerekFirst ? "Derek Hale" : "Stiles Stilinski" ), ship.Characters[0] );
+			IsCharacterRequest( ( isDerekFirst ? "Stiles Stilinski" : "Derek Hale" ), ship.Characters[1] );
 			Assert.IsNotNull( ship.Info as AO3TagInfoRequestHandle );
+		}
+
+		public static void IsCharacterRequest( String characterName, IRequestHandle<ICharacter> character )
+		{
+			Assert.IsNotNull( character as AO3CharacterRequestHandle );
+			Assert.AreEqual( characterName, ( (AO3CharacterRequestHandle) character ).Name );
 		}
 	}
 }

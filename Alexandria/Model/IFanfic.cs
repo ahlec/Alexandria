@@ -15,6 +15,8 @@ namespace Alexandria.Model
 
 		IReadOnlyList<IShip> Ships { get; }
 
+		IReadOnlyList<IRequestHandle<ICharacter>> Characters { get; }
+
 		IReadOnlyList<ITag> Tags { get; }
 
 		Int32 NumberWords { get; }
@@ -26,5 +28,7 @@ namespace Alexandria.Model
 		Int32 NumberComments { get; }
 
 		ISeriesEntry SeriesInfo { get; }
+
+		Language Language { get; }
 	}
 }
