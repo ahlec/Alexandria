@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Alexandria.Model
 {
-	public interface ITag
+	public interface ITag : IRequestable
 	{
-		String Text { get; }
-
-		IRequestHandle<ITagInfo> Info { get; }
 	}
 }

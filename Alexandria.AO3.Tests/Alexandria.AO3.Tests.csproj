@@ -51,6 +51,8 @@
     <Compile Include="AO3Assert.cs" />
     <Compile Include="FanficParsing.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestUtils.Tests.cs" />
+    <Compile Include="UnitTestConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

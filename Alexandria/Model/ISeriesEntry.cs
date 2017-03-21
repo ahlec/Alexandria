@@ -1,15 +1,16 @@
 ﻿using System;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {
 	public interface ISeriesEntry
 	{
-		IRequestHandle<ISeries> Series { get; }
+		ISeriesRequestHandle Series { get; }
 
 		Int32 EntryNumber { get; }
 
-		IRequestHandle<IFanfic> PreviousEntry { get; }
+		IFanficRequestHandle PreviousEntry { get; }
 
-		IRequestHandle<IFanfic> NextEntry { get; }
+		IFanficRequestHandle NextEntry { get; }
 	}
 }

@@ -1,9 +1,9 @@
 ﻿using System;
-using Alexandria.Model;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	public sealed class AO3FanficRequestHandle : IRequestHandle<IFanfic>
+	internal sealed class AO3FanficRequestHandle : IFanficRequestHandle
 	{
 		public AO3FanficRequestHandle( String handle )
 		{

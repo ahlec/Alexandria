@@ -1,10 +1,10 @@
 ﻿using System;
-using Alexandria.Model;
 using HtmlAgilityPack;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	public sealed class AO3AuthorRequestHandle : IRequestHandle<IAuthor>
+	internal sealed class AO3AuthorRequestHandle : IAuthorRequestHandle
 	{
 		public AO3AuthorRequestHandle( String username, String pseud )
 		{

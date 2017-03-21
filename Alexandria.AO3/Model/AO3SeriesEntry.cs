@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using HtmlAgilityPack;
 using Alexandria.Model;
+using Alexandria.RequestHandles;
 using Alexandria.AO3.RequestHandles;
 
 namespace Alexandria.AO3.Model
@@ -16,13 +17,13 @@ namespace Alexandria.AO3.Model
 
 		#region ISeriesEntry
 
-		public IRequestHandle<ISeries> Series { get; private set; }
+		public ISeriesRequestHandle Series { get; private set; }
 
 		public Int32 EntryNumber { get; private set; }
 
-		public IRequestHandle<IFanfic> PreviousEntry { get; private set; }
+		public IFanficRequestHandle PreviousEntry { get; private set; }
 
-		public IRequestHandle<IFanfic> NextEntry { get; private set; }
+		public IFanficRequestHandle NextEntry { get; private set; }
 
 		#endregion
 

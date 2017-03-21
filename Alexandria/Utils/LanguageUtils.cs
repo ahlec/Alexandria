@@ -42,6 +42,6 @@ namespace Alexandria.Utils
 			return renderName.Name;
 		}
 
-		private static IDictionary<string, Language> s_languageStrings = new Dictionary<string, Language>();
+		private static IDictionary<String, Language> s_languageStrings = new Dictionary<String, Language>();
 	}
 }

@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Alexandria.Model;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	public sealed class AO3SeriesRequestHandle : IRequestHandle<ISeries>
+	internal sealed class AO3SeriesRequestHandle : ISeriesRequestHandle
 	{
-		public AO3SeriesRequestHandle( String handle )
+		public AO3SeriesRequestHandle( String title )
 		{
-			Handle = handle;
+			Title = title;
 		}
 
-		public String Handle { get; }
+		public String Title { get; }
 	}
 }

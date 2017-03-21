@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Alexandria.Model;
+using Alexandria.RequestHandles;
 using Alexandria.Utils;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
@@ -21,7 +19,7 @@ namespace Alexandria.AO3.Model
 
 		public String Title { get; private set; }
 
-		public IRequestHandle<IAuthor> Author { get; private set; }
+		public IAuthorRequestHandle Author { get; private set; }
 
 		public MaturityRating Rating { get; private set; }
 
@@ -29,9 +27,9 @@ namespace Alexandria.AO3.Model
 
 		public IReadOnlyList<IShip> Ships { get; private set; }
 
-		public IReadOnlyList<IRequestHandle<ICharacter>> Characters { get; private set; }
+		public IReadOnlyList<ICharacterRequestHandle> Characters { get; private set; }
 
-		public IReadOnlyList<ITag> Tags { get; private set; }
+		public IReadOnlyList<ITagRequestHandle> Tags { get; private set; }
 
 		public Int32 NumberWords { get; private set; }
 
@@ -70,7 +68,7 @@ namespace Alexandria.AO3.Model
 			parsed.Ships = ships;
 
 			HtmlNode charactersUl = workMetaGroup.SelectSingleNode( "dd[@class='character tags']/ul" );
-			List<IRequestHandle<ICharacter>> characters = new List<IRequestHandle<ICharacter>>();
+			List<ICharacterRequestHandle> characters = new List<ICharacterRequestHandle>();
 			if ( charactersUl != null )
 			{
 				foreach ( HtmlNode li in charactersUl.Elements( "li" ) )
@@ -82,13 +80,13 @@ namespace Alexandria.AO3.Model
 			parsed.Characters = characters;
 
 			HtmlNode freeformTagsUl = workMetaGroup.SelectSingleNode( "dd[@class='freeform tags']/ul" );
-			List<ITag> tags = new List<ITag>();
+			List<ITagRequestHandle> tags = new List<ITagRequestHandle>();
 			if ( freeformTagsUl != null )
 			{
 				foreach ( HtmlNode li in freeformTagsUl.Elements( "li" ) )
 				{
 					String tag = li.Element( "a" ).ReadableInnerText().Trim();
-					tags.Add( new AO3Tag( tag ) );
+					tags.Add( new AO3TagRequestHandle( tag ) );
 				}
 			}
 			parsed.Tags = tags;

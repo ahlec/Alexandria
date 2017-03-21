@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {
@@ -9,6 +10,6 @@ namespace Alexandria.Model
 
 		ShipType Type { get; }
 
-		IEnumerable<IRequestHandle<ICharacter>> Characters { get; }
+		IReadOnlyList<ICharacterRequestHandle> Characters { get; }
 	}
 }

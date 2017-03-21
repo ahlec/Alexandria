@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {
@@ -7,7 +8,7 @@ namespace Alexandria.Model
 	{
 		String Title { get; }
 
-		IRequestHandle<IAuthor> Author { get; }
+		IAuthorRequestHandle Author { get; }
 
 		MaturityRating Rating { get; }
 
@@ -15,9 +16,9 @@ namespace Alexandria.Model
 
 		IReadOnlyList<IShip> Ships { get; }
 
-		IReadOnlyList<IRequestHandle<ICharacter>> Characters { get; }
+		IReadOnlyList<ICharacterRequestHandle> Characters { get; }
 
-		IReadOnlyList<ITag> Tags { get; }
+		IReadOnlyList<ITagRequestHandle> Tags { get; }
 
 		Int32 NumberWords { get; }
 

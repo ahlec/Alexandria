@@ -45,7 +45,10 @@
   <ItemGroup>
     <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="IRequestable.cs" />
-    <Compile Include="IRequestHandle.cs" />
+    <Compile Include="RequestHandles\IAuthorRequestHandle.cs" />
+    <Compile Include="RequestHandles\ICharacterRequestHandle.cs" />
+    <Compile Include="RequestHandles\IFanficRequestHandle.cs" />
+    <Compile Include="RequestHandles\IRequestHandle.cs" />
     <Compile Include="Model\ContentWarnings.cs" />
     <Compile Include="Model\IAuthor.cs" />
     <Compile Include="Model\ICharacter.cs" />
@@ -55,12 +58,14 @@
     <Compile Include="Model\IShip.cs" />
     <Compile Include="Model\IShipInfo.cs" />
     <Compile Include="Model\ITag.cs" />
-    <Compile Include="Model\ITagInfo.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\MaturityRating.cs" />
     <Compile Include="Model\ShipType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LibrarySource.cs" />
+    <Compile Include="RequestHandles\ISeriesRequestHandle.cs" />
+    <Compile Include="RequestHandles\IShipInfoRequestHandle.cs" />
+    <Compile Include="RequestHandles\ITagRequestHandle.cs" />
     <Compile Include="Utils\LanguageUtils.cs" />
     <Compile Include="Utils\NativeLanguageAttribute.cs" />
     <Compile Include="Utils\RenderLanguageNameAttribute.cs" />

@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Alexandria.Model;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	public sealed class AO3CharacterRequestHandle : IRequestHandle<ICharacter>
+	internal sealed class AO3CharacterRequestHandle : ICharacterRequestHandle
 	{
 		public AO3CharacterRequestHandle( String name )
 		{
-			Name = name;
+			FullName = name;
 		}
 
-		public String Name { get; }
+		public String FullName { get; }
 	}
 }

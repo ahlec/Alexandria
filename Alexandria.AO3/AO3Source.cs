@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Alexandria.Model;
+using Alexandria.RequestHandles;
 using Alexandria.AO3.Model;
 using Alexandria.AO3.RequestHandles;
 

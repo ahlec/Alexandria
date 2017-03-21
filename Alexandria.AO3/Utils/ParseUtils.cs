@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using HtmlAgilityPack;
 using Alexandria.Model;
+using Alexandria.RequestHandles;
 using Alexandria.AO3.RequestHandles;
 
 namespace Alexandria.AO3.Utils
@@ -75,7 +76,7 @@ namespace Alexandria.AO3.Utils
 			return parsed;
 		}
 
-		public static IReadOnlyList<IRequestHandle<ICharacter>> ParseShipCharacters( String shipTag, out ShipType type )
+		public static IReadOnlyList<ICharacterRequestHandle> ParseShipCharacters( String shipTag, out ShipType type )
 		{
 			foreach ( KeyValuePair<String, ShipType> separator in _shipNameSeparators )
 			{
@@ -87,7 +88,7 @@ namespace Alexandria.AO3.Utils
 				}
 
 
-				List<IRequestHandle<ICharacter>> characters = new List<IRequestHandle<ICharacter>>();
+				List<ICharacterRequestHandle> characters = new List<ICharacterRequestHandle>();
 
 				while ( nextSeparatorIndex >= 0 )
 				{
@@ -107,7 +108,7 @@ namespace Alexandria.AO3.Utils
 			}
 
 			type = ShipType.Unknown;
-			return new List<IRequestHandle<ICharacter>>();
+			return new List<ICharacterRequestHandle>();
 		}
 
 		public static String ReadableInnerText( this HtmlNode node )
