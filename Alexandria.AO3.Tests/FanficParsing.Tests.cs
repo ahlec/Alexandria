@@ -47,12 +47,17 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "Mild Transphobia", fanfic.Tags[9].Text );
 
 			Assert.AreEqual( 101000, fanfic.NumberWords );
-			Assert.AreEqual( new DateTime( 2012, 10, 16 ), fanfic.DateStartedUtc.Date );
+			Assert.AreEqual( new DateTime( 2012, 10, 16 ), fanfic.DateStarted.Date );
+			Assert.AreEqual( new DateTime( 2013, 04, 25 ), fanfic.DateLastUpdated.Date );
 			Assert.IsTrue( fanfic.NumberComments > 2000 );
 			Assert.IsTrue( fanfic.NumberLikes > 17000 );
 			Assert.IsNull( fanfic.SeriesInfo );
 
 			Assert.AreEqual( Language.English, fanfic.Language );
+
+			Assert.AreEqual( @"Looking for full day/evening sitter. 2 twin boys age 4.  Must have exp. w/werewolves. Must be human. No pedophiles. No teenage girls. Pay negotiable.", fanfic.Summary );
+			Assert.IsNull( fanfic.AuthorsNote );
+			Assert.IsNull( fanfic.Footnote );
 		}
 
 		[TestMethod]
@@ -104,7 +109,8 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "Week 9", fanfic.Tags[8].Text );
 
 			Assert.AreEqual( 4084, fanfic.NumberWords );
-			Assert.AreEqual( new DateTime( 2015, 3, 22 ), fanfic.DateStartedUtc.Date );
+			Assert.AreEqual( new DateTime( 2015, 3, 22 ), fanfic.DateStarted.Date );
+			Assert.AreEqual( new DateTime( 2015, 3, 22 ), fanfic.DateLastUpdated.Date );
 			Assert.IsTrue( fanfic.NumberComments > 80 );
 			Assert.IsTrue( fanfic.NumberLikes > 2400 );
 			Assert.IsNotNull( fanfic.SeriesInfo );
@@ -114,6 +120,11 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "3626367", fanfic.SeriesInfo.NextEntry.Handle );
 
 			Assert.AreEqual( Language.English, fanfic.Language );
+
+			Assert.AreEqual( @"Derek grew up knowing that soulmates are something to be cherished, so when he got a voice in his head, childish thoughts and flashes of color and objects, he’d excitedly jumped on his mother’s bed to tell her. She had smiled, ruffled his hair and told him how she was proud of him, even though Derek hadn’t really done anything.", fanfic.Summary );
+			Assert.AreEqual( @"From the prompt:
+ ➥a voice (not yours, your soulmate’s) appears in the back of your head, thinking about or commenting on whatever your soulmate happens to be doing at the time. But, you can’t converse with it, and it can’t tell you any details about who/where they are. Pretty frustrating tbh au", fanfic.AuthorsNote );
+			Assert.AreEqual( @"Oh my god this fic messed my writing schedule so much it might just have turned me into a white rabbit with a pocket watch because dearie me am I late.", fanfic.Footnote );
 		}
 
 		[TestMethod]
@@ -162,7 +173,8 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "Humor", fanfic.Tags[5].Text );
 
 			Assert.AreEqual( 1653, fanfic.NumberWords );
-			Assert.AreEqual( new DateTime( 2016, 4, 19 ), fanfic.DateStartedUtc.Date );
+			Assert.AreEqual( new DateTime( 2016, 4, 19 ), fanfic.DateStarted.Date );
+			Assert.AreEqual( new DateTime( 2016, 4, 19 ), fanfic.DateLastUpdated.Date );
 			Assert.IsTrue( fanfic.NumberComments > 50 );
 			Assert.IsTrue( fanfic.NumberLikes > 1800 );
 			Assert.IsNotNull( fanfic.SeriesInfo );
@@ -172,6 +184,12 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "8702479", fanfic.SeriesInfo.NextEntry.Handle );
 
 			Assert.AreEqual( Language.English, fanfic.Language );
+
+			Assert.AreEqual( @"When your soulmate’s first words to you were supposed to be etched on your wrist, a blank wrist was quite intriguing and an open invitation to be teased.
+Derek’s wrist was missing a soulband.
+Every single person in his acquaintance had a soulband, God! Even Greenberg had a soulband.", fanfic.Summary );
+			Assert.AreEqual( @"Thank you Jonjo for the beta work. You are amazing <3", fanfic.AuthorsNote );
+			Assert.AreEqual( @"I am on tumblr - Here - my Sterek blog.", fanfic.Footnote );
 		}
 	}
 }

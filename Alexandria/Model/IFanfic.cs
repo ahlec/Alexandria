@@ -22,7 +22,9 @@ namespace Alexandria.Model
 
 		Int32 NumberWords { get; }
 
-		DateTime DateStartedUtc { get; }
+		DateTime DateStarted { get; }
+
+		DateTime DateLastUpdated { get; }
 
 		Int32 NumberLikes { get; }
 
@@ -31,5 +33,11 @@ namespace Alexandria.Model
 		ISeriesEntry SeriesInfo { get; }
 
 		Language Language { get; }
+
+		String Summary { get; }
+
+		String AuthorsNote { get; }
+
+		String Footnote { get; }
 	}
 }

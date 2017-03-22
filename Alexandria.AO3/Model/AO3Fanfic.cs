@@ -35,7 +35,9 @@ namespace Alexandria.AO3.Model
 
 		public Boolean IsCompleted { get; private set; }
 
-		public DateTime DateStartedUtc { get; private set; }
+		public DateTime DateStarted { get; private set; }
+
+		public DateTime DateLastUpdated { get; private set; }
 
 		public Int32 NumberLikes { get; private set; }
 
@@ -44,6 +46,12 @@ namespace Alexandria.AO3.Model
 		public ISeriesEntry SeriesInfo { get; private set; }
 
 		public Language Language { get; private set; }
+
+		public String Summary { get; private set; }
+
+		public String AuthorsNote { get; private set; }
+
+		public String Footnote { get; private set; }
 
 		#endregion // IFanfic
 
@@ -93,6 +101,7 @@ namespace Alexandria.AO3.Model
 			parsed.Language = LanguageUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='language']" ).ReadableInnerText().Trim() );
 
 			// We wind up looking at every <dd> anyways, so this is more efficient than needing to make a lot of XPath calls over the same datasets
+			Boolean hasDateLastUpdated = false;
 			HtmlNode statsDl = workMetaGroup.SelectSingleNode( "dd[@class='stats']/dl" );
 			foreach ( HtmlNode dd in statsDl.Elements( "dd" ) )
 			{
@@ -117,10 +126,20 @@ namespace Alexandria.AO3.Model
 						}
 					case "published":
 						{
-							parsed.DateStartedUtc = DateTime.Parse( ddValue );
+							parsed.DateStarted = DateTime.Parse( ddValue );
+							break;
+						}
+					case "status":
+						{
+							parsed.DateLastUpdated = DateTime.Parse( ddValue );
+							hasDateLastUpdated = true;
 							break;
 						}
 				}
+			}
+			if ( !hasDateLastUpdated )
+			{
+				parsed.DateLastUpdated = parsed.DateStarted;
 			}
 
 			HtmlNode seriesSpan = workMetaGroup.SelectSingleNode( "dd[@class='series']/span" );
@@ -132,6 +151,24 @@ namespace Alexandria.AO3.Model
 			HtmlNode prefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='preface group']" );
 			parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();
 			parsed.Author = AO3AuthorRequestHandle.Parse( prefaceGroup.SelectSingleNode( "//a[@rel='author']" ) );
+
+			HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( "//div[@class='summary module']/blockquote" );
+			if ( summaryBlockquote != null )
+			{
+				parsed.Summary = summaryBlockquote.ReadableInnerText().Trim();
+			}
+
+			HtmlNode notesBlockquote = prefaceGroup.SelectSingleNode( "//div[@class='notes module']/blockquote" );
+			if ( notesBlockquote != null )
+			{
+				parsed.AuthorsNote = notesBlockquote.ReadableInnerText().Trim();
+			}
+
+			HtmlNode workEndnotesBlockquote = document.DocumentNode.SelectSingleNode( "//div[@id='work_endnotes']/blockquote" );
+			if ( workEndnotesBlockquote != null )
+			{
+				parsed.Footnote = workEndnotesBlockquote.ReadableInnerText().Trim();
+			}
 
 			return parsed;
 		}

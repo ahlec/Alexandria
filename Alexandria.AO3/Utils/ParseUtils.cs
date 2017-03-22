@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
+using Alexandria.Utils;
 using Alexandria.AO3.RequestHandles;
 
 namespace Alexandria.AO3.Utils
@@ -113,8 +117,64 @@ namespace Alexandria.AO3.Utils
 
 		public static String ReadableInnerText( this HtmlNode node )
 		{
-			String text = node.InnerText;
-			return text.Replace( "&amp;", "&" );
+			// Strip out all of the HTML tags, EXCEPT for <br> and <br />, which should be transformed into newline characters
+			String innerHtml = node.InnerHtml;
+			StringBuilder builder = new StringBuilder( innerHtml.Length );
+			Boolean currentlyInsideTag = false;
+			Int32 currentTagIndex = 0;
+			Boolean wasLinebreakTag = false;
+			foreach ( Char character in innerHtml )
+			{
+				if ( character == '<' )
+				{
+					currentlyInsideTag = true;
+					currentTagIndex = 0;
+					wasLinebreakTag = false;
+					continue;
+				}
+				else if ( character == '>' )
+				{
+					currentlyInsideTag = false;
+					if ( wasLinebreakTag )
+					{
+						builder.AppendLine();
+					}
+					wasLinebreakTag = false;
+					continue;
+				}
+
+				if ( !currentlyInsideTag )
+				{
+					builder.Append( character );
+				}
+				else
+				{
+					switch ( currentTagIndex )
+					{
+						case 0:
+							{
+								wasLinebreakTag = ( character == 'b' || character == 'B' );
+								break;
+							}
+						case 1:
+							{
+								wasLinebreakTag = wasLinebreakTag && ( character == 'r' || character == 'R' );
+								break;
+							}
+						default:
+							{
+								wasLinebreakTag = wasLinebreakTag && Char.IsWhiteSpace( character );
+								break;
+							}
+					}
+					currentTagIndex++;
+				}
+			}
+
+			builder.Trim();
+
+			String text = HttpUtility.HtmlDecode( builder.ToString() );
+			return text;
 		}
 
 		static readonly ImmutableDictionary<String, ShipType> _shipNameSeparators = new Dictionary<String, ShipType>

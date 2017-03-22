@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -38,7 +39,7 @@ namespace Alexandria
 				if ( File.Exists( cacheFilename ) )
 				{
 					document = new HtmlDocument();
-					document.Load( cacheFilename );
+					document.Load( cacheFilename, Encoding.UTF8 );
 					responseUrl = null;
 					return WebPageParseResult.Success;
 				}
@@ -82,7 +83,11 @@ namespace Alexandria
 			text = text.Replace( "<option ", "<my_option " ).Replace( "option>", "my_option>" );
 
 			document = new HtmlDocument();
-			document.LoadHtml( text );
+			Byte[] bytes = Encoding.UTF8.GetBytes( text );
+			using ( Stream textStream = new MemoryStream( bytes ) )
+			{
+				document.Load( textStream, Encoding.UTF8 );
+			}
 			if ( document.ParseErrors.Any() )
 			{
 				return WebPageParseResult.UnknownDeserializationError;
