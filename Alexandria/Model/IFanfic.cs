@@ -32,6 +32,8 @@ namespace Alexandria.Model
 
 		ISeriesEntry SeriesInfo { get; }
 
+		IChapterInfo ChapterInfo { get; }
+
 		Language Language { get; }
 
 		String Summary { get; }

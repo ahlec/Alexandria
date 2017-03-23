@@ -80,7 +80,9 @@ namespace Alexandria
 			// http://stackoverflow.com/questions/293342/htmlagilitypack-drops-option-end-tags
 			// Just replacing the tag name altogether to something else, it doesn't matter, we're not going to pay attention
 			// to it right now.
-			text = text.Replace( "<option ", "<my_option " ).Replace( "option>", "my_option>" );
+			const String OptionsOpenTagReplacement = "<" + OptionsHtmlTag + " ";
+			const String OptionsCloseTagReplacement = OptionsHtmlTag + ">";
+			text = text.Replace( "<option ", OptionsOpenTagReplacement ).Replace( "option>", OptionsCloseTagReplacement );
 
 			document = new HtmlDocument();
 			Byte[] bytes = Encoding.UTF8.GetBytes( text );
@@ -117,5 +119,7 @@ namespace Alexandria
 		}
 
 		#endregion Caching
+
+		public const String OptionsHtmlTag = "my_option";
 	}
 }

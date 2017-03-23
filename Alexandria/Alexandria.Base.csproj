@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="IRequestable.cs" />
+    <Compile Include="Model\IChapterInfo.cs" />
     <Compile Include="RequestHandles\IAuthorRequestHandle.cs" />
     <Compile Include="RequestHandles\ICharacterRequestHandle.cs" />
     <Compile Include="RequestHandles\IFanficRequestHandle.cs" />

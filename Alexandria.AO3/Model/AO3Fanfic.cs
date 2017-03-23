@@ -45,6 +45,8 @@ namespace Alexandria.AO3.Model
 
 		public ISeriesEntry SeriesInfo { get; private set; }
 
+		public IChapterInfo ChapterInfo { get; private set; }
+
 		public Language Language { get; private set; }
 
 		public String Summary { get; private set; }
@@ -147,6 +149,8 @@ namespace Alexandria.AO3.Model
 			{
 				parsed.SeriesInfo = AO3SeriesEntry.Parse( seriesSpan );
 			}
+
+			parsed.ChapterInfo = AO3ChapterInfo.Parse( document, workMetaGroup );
 
 			HtmlNode prefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='preface group']" );
 			parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();

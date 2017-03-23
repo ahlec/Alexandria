@@ -53,6 +53,33 @@ namespace Alexandria.AO3.Tests
 			Assert.IsTrue( fanfic.NumberLikes > 17000 );
 			Assert.IsNull( fanfic.SeriesInfo );
 
+			Assert.IsNotNull( fanfic.ChapterInfo );
+			Assert.AreEqual( 1, fanfic.ChapterInfo.ChapterNumber );
+			Assert.IsNull( fanfic.ChapterInfo.ChapterTitle );
+			Assert.AreEqual( 20, fanfic.ChapterInfo.TotalNumberChapters );
+			Assert.IsNotNull( fanfic.ChapterInfo.Chapters );
+			Assert.AreEqual( 20, fanfic.ChapterInfo.Chapters.Count );
+			Assert.AreEqual( "956260", fanfic.ChapterInfo.Chapters[0].Handle );
+			Assert.AreEqual( "958923", fanfic.ChapterInfo.Chapters[1].Handle );
+			Assert.AreEqual( "969987", fanfic.ChapterInfo.Chapters[2].Handle );
+			Assert.AreEqual( "978501", fanfic.ChapterInfo.Chapters[3].Handle );
+			Assert.AreEqual( "1013137", fanfic.ChapterInfo.Chapters[4].Handle );
+			Assert.AreEqual( "1021020", fanfic.ChapterInfo.Chapters[5].Handle );
+			Assert.AreEqual( "1039138", fanfic.ChapterInfo.Chapters[6].Handle );
+			Assert.AreEqual( "1043245", fanfic.ChapterInfo.Chapters[7].Handle );
+			Assert.AreEqual( "1067069", fanfic.ChapterInfo.Chapters[8].Handle );
+			Assert.AreEqual( "1069071", fanfic.ChapterInfo.Chapters[9].Handle );
+			Assert.AreEqual( "1113252", fanfic.ChapterInfo.Chapters[10].Handle );
+			Assert.AreEqual( "1119371", fanfic.ChapterInfo.Chapters[11].Handle );
+			Assert.AreEqual( "1136732", fanfic.ChapterInfo.Chapters[12].Handle );
+			Assert.AreEqual( "1157366", fanfic.ChapterInfo.Chapters[13].Handle );
+			Assert.AreEqual( "1168541", fanfic.ChapterInfo.Chapters[14].Handle );
+			Assert.AreEqual( "1239449", fanfic.ChapterInfo.Chapters[15].Handle );
+			Assert.AreEqual( "1266246", fanfic.ChapterInfo.Chapters[16].Handle );
+			Assert.AreEqual( "1332473", fanfic.ChapterInfo.Chapters[17].Handle );
+			Assert.AreEqual( "1418973", fanfic.ChapterInfo.Chapters[18].Handle );
+			Assert.AreEqual( "1453053", fanfic.ChapterInfo.Chapters[19].Handle );
+
 			Assert.AreEqual( Language.English, fanfic.Language );
 
 			Assert.AreEqual( @"Looking for full day/evening sitter. 2 twin boys age 4.  Must have exp. w/werewolves. Must be human. No pedophiles. No teenage girls. Pay negotiable.", fanfic.Summary );
@@ -113,11 +140,14 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( new DateTime( 2015, 3, 22 ), fanfic.DateLastUpdated.Date );
 			Assert.IsTrue( fanfic.NumberComments > 80 );
 			Assert.IsTrue( fanfic.NumberLikes > 2400 );
+
 			Assert.IsNotNull( fanfic.SeriesInfo );
 			Assert.IsNotNull( fanfic.SeriesInfo.Series );
 			Assert.AreEqual( 8, fanfic.SeriesInfo.EntryNumber );
 			Assert.AreEqual( "3476975", fanfic.SeriesInfo.PreviousEntry.Handle );
 			Assert.AreEqual( "3626367", fanfic.SeriesInfo.NextEntry.Handle );
+
+			Assert.IsNull( fanfic.ChapterInfo );
 
 			Assert.AreEqual( Language.English, fanfic.Language );
 
@@ -182,6 +212,8 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( 2, fanfic.SeriesInfo.EntryNumber );
 			Assert.AreEqual( "4034680", fanfic.SeriesInfo.PreviousEntry.Handle );
 			Assert.AreEqual( "8702479", fanfic.SeriesInfo.NextEntry.Handle );
+
+			Assert.IsNull( fanfic.ChapterInfo );
 
 			Assert.AreEqual( Language.English, fanfic.Language );
 
