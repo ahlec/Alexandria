@@ -23,5 +23,20 @@ namespace Alexandria.AO3.Utils
 
 			return new AO3FanficRequestHandle( handle );
 		}
+
+		public static IAuthorRequestHandle MakeAuthorRequest( String username, String pseud = null )
+		{
+			if ( String.IsNullOrEmpty( username ) )
+			{
+				throw new ArgumentNullException( nameof( username ) );
+			}
+
+			if ( String.IsNullOrWhiteSpace( pseud ) )
+			{
+				pseud = null;
+			}
+
+			return new AO3AuthorRequestHandle( username, pseud );
+		}
 	}
 }

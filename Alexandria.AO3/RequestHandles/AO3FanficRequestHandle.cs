@@ -11,5 +11,10 @@ namespace Alexandria.AO3.RequestHandles
 		}
 
 		public String Handle { get; }
+
+		public override string ToString()
+		{
+			return Handle;
+		}
 	}
 }

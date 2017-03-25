@@ -38,5 +38,19 @@ namespace Alexandria.AO3.Tests
 			Assert.IsNotNull( requestHandle );
 			Assert.AreEqual( UnitTestConstants.FicHandle_PrinceAmongWolves, requestHandle.Handle );
 		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentNullException ) )]
+		public void AO3RequestUtils_MakeAuthorRequestThrowsOnNull()
+		{
+			AO3RequestUtils.MakeAuthorRequest( null );
+		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentNullException ) )]
+		public void AO3RequestUtils_MakeAuthorRequestThrowsOnEmpty()
+		{
+			AO3RequestUtils.MakeAuthorRequest( String.Empty );
+		}
 	}
 }

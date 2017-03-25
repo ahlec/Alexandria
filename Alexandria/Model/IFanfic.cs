@@ -41,5 +41,7 @@ namespace Alexandria.Model
 		String AuthorsNote { get; }
 
 		String Footnote { get; }
+
+		String Text { get; }
 	}
 }

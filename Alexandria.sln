@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alexandria.AO3.Tests", "Alexandria.AO3.Tests\Alexandria.AO3.Tests.csproj", "{D393DC34-97D6-42A4-861D-CE7AB39753EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alexandria.Base.Tests", "Alexandria.Base.Tests\Alexandria.Base.Tests.csproj", "{B5001C46-9952-44E2-9942-D755079DA1F5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{D393DC34-97D6-42A4-861D-CE7AB39753EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D393DC34-97D6-42A4-861D-CE7AB39753EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D393DC34-97D6-42A4-861D-CE7AB39753EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5001C46-9952-44E2-9942-D755079DA1F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5001C46-9952-44E2-9942-D755079DA1F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5001C46-9952-44E2-9942-D755079DA1F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5001C46-9952-44E2-9942-D755079DA1F5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -39,5 +45,6 @@ Global
 		{25A32DE3-CE8F-4F48-A111-BEDB2A2594D3} = {574637F0-D514-46B2-A844-3358320ADCBB}
 		{FC380674-2A3D-491A-B65C-C572E04252D4} = {574637F0-D514-46B2-A844-3358320ADCBB}
 		{D393DC34-97D6-42A4-861D-CE7AB39753EE} = {B2A2BD62-B981-4CFD-BCAC-4D45C09156E8}
+		{B5001C46-9952-44E2-9942-D755079DA1F5} = {B2A2BD62-B981-4CFD-BCAC-4D45C09156E8}
 	EndGlobalSection
 EndGlobal

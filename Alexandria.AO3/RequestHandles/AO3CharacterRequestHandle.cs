@@ -11,5 +11,10 @@ namespace Alexandria.AO3.RequestHandles
 		}
 
 		public String FullName { get; }
+
+		public override string ToString()
+		{
+			return FullName;
+		}
 	}
 }

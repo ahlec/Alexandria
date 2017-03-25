@@ -117,12 +117,13 @@ namespace Alexandria.AO3.Utils
 
 		public static String ReadableInnerText( this HtmlNode node )
 		{
-			// Strip out all of the HTML tags, EXCEPT for <br> and <br />, which should be transformed into newline characters
+			// Strip out all of the HTML tags, EXCEPT for <br> and <br /> and <p>, which should be transformed into newline characters
 			String innerHtml = node.InnerHtml;
 			StringBuilder builder = new StringBuilder( innerHtml.Length );
 			Boolean currentlyInsideTag = false;
 			Int32 currentTagIndex = 0;
 			Boolean wasLinebreakTag = false;
+			Char firstCharacterInTag = '\0';
 			foreach ( Char character in innerHtml )
 			{
 				if ( character == '<' )
@@ -153,12 +154,23 @@ namespace Alexandria.AO3.Utils
 					{
 						case 0:
 							{
-								wasLinebreakTag = ( character == 'b' || character == 'B' );
+								wasLinebreakTag = ( character == 'b' || character == 'B' || character == 'p' || character == 'P' );
+								firstCharacterInTag = character;
 								break;
 							}
 						case 1:
 							{
-								wasLinebreakTag = wasLinebreakTag && ( character == 'r' || character == 'R' );
+								if ( wasLinebreakTag )
+								{
+									if ( firstCharacterInTag == 'b' || firstCharacterInTag == 'B' )
+									{
+										wasLinebreakTag = ( character == 'r' || character == 'R' );
+									}
+									else
+									{
+										wasLinebreakTag = Char.IsWhiteSpace( character );
+									}
+								}
 								break;
 							}
 						default:

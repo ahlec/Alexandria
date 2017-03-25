@@ -24,7 +24,8 @@ namespace Alexandria.AO3
 			AO3FanficRequestHandle fanficRequest = request as AO3FanficRequestHandle;
 			if ( fanficRequest != null )
 			{
-				return (T) GetFanfic( fanficRequest.Handle );
+				String endpoint = $"http://www.archiveofourown.org/works/{fanficRequest.Handle}?view_adult=true";
+				return (T) GetFanficInternal( fanficRequest.Handle, endpoint, true );
 			}
 
 			AO3AuthorRequestHandle authorRequest = request as AO3AuthorRequestHandle;
@@ -39,18 +40,14 @@ namespace Alexandria.AO3
 
 		IAuthor GetAuthor( String username, String pseud )
 		{
-			throw new NotImplementedException();
-		}
-
-		IFanfic GetFanfic( String handle )
-		{
-			if ( String.IsNullOrEmpty( handle ) )
+			String endpoint = $"http://archiveofourown.org/users/{username}/profile";
+			WebPageParseResult result = GetWebPage( username, endpoint, false, out Uri responseUrl, out HtmlDocument document );
+			if ( result != WebPageParseResult.Success )
 			{
-				throw new ArgumentNullException( nameof( handle ) );
+				throw new ApplicationException( result.ToString() );
 			}
 
-			String endpoint = $"http://www.archiveofourown.org/works/{handle}?view_adult=true";
-			return GetFanficInternal( handle, endpoint, true );
+			return AO3Author.Parse( document );
 		}
 
 		IFanfic GetFanficInternal( String handle, String endpoint, Boolean isRetryingOnResponseUrl )

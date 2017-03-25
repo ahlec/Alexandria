@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\AO3Author.cs" />
     <Compile Include="Model\AO3ChapterInfo.cs" />
     <Compile Include="RequestHandles\AO3AuthorRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3CharacterRequestHandle.cs" />

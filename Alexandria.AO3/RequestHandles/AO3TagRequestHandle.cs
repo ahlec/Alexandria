@@ -13,5 +13,10 @@ namespace Alexandria.AO3.RequestHandles
 		public String Text { get; }
 
 		public String ShipTag => Text;
+
+		public override string ToString()
+		{
+			return Text;
+		}
 	}
 }

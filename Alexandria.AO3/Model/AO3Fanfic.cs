@@ -55,6 +55,8 @@ namespace Alexandria.AO3.Model
 
 		public String Footnote { get; private set; }
 
+		public String Text { get; private set; }
+
 		#endregion // IFanfic
 
 		public static AO3Fanfic Parse( HtmlDocument document )
@@ -154,7 +156,11 @@ namespace Alexandria.AO3.Model
 
 			HtmlNode prefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='preface group']" );
 			parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();
-			parsed.Author = AO3AuthorRequestHandle.Parse( prefaceGroup.SelectSingleNode( "//a[@rel='author']" ) );
+			HtmlNode authorA = prefaceGroup.SelectSingleNode( "//a[@rel='author']" );
+			if ( authorA != null )
+			{
+				parsed.Author = AO3AuthorRequestHandle.Parse( authorA );
+			}
 
 			HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( "//div[@class='summary module']/blockquote" );
 			if ( summaryBlockquote != null )
@@ -173,6 +179,14 @@ namespace Alexandria.AO3.Model
 			{
 				parsed.Footnote = workEndnotesBlockquote.ReadableInnerText().Trim();
 			}
+
+			HtmlNode userstuffModuleDiv = document.DocumentNode.SelectSingleNode( "//div[@class='userstuff module']" );
+			if ( userstuffModuleDiv == null )
+			{
+				userstuffModuleDiv = document.DocumentNode.SelectSingleNode( "//div[@id='chapters']/div[contains( @class, 'userstuff' )]" );
+			}
+			userstuffModuleDiv.Element( "h3" )?.Remove();
+			parsed.Text = userstuffModuleDiv.ReadableInnerText().Trim();
 
 			return parsed;
 		}
