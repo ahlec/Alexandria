@@ -47,7 +47,7 @@ namespace Alexandria.AO3
 				throw new ApplicationException( result.ToString() );
 			}
 
-			return AO3Author.Parse( document );
+			return AO3Author.Parse( this, document );
 		}
 
 		IFanfic GetFanficInternal( String handle, String endpoint, Boolean isRetryingOnResponseUrl )

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
@@ -11,7 +8,7 @@ namespace Alexandria.Model
 	{
 		String Name { get; }
 
-		//IReadOnlyList<String> Nicknames { get; }
+		IReadOnlyList<String> Nicknames { get; }
 
 		DateTime DateJoined { get; }
 
@@ -21,6 +18,8 @@ namespace Alexandria.Model
 
 		String Biography { get; }
 
-		//IReadOnlyList<IFanficRequestHandle> Works { get; }
+		Int32 NumberFanfics { get; }
+
+		IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics();
 	}
 }

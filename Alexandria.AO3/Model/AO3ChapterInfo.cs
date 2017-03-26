@@ -47,7 +47,7 @@ namespace Alexandria.AO3.Model
 			}
 			parsed.Chapters = chapters;
 
-			HtmlNode chaptersDd = workMetaGroup.SelectSingleNode( "//dd[@class='chapters']" );
+			HtmlNode chaptersDd = workMetaGroup.SelectSingleNode( ".//dd[@class='chapters']" );
 			String[] chaptersInfo = chaptersDd.InnerText.Trim().Split( '/' );
 			if ( chaptersInfo[1] == "?" )
 			{

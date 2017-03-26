@@ -156,19 +156,19 @@ namespace Alexandria.AO3.Model
 
 			HtmlNode prefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='preface group']" );
 			parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();
-			HtmlNode authorA = prefaceGroup.SelectSingleNode( "//a[@rel='author']" );
+			HtmlNode authorA = prefaceGroup.SelectSingleNode( ".//a[@rel='author']" );
 			if ( authorA != null )
 			{
 				parsed.Author = AO3AuthorRequestHandle.Parse( authorA );
 			}
 
-			HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( "//div[@class='summary module']/blockquote" );
+			HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='summary module']/blockquote" );
 			if ( summaryBlockquote != null )
 			{
 				parsed.Summary = summaryBlockquote.ReadableInnerText().Trim();
 			}
 
-			HtmlNode notesBlockquote = prefaceGroup.SelectSingleNode( "//div[@class='notes module']/blockquote" );
+			HtmlNode notesBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='notes module']/blockquote" );
 			if ( notesBlockquote != null )
 			{
 				parsed.AuthorsNote = notesBlockquote.ReadableInnerText().Trim();
