@@ -11,7 +11,7 @@ namespace Alexandria.Model
 	{
 		String Name { get; }
 
-		IReadOnlyList<String> Nicknames { get; }
+		//IReadOnlyList<String> Nicknames { get; }
 
 		DateTime DateJoined { get; }
 
@@ -21,6 +21,6 @@ namespace Alexandria.Model
 
 		String Biography { get; }
 
-		IReadOnlyList<IFanficRequestHandle> Works { get; }
+		//IReadOnlyList<IFanficRequestHandle> Works { get; }
 	}
 }
