@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {
 	public interface ITag : IRequestable
 	{
+		String Text { get; }
+
+		IReadOnlyList<ITagRequestHandle> ParentTags { get; }
+
+		IReadOnlyList<ITagRequestHandle> SynonymousTags { get; }
 	}
 }

@@ -33,6 +33,12 @@ namespace Alexandria.AO3
 			{
 				return (T) GetAuthor( authorRequest.Username, authorRequest.Pseud );
 			}
+
+			AO3TagRequestHandle tagRequest = request as AO3TagRequestHandle;
+			if ( tagRequest != null )
+			{
+				return (T)(Object) GetTag( tagRequest.Text );
+			}
 #pragma warning restore IDE0019 // Use pattern matching
 
 			throw new NotSupportedException( $"Unable to support {nameof( IRequestHandle<T> )} with an input `{nameof( request )}` of type {request.GetType().Name}" );
@@ -69,6 +75,19 @@ namespace Alexandria.AO3
 			}
 
 			throw new ApplicationException( "Could not get past the adult content wall!" );
+		}
+
+		AO3Tag GetTag( String tag )
+		{
+			tag = tag.Replace( "/", "*s*" );
+			String endpoint = $"http://archiveofourown.org/tags/{tag}";
+			WebPageParseResult result = GetWebPage( tag, endpoint, false, out Uri responseUrl, out HtmlDocument document );
+			if ( result != WebPageParseResult.Success )
+			{
+				throw new ApplicationException( result.ToString() );
+			}
+
+			return AO3Tag.Parse( document );
 		}
 	}
 }

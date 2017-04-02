@@ -3,7 +3,7 @@ using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	internal sealed class AO3TagRequestHandle : ITagRequestHandle, IShipInfoRequestHandle
+	internal sealed class AO3TagRequestHandle : ITagRequestHandle
 	{
 		public AO3TagRequestHandle( String tagName )
 		{
@@ -11,8 +11,6 @@ namespace Alexandria.AO3.RequestHandles
 		}
 
 		public String Text { get; }
-
-		public String ShipTag => Text;
 
 		public override string ToString()
 		{

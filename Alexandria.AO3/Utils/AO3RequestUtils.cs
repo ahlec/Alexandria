@@ -38,5 +38,15 @@ namespace Alexandria.AO3.Utils
 
 			return new AO3AuthorRequestHandle( username, pseud );
 		}
+
+		public static ITagRequestHandle MakeTagRequest( String tag )
+		{
+			if ( String.IsNullOrEmpty( tag ) )
+			{
+				throw new ArgumentNullException( nameof( tag ) );
+			}
+
+			return new AO3TagRequestHandle( tag );
+		}
 	}
 }

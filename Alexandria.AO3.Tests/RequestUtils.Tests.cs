@@ -52,5 +52,28 @@ namespace Alexandria.AO3.Tests
 		{
 			AO3RequestUtils.MakeAuthorRequest( String.Empty );
 		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentNullException ) )]
+		public void AO3RequestUtils_MakeTagRequestThrowsOnNull()
+		{
+			AO3RequestUtils.MakeTagRequest( null );
+		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentNullException ) )]
+		public void AO3RequestUtils_MakeTagRequestThrowsOnEmpty()
+		{
+			AO3RequestUtils.MakeTagRequest( String.Empty );
+		}
+
+		[TestMethod]
+		public void AO3RequestUtils_MakeTagRequestValid()
+		{
+			ITagRequestHandle requestHandle = AO3RequestUtils.MakeTagRequest( UnitTestConstants.Tag_StilesStilinski );
+
+			Assert.IsNotNull( requestHandle );
+			Assert.AreEqual( UnitTestConstants.Tag_StilesStilinski, requestHandle.Text );
+		}
 	}
 }

@@ -26,7 +26,7 @@ namespace Alexandria.AO3.Model
 			AO3Ship parsed = new AO3Ship
 			{
 				Name = shipTag,
-				Info = new AO3TagRequestHandle( shipTag )
+				Info = new AO3ShipInfoRequestHandle( shipTag )
 			};
 
 			parsed.Characters = ParseUtils.ParseShipCharacters( shipTag, out ShipType type );

@@ -6,6 +6,7 @@ namespace Alexandria.AO3.Tests
 	{
 		public const String FullFanficParsingTestsCategory = "AO3 - Full Fanfic Parsing";
 		public const String FullAuthorParsingTestsCategory = "AO3 - Full Author Parsing";
+		public const String FullTagParsingTestsCategory = "AO3 - Full Tag Parsing";
 		public const String FanficParsingTestsCategory = "AO3 - Fanfic Parsing";
 		public const String UtilTestsCategory = "AO3 - Utils";
 
@@ -15,5 +16,7 @@ namespace Alexandria.AO3.Tests
 		public const String FicHandle_Homesick = "10317524";
 
 		public const String AuthorUsername_Crossroadswrite = "crossroadswrite";
+
+		public const String Tag_StilesStilinski = "Stiles Stilinski";
 	}
 }
