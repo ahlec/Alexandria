@@ -47,7 +47,7 @@ namespace Alexandria.AO3
 		IAuthor GetAuthor( String username, String pseud )
 		{
 			String endpoint = $"http://archiveofourown.org/users/{username}/profile";
-			WebPageParseResult result = GetWebPage( username, endpoint, false, out Uri responseUrl, out HtmlDocument document );
+			WebPageParseResult result = GetWebPage( CacheableObjects.AuthorHtml, username, endpoint, false, out Uri responseUrl, out HtmlDocument document );
 			if ( result != WebPageParseResult.Success )
 			{
 				throw new ApplicationException( result.ToString() );
@@ -58,7 +58,7 @@ namespace Alexandria.AO3
 
 		IFanfic GetFanficInternal( String handle, String endpoint, Boolean isRetryingOnResponseUrl )
 		{
-			WebPageParseResult result = GetWebPage( handle, endpoint, !isRetryingOnResponseUrl, out Uri responseUrl, out HtmlDocument document );
+			WebPageParseResult result = GetWebPage( CacheableObjects.FanficHtml, handle, endpoint, !isRetryingOnResponseUrl, out Uri responseUrl, out HtmlDocument document );
 			if ( result != WebPageParseResult.Success )
 			{
 				throw new ApplicationException( result.ToString() );
@@ -81,7 +81,7 @@ namespace Alexandria.AO3
 		{
 			tag = tag.Replace( "/", "*s*" );
 			String endpoint = $"http://archiveofourown.org/tags/{tag}";
-			WebPageParseResult result = GetWebPage( tag, endpoint, false, out Uri responseUrl, out HtmlDocument document );
+			WebPageParseResult result = GetWebPage( CacheableObjects.TagHtml, tag, endpoint, false, out Uri responseUrl, out HtmlDocument document );
 			if ( result != WebPageParseResult.Success )
 			{
 				throw new ApplicationException( result.ToString() );

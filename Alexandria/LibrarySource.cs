@@ -7,6 +7,7 @@ using System.Text;
 using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
+using Alexandria.Utils;
 
 namespace Alexandria
 {
@@ -24,16 +25,21 @@ namespace Alexandria
 
 		protected LibrarySource()
 		{
-			IsCachingWebResults = true;
+			_objectsBeingCached = CacheableObjects.All;
 			CacheDirectory = Path.Combine( "cache", GetType().Name );
 			CacheLifetime = TimeSpan.FromDays( 1.0D );
 		}
 
 		public abstract T MakeRequest<T>( IRequestHandle<T> request ) where T : IRequestable;
 
-		protected WebPageParseResult GetWebPage( String cacheHandle, String endpoint, Boolean ignoreCache, out Uri responseUrl, out HtmlDocument document )
+		protected WebPageParseResult GetWebPage( CacheableObjects objectType, String cacheHandle, String endpoint, Boolean ignoreCache, out Uri responseUrl, out HtmlDocument document )
 		{
-			if ( IsCachingWebResults && !ignoreCache )
+			if ( !CacheableObjectsUtils.IsHtmlObject( objectType ) )
+			{
+				throw new ArgumentException( "Only HTML objects can be requested by this function", nameof( objectType ) );
+			}
+
+			if ( IsCachingObjectType( objectType ) && !ignoreCache )
 			{
 				String cacheFilename = Path.Combine( CacheDirectory, cacheHandle + ".htm" );
 				if ( File.Exists( cacheFilename ) )
@@ -95,7 +101,7 @@ namespace Alexandria
 				return WebPageParseResult.UnknownDeserializationError;
 			}
 
-			if ( IsCachingWebResults )
+			if ( IsCachingObjectType( objectType ) )
 			{
 				WriteToCache( cacheHandle, text );
 			}
@@ -105,7 +111,15 @@ namespace Alexandria
 
 		#region Caching
 
-		public Boolean IsCachingWebResults { get; private set; }
+		public Boolean IsCachingObjectType( CacheableObjects objectType )
+		{
+			if ( objectType.HasMultipleFlagsSet() )
+			{
+				throw new ArgumentException( $"The provided {nameof( CacheableObjects )} must only have a single flag set!", nameof( objectType ) );
+			}
+
+			return _objectsBeingCached.HasFlag( objectType );
+		}
 
 		public String CacheDirectory { get; private set; }
 
@@ -121,5 +135,7 @@ namespace Alexandria
 		#endregion Caching
 
 		public const String OptionsHtmlTag = "my_option";
+
+		CacheableObjects _objectsBeingCached = CacheableObjects.None;
 	}
 }

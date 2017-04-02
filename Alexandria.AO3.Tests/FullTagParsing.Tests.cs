@@ -9,7 +9,7 @@ using Alexandria.AO3.Utils;
 namespace Alexandria.AO3.Tests
 {
 	[TestClass]
-	[TestCategory( UnitTestConstants.FullAuthorParsingTestsCategory )]
+	[TestCategory( UnitTestConstants.FullTagParsingTestsCategory )]
 	public class FullTagParsing
 	{
 		[TestMethod]
@@ -19,6 +19,7 @@ namespace Alexandria.AO3.Tests
 			ITag tag = _source.MakeRequest( request );
 
 			Assert.IsNotNull( tag );
+			Assert.AreEqual( TagType.Character, tag.Type );
 			Assert.AreEqual( UnitTestConstants.Tag_StilesStilinski, tag.Text );
 
 			Assert.IsNotNull( tag.ParentTags );

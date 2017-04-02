@@ -48,6 +48,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheableObjectsUtils.Tests.cs" />
+    <Compile Include="FlagUtils.Tests.cs" />
     <Compile Include="LanguageUtils.Tests.cs" />
     <Compile Include="UnitTestConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

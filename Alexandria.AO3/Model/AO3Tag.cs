@@ -16,11 +16,18 @@ namespace Alexandria.AO3.Model
 
 		#region ITag
 
+		public TagType Type { get; private set; }
+
 		public String Text { get; private set; }
 
 		public IReadOnlyList<ITagRequestHandle> ParentTags { get; private set; }
 
 		public IReadOnlyList<ITagRequestHandle> SynonymousTags { get; private set; }
+
+		public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
+		{
+			throw new NotImplementedException();
+		}
 
 		#endregion
 
@@ -29,6 +36,33 @@ namespace Alexandria.AO3.Model
 			AO3Tag parsed = new AO3Tag();
 
 			HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@class='tags-show region']" );
+
+			String mainContentPText = mainDiv.SelectSingleNode( "div[@class='tag home profile']/p" ).InnerText;
+			String mainContentPFirstSentence = mainContentPText.Substring( 0, mainContentPText.IndexOf( '.' ) );
+			Int32 mainContentSentenceStartLength = "This tag belongs to the ".Length;
+			String textCategory = mainContentPFirstSentence.Substring( mainContentSentenceStartLength, mainContentPText.LastIndexOf( " Category" ) - mainContentSentenceStartLength );
+			switch ( textCategory )
+			{
+				case "Character":
+					{
+						parsed.Type = TagType.Character;
+						break;
+					}
+				case "Relationship":
+					{
+						parsed.Type = TagType.Relationship;
+						break;
+					}
+				case "Additional Tags":
+					{
+						parsed.Type = TagType.Miscellaneous;
+						break;
+					}
+				default:
+					{
+						throw new NotImplementedException();
+					}
+			}
 
 			parsed.Text = mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ).ReadableInnerText().Trim();
 

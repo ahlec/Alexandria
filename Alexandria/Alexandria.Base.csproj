@@ -43,10 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheableObjects.cs" />
     <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="IQueryResultsPage.cs" />
     <Compile Include="IRequestable.cs" />
     <Compile Include="Model\IChapterInfo.cs" />
+    <Compile Include="Model\TagType.cs" />
     <Compile Include="RequestHandles\IAuthorRequestHandle.cs" />
     <Compile Include="RequestHandles\ICharacterRequestHandle.cs" />
     <Compile Include="RequestHandles\IFanficRequestHandle.cs" />
@@ -68,6 +70,8 @@
     <Compile Include="RequestHandles\ISeriesRequestHandle.cs" />
     <Compile Include="RequestHandles\IShipInfoRequestHandle.cs" />
     <Compile Include="RequestHandles\ITagRequestHandle.cs" />
+    <Compile Include="Utils\CacheableObjectsUtils.cs" />
+    <Compile Include="Utils\FlagUtils.cs" />
     <Compile Include="Utils\LanguageUtils.cs" />
     <Compile Include="Utils\NativeLanguageAttribute.cs" />
     <Compile Include="Utils\RenderLanguageNameAttribute.cs" />
