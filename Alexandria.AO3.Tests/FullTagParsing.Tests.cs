@@ -51,6 +51,63 @@ namespace Alexandria.AO3.Tests
 			{
 				Assert.IsTrue( synonymousTags.Contains( synonym.ToLowerInvariant() ) );
 			}
+
+			IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = tag.QueryFanfics();
+			Assert.IsNotNull( fanfics );
+			Assert.IsTrue( fanfics.HasMoreResults );
+			Assert.AreEqual( 20, fanfics.Results.Count );
+			fanfics = fanfics.RetrieveNextPage();
+			Assert.IsNotNull( fanfics );
+			Assert.IsTrue( fanfics.HasMoreResults );
+			Assert.AreEqual( 20, fanfics.Results.Count );
+		}
+
+		[TestMethod]
+		public void AO3Tag_POVJackFrost()
+		{
+			ITagRequestHandle request = AO3RequestUtils.MakeTagRequest( UnitTestConstants.Tag_POVJackFrost );
+			ITag tag = _source.MakeRequest( request );
+
+			Assert.IsNotNull( tag );
+			Assert.AreEqual( TagType.Miscellaneous, tag.Type );
+			Assert.AreEqual( UnitTestConstants.Tag_POVJackFrost, tag.Text );
+
+			Assert.IsNotNull( tag.ParentTags );
+			Assert.AreEqual( 1, tag.ParentTags.Count );
+			Assert.IsNotNull( tag.ParentTags[0] );
+			Assert.AreEqual( "Guardians of Childhood & Related Fandoms", tag.ParentTags[0].Text );
+
+			Assert.IsNotNull( tag.SynonymousTags );
+			Assert.AreEqual( 3, tag.SynonymousTags.Count );
+			Assert.IsNotNull( tag.SynonymousTags[0] );
+			Assert.AreEqual( "jack's pov (kinda)", tag.SynonymousTags[0].Text );
+			Assert.IsNotNull( tag.SynonymousTags[1] );
+			Assert.AreEqual( "Narrated by Jack", tag.SynonymousTags[1].Text );
+			Assert.IsNotNull( tag.SynonymousTags[2] );
+			Assert.AreEqual( "POV Jack Frost", tag.SynonymousTags[2].Text );
+			
+			IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = tag.QueryFanfics();
+			Assert.IsNotNull( fanfics );
+			Assert.IsFalse( fanfics.HasMoreResults );
+			String[] fanficHandles =
+			{
+				"7367401",
+				"1312102",
+				"8015113",
+				"7860361",
+				"5663545",
+				"5480645",
+				"4084660",
+				"2662784",
+				"1068792",
+				"1068772"
+			};
+			Assert.AreEqual( fanficHandles.Length, fanfics.Results.Count );
+			for ( Int32 index = 0; index < fanfics.Results.Count; ++index )
+			{
+				Assert.IsNotNull( fanfics.Results[index] );
+				Assert.AreEqual( fanficHandles[index], fanfics.Results[index].Handle );
+			}
 		}
 
 		readonly LibrarySource _source = new AO3Source();

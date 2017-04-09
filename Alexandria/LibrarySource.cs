@@ -13,16 +13,6 @@ namespace Alexandria
 {
 	public abstract class LibrarySource
 	{
-		protected enum WebPageParseResult
-		{
-			Success = 0,
-
-			FileNotFound = 1,
-			UnknownWebError = 99,
-
-			UnknownDeserializationError = 199
-		}
-
 		protected LibrarySource()
 		{
 			_objectsBeingCached = CacheableObjects.All;
@@ -32,8 +22,10 @@ namespace Alexandria
 
 		public abstract T MakeRequest<T>( IRequestHandle<T> request ) where T : IRequestable;
 
-		protected WebPageParseResult GetWebPage( CacheableObjects objectType, String cacheHandle, String endpoint, Boolean ignoreCache, out Uri responseUrl, out HtmlDocument document )
+		protected HtmlDocument GetWebPage( CacheableObjects objectType, String cacheHandle, String endpoint, Boolean ignoreCache, out Uri responseUrl )
 		{
+			HtmlDocument document;
+
 			if ( !CacheableObjectsUtils.IsHtmlObject( objectType ) )
 			{
 				throw new ArgumentException( "Only HTML objects can be requested by this function", nameof( objectType ) );
@@ -41,13 +33,13 @@ namespace Alexandria
 
 			if ( IsCachingObjectType( objectType ) && !ignoreCache )
 			{
-				String cacheFilename = Path.Combine( CacheDirectory, cacheHandle + ".htm" );
+				String cacheFilename = GetCacheFileName( objectType, cacheHandle );
 				if ( File.Exists( cacheFilename ) )
 				{
 					document = new HtmlDocument();
 					document.Load( cacheFilename, Encoding.UTF8 );
 					responseUrl = null;
-					return WebPageParseResult.Success;
+					return document;
 				}
 			}
 
@@ -56,22 +48,9 @@ namespace Alexandria
 			HttpWebResponse response = (HttpWebResponse) request.GetResponse();
 			responseUrl = response.ResponseUri;
 			
-			switch ( response.StatusCode )
+			if ( response.StatusCode != HttpStatusCode.OK )
 			{
-				case HttpStatusCode.NotFound:
-					{
-						document = null;
-						return WebPageParseResult.FileNotFound;
-					}
-				case HttpStatusCode.OK:
-					{
-						break;
-					}
-				default:
-					{
-						document = null;
-						return WebPageParseResult.UnknownWebError;
-					}
+				throw new ApplicationException( $"The page {endpoint} resulted in a {response.StatusCode} error code." );
 			}
 
 			String text;
@@ -98,15 +77,21 @@ namespace Alexandria
 			}
 			if ( document.ParseErrors.Any() )
 			{
-				return WebPageParseResult.UnknownDeserializationError;
+				StringBuilder exceptionMessage = new StringBuilder( $"The page {endpoint} resulted in {document.ParseErrors.Count()} error(s)" );
+				exceptionMessage.AppendLine();
+				foreach ( HtmlParseError error in document.ParseErrors )
+				{
+					exceptionMessage.AppendLine( $"- Line {error.Line} Col {error.LinePosition}: {error.Reason} [{error.Code}]" );
+				}
+				throw new ApplicationException( exceptionMessage.ToString() );
 			}
 
 			if ( IsCachingObjectType( objectType ) )
 			{
-				WriteToCache( cacheHandle, text );
+				WriteToCache( objectType, cacheHandle, text );
 			}
 
-			return WebPageParseResult.Success;
+			return document;
 		}
 
 		#region Caching
@@ -125,10 +110,16 @@ namespace Alexandria
 
 		public TimeSpan CacheLifetime { get; private set; }
 
-		void WriteToCache( String cacheHandle, String text )
+		String GetCacheFileName( CacheableObjects objectType, String cacheHandle )
 		{
-			Directory.CreateDirectory( CacheDirectory );
-			String cacheFilename = Path.Combine( CacheDirectory, cacheHandle + ".htm" );
+			return Path.Combine( CacheDirectory, objectType.ToString(), cacheHandle + ".htm" );
+		}
+
+		void WriteToCache( CacheableObjects objectType, String cacheHandle, String text )
+		{
+			String cacheFilename = GetCacheFileName( objectType, cacheHandle );
+			String directoryPath = Path.GetDirectoryName( cacheFilename );
+			Directory.CreateDirectory( directoryPath );
 			File.WriteAllText( cacheFilename, text );
 		}
 

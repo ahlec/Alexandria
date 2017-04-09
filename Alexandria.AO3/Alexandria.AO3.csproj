@@ -50,6 +50,7 @@
     <Compile Include="Model\AO3Author.cs" />
     <Compile Include="Model\AO3ChapterInfo.cs" />
     <Compile Include="Model\AO3Tag.cs" />
+    <Compile Include="Model\AO3Tag.QueryResults.cs" />
     <Compile Include="RequestHandles\AO3AuthorRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3CharacterRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3FanficRequestHandle.cs" />

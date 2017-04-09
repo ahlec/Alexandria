@@ -18,5 +18,6 @@ namespace Alexandria.AO3.Tests
 		public const String AuthorUsername_Crossroadswrite = "crossroadswrite";
 
 		public const String Tag_StilesStilinski = "Stiles Stilinski";
+		public const String Tag_POVJackFrost = "POV Jack Frost (Guardians of Childhood)";
 	}
 }

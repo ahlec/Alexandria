@@ -11,6 +11,7 @@ namespace Alexandria.Utils
 				case CacheableObjects.FanficHtml:
 				case CacheableObjects.AuthorHtml:
 				case CacheableObjects.TagHtml:
+				case CacheableObjects.TagFanficsHtml:
 					{
 						return true;
 					}

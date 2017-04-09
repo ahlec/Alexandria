@@ -36,6 +36,7 @@ namespace Alexandria.Base.Tests
 				new ObjectInfo( CacheableObjects.AuthorJson, false, true ),
 				new ObjectInfo( CacheableObjects.TagHtml, true, false ),
 				new ObjectInfo( CacheableObjects.TagJson, false, true ),
+				new ObjectInfo( CacheableObjects.TagFanficsHtml, true, false ),
 				new ObjectInfo( CacheableObjects.All, false, false )
 			};
 		}

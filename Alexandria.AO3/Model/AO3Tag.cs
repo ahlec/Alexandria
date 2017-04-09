@@ -8,10 +8,11 @@ using Alexandria.AO3.Utils;
 
 namespace Alexandria.AO3.Model
 {
-	internal sealed class AO3Tag : ITag
+	internal sealed partial class AO3Tag : ITag
 	{
-		AO3Tag()
+		AO3Tag( AO3Source source )
 		{
+			_source = source;
 		}
 
 		#region ITag
@@ -26,14 +27,15 @@ namespace Alexandria.AO3.Model
 
 		public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
 		{
-			throw new NotImplementedException();
+			String endpointTag = Text.Replace( "/", "*s*" );
+			return QueryResults.Retrieve( _source, endpointTag, 1 );
 		}
 
 		#endregion
 
-		internal static AO3Tag Parse( HtmlDocument document )
+		internal static AO3Tag Parse( HtmlDocument document, AO3Source source )
 		{
-			AO3Tag parsed = new AO3Tag();
+			AO3Tag parsed = new AO3Tag( source );
 
 			HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@class='tags-show region']" );
 
@@ -90,5 +92,7 @@ namespace Alexandria.AO3.Model
 
 			return parsed;
 		}
+
+		readonly AO3Source _source;
 	}
 }

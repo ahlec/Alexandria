@@ -44,25 +44,21 @@ namespace Alexandria.AO3
 			throw new NotSupportedException( $"Unable to support {nameof( IRequestHandle<T> )} with an input `{nameof( request )}` of type {request.GetType().Name}" );
 		}
 
+		internal HtmlDocument RetrieveEndpoint( CacheableObjects objectType, String cacheHandle, String endpoint )
+		{
+			return GetWebPage( objectType, cacheHandle, endpoint, false, out Uri responseUrl );
+		}
+
 		IAuthor GetAuthor( String username, String pseud )
 		{
 			String endpoint = $"http://archiveofourown.org/users/{username}/profile";
-			WebPageParseResult result = GetWebPage( CacheableObjects.AuthorHtml, username, endpoint, false, out Uri responseUrl, out HtmlDocument document );
-			if ( result != WebPageParseResult.Success )
-			{
-				throw new ApplicationException( result.ToString() );
-			}
-
+			HtmlDocument document = GetWebPage( CacheableObjects.AuthorHtml, username, endpoint, false, out Uri responseUrl );
 			return AO3Author.Parse( this, document );
 		}
 
 		IFanfic GetFanficInternal( String handle, String endpoint, Boolean isRetryingOnResponseUrl )
 		{
-			WebPageParseResult result = GetWebPage( CacheableObjects.FanficHtml, handle, endpoint, !isRetryingOnResponseUrl, out Uri responseUrl, out HtmlDocument document );
-			if ( result != WebPageParseResult.Success )
-			{
-				throw new ApplicationException( result.ToString() );
-			}
+			HtmlDocument document = GetWebPage( CacheableObjects.FanficHtml, handle, endpoint, !isRetryingOnResponseUrl, out Uri responseUrl );
 
 			if ( document.DocumentNode.SelectSingleNode( "//div[@id='workskin']" ) != null )
 			{
@@ -81,13 +77,8 @@ namespace Alexandria.AO3
 		{
 			tag = tag.Replace( "/", "*s*" );
 			String endpoint = $"http://archiveofourown.org/tags/{tag}";
-			WebPageParseResult result = GetWebPage( CacheableObjects.TagHtml, tag, endpoint, false, out Uri responseUrl, out HtmlDocument document );
-			if ( result != WebPageParseResult.Success )
-			{
-				throw new ApplicationException( result.ToString() );
-			}
-
-			return AO3Tag.Parse( document );
+			HtmlDocument document = GetWebPage( CacheableObjects.TagHtml, tag, endpoint, false, out Uri responseUrl );
+			return AO3Tag.Parse( document, this );
 		}
 	}
 }
