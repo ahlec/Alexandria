@@ -10,8 +10,10 @@ namespace Alexandria.Utils
 			{
 				case CacheableObjects.FanficHtml:
 				case CacheableObjects.AuthorHtml:
+				case CacheableObjects.AuthorFanficsHtml:
 				case CacheableObjects.TagHtml:
 				case CacheableObjects.TagFanficsHtml:
+				case CacheableObjects.SeriesHtml:
 					{
 						return true;
 					}
@@ -29,6 +31,7 @@ namespace Alexandria.Utils
 				case CacheableObjects.FanficJson:
 				case CacheableObjects.AuthorJson:
 				case CacheableObjects.TagJson:
+				case CacheableObjects.SeriesJson:
 					{
 						return true;
 					}

@@ -14,7 +14,7 @@ namespace Alexandria.Model
 
 		ContentWarnings ContentWarnings { get; }
 
-		IReadOnlyList<IShip> Ships { get; }
+		IReadOnlyList<IShipRequestHandle> Ships { get; }
 
 		IReadOnlyList<ICharacterRequestHandle> Characters { get; }
 

@@ -5,11 +5,11 @@ namespace Alexandria.AO3.RequestHandles
 {
 	internal sealed class AO3SeriesRequestHandle : ISeriesRequestHandle
 	{
-		public AO3SeriesRequestHandle( String title )
+		public AO3SeriesRequestHandle( String handle )
 		{
-			Title = title;
+			Handle = handle;
 		}
 
-		public String Title { get; }
+		public String Handle { get; }
 	}
 }

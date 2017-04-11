@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Alexandria.RequestHandles;
 using Alexandria.AO3.RequestHandles;
 
@@ -13,12 +14,9 @@ namespace Alexandria.AO3.Utils
 				throw new ArgumentNullException( nameof( handle ) );
 			}
 
-			foreach ( Char character in handle )
+			if ( handle.Any( character => !Char.IsDigit( character ) ) )
 			{
-				if ( !Char.IsDigit( character ) )
-				{
-					throw new ArgumentException( "Handles to fanfics on AO3 may only consist of numbers.", nameof( handle ) );
-				}
+				throw new ArgumentException( "Handles to fanfics on AO3 may only consist of numbers.", nameof( handle ) );
 			}
 
 			return new AO3FanficRequestHandle( handle );
@@ -47,6 +45,31 @@ namespace Alexandria.AO3.Utils
 			}
 
 			return new AO3TagRequestHandle( tag );
+		}
+
+		public static IShipRequestHandle MakeShipRequest( String tag )
+		{
+			if ( String.IsNullOrEmpty( tag ) )
+			{
+				throw new ArgumentNullException( nameof( tag ) );
+			}
+
+			return new AO3ShipRequestHandle( tag );
+		}
+
+		public static ISeriesRequestHandle MakeSeriesRequest( String handle )
+		{
+			if ( String.IsNullOrEmpty( handle ) )
+			{
+				throw new ArgumentNullException( nameof( handle ) );
+			}
+
+			if ( handle.Any( character => !Char.IsDigit( character ) ) )
+			{
+				throw new ArgumentException( "Handles for series on AO3 may only consist of numbers.", nameof( handle ) );
+			}
+
+			return new AO3SeriesRequestHandle( handle );
 		}
 	}
 }

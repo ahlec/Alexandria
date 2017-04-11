@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using HtmlAgilityPack;
-using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
 

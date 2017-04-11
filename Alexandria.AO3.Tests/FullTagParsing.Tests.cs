@@ -89,24 +89,11 @@ namespace Alexandria.AO3.Tests
 			IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = tag.QueryFanfics();
 			Assert.IsNotNull( fanfics );
 			Assert.IsFalse( fanfics.HasMoreResults );
-			String[] fanficHandles =
-			{
-				"7367401",
-				"1312102",
-				"8015113",
-				"7860361",
-				"5663545",
-				"5480645",
-				"4084660",
-				"2662784",
-				"1068792",
-				"1068772"
-			};
-			Assert.AreEqual( fanficHandles.Length, fanfics.Results.Count );
+			Assert.AreEqual( UnitTestConstants.Tag_POVJackFrostFanficHandles.Length, fanfics.Results.Count );
 			for ( Int32 index = 0; index < fanfics.Results.Count; ++index )
 			{
 				Assert.IsNotNull( fanfics.Results[index] );
-				Assert.AreEqual( fanficHandles[index], fanfics.Results[index].Handle );
+				Assert.AreEqual( UnitTestConstants.Tag_POVJackFrostFanficHandles[index], fanfics.Results[index].Handle );
 			}
 		}
 

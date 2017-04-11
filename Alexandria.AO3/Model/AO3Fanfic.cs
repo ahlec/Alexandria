@@ -25,7 +25,7 @@ namespace Alexandria.AO3.Model
 
 		public ContentWarnings ContentWarnings { get; private set; }
 
-		public IReadOnlyList<IShip> Ships { get; private set; }
+		public IReadOnlyList<IShipRequestHandle> Ships { get; private set; }
 
 		public IReadOnlyList<ICharacterRequestHandle> Characters { get; private set; }
 
@@ -68,13 +68,13 @@ namespace Alexandria.AO3.Model
 			parsed.ContentWarnings = ParseUtils.ParseContentWarningsFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='warning tags']/ul" ) );
 
 			HtmlNode relationshipsUl = workMetaGroup.SelectSingleNode( "dd[@class='relationship tags']/ul" );
-			List<IShip> ships = new List<IShip>();
+			List<IShipRequestHandle> ships = new List<IShipRequestHandle>();
 			if ( relationshipsUl != null )
 			{
 				foreach ( HtmlNode li in relationshipsUl.Elements( "li" ) )
 				{
 					String shipTag = li.Element( "a" ).ReadableInnerText().Trim();
-					ships.Add( AO3Ship.Parse( shipTag ) );
+					ships.Add( new AO3ShipRequestHandle( shipTag ) );
 				}
 			}
 			parsed.Ships = ships;

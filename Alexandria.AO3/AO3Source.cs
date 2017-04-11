@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -38,6 +34,12 @@ namespace Alexandria.AO3
 			if ( tagRequest != null )
 			{
 				return (T)(Object) GetTag( tagRequest.Text );
+			}
+
+			AO3SeriesRequestHandle seriesRequest = request as AO3SeriesRequestHandle;
+			if ( seriesRequest != null )
+			{
+				return (T) GetSeries( seriesRequest.Handle );
 			}
 #pragma warning restore IDE0019 // Use pattern matching
 
@@ -79,6 +81,13 @@ namespace Alexandria.AO3
 			String endpoint = $"http://archiveofourown.org/tags/{tag}";
 			HtmlDocument document = GetWebPage( CacheableObjects.TagHtml, tag, endpoint, false, out Uri responseUrl );
 			return AO3Tag.Parse( document, this );
+		}
+
+		ISeries GetSeries( String handle )
+		{
+			String endpoint = $"http://archiveofourown.org/series/{handle}";
+			HtmlDocument document = GetWebPage( CacheableObjects.SeriesHtml, handle, endpoint, false, out Uri responseUrl );
+			return AO3Series.Parse( document );
 		}
 	}
 }

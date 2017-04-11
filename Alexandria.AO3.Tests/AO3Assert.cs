@@ -15,8 +15,6 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( 2, ship.Characters.Count );
 			Assert.AreEqual( ( isDerekFirst ? "Derek Hale" : "Stiles Stilinski" ), ship.Characters[0].FullName );
 			Assert.AreEqual( ( isDerekFirst ? "Stiles Stilinski" : "Derek Hale" ), ship.Characters[1].FullName );
-			Assert.IsNotNull( ship.Info );
-			Assert.AreEqual( ship.Name, ship.Info.ShipTag ); // We already validated it
 		}
 	}
 }

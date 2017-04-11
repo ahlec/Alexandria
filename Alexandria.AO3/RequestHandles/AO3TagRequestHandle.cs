@@ -12,7 +12,7 @@ namespace Alexandria.AO3.RequestHandles
 
 		public String Text { get; }
 
-		public override string ToString()
+		public override String ToString()
 		{
 			return Text;
 		}

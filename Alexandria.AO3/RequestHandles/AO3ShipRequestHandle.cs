@@ -3,9 +3,9 @@ using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	internal sealed class AO3ShipInfoRequestHandle : IShipInfoRequestHandle
+	internal sealed class AO3ShipRequestHandle : IShipRequestHandle
 	{
-		public AO3ShipInfoRequestHandle( String shipTag )
+		public AO3ShipRequestHandle( String shipTag )
 		{
 			ShipTag = shipTag;
 		}

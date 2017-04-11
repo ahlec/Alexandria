@@ -75,5 +75,58 @@ namespace Alexandria.AO3.Tests
 			Assert.IsNotNull( requestHandle );
 			Assert.AreEqual( UnitTestConstants.Tag_StilesStilinski, requestHandle.Text );
 		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentNullException ) )]
+		public void AO3RequestUtils_MakeShipRequestThrowsOnNull()
+		{
+			AO3RequestUtils.MakeShipRequest( null );
+		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentNullException ) )]
+		public void AO3RequestUtils_MakeShipRequestThrowsOnEmpty()
+		{
+			AO3RequestUtils.MakeShipRequest( String.Empty );
+		}
+
+		[TestMethod]
+		public void AO3RequestUtils_MakeShipRequestValid()
+		{
+			IShipRequestHandle requestHandle = AO3RequestUtils.MakeShipRequest( UnitTestConstants.Ship_Sterek );
+
+			Assert.IsNotNull( requestHandle );
+			Assert.AreEqual( UnitTestConstants.Ship_Sterek, requestHandle.ShipTag );
+		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentNullException ) )]
+		public void AO3RequestUtils_MakeSeriesRequestThrowsOnNull()
+		{
+			AO3RequestUtils.MakeSeriesRequest( null );
+		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentNullException ) )]
+		public void AO3RequestUtils_MakeSeriesRequestThrowsOnEmpty()
+		{
+			AO3RequestUtils.MakeSeriesRequest( String.Empty );
+		}
+
+		[TestMethod]
+		[ExpectedException( typeof( ArgumentException ), AllowDerivedTypes = false )]
+		public void AO3RequestUtils_MakeSeriesRequestThrowsOnAlphaCharacters()
+		{
+			AO3RequestUtils.MakeSeriesRequest( "hello world" );
+		}
+
+		[TestMethod]
+		public void AO3RequestUtils_MakeSeriesRequestValid()
+		{
+			ISeriesRequestHandle requestHandle = AO3RequestUtils.MakeSeriesRequest( UnitTestConstants.SeriesHandle_JanuaryJackrabbitWeek2014 );
+
+			Assert.IsNotNull( requestHandle );
+			Assert.AreEqual( UnitTestConstants.SeriesHandle_JanuaryJackrabbitWeek2014, requestHandle.Handle );
+		}
 	}
 }

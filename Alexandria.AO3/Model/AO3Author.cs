@@ -4,7 +4,6 @@ using System.Linq;
 using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
 
 namespace Alexandria.AO3.Model
@@ -34,14 +33,14 @@ namespace Alexandria.AO3.Model
 
 		public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
 		{
-			throw new NotImplementedException();
+			return AO3QueryResults.Retrieve( _source, CacheableObjects.AuthorFanficsHtml, "users", Name, 1 );
 		}
 
 		#endregion IAuthor
 
-		static IEnumerable<String> CollectPseuds( HtmlNode pseudsDD )
+		static IEnumerable<String> CollectPseuds( HtmlNode pseudsDd )
 		{
-			foreach ( HtmlNode pseudA in pseudsDD.Elements( "a" ) )
+			foreach ( HtmlNode pseudA in pseudsDd.Elements( "a" ) )
 			{
 				yield return pseudA.ReadableInnerText().Trim();
 			}

@@ -8,7 +8,7 @@ using Alexandria.AO3.Utils;
 
 namespace Alexandria.AO3.Model
 {
-	internal sealed partial class AO3Tag : ITag
+	internal sealed class AO3Tag : ITag
 	{
 		AO3Tag( AO3Source source )
 		{
@@ -28,7 +28,7 @@ namespace Alexandria.AO3.Model
 		public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
 		{
 			String endpointTag = Text.Replace( "/", "*s*" );
-			return QueryResults.Retrieve( _source, endpointTag, 1 );
+			return AO3QueryResults.Retrieve( _source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
 		}
 
 		#endregion
@@ -42,7 +42,7 @@ namespace Alexandria.AO3.Model
 			String mainContentPText = mainDiv.SelectSingleNode( "div[@class='tag home profile']/p" ).InnerText;
 			String mainContentPFirstSentence = mainContentPText.Substring( 0, mainContentPText.IndexOf( '.' ) );
 			Int32 mainContentSentenceStartLength = "This tag belongs to the ".Length;
-			String textCategory = mainContentPFirstSentence.Substring( mainContentSentenceStartLength, mainContentPText.LastIndexOf( " Category" ) - mainContentSentenceStartLength );
+			String textCategory = mainContentPFirstSentence.Substring( mainContentSentenceStartLength, mainContentPText.LastIndexOf( " Category", StringComparison.InvariantCultureIgnoreCase ) - mainContentSentenceStartLength );
 			switch ( textCategory )
 			{
 				case "Character":

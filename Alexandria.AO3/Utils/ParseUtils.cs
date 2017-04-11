@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using HtmlAgilityPack;
 using Alexandria.Model;
@@ -85,7 +84,7 @@ namespace Alexandria.AO3.Utils
 			foreach ( KeyValuePair<String, ShipType> separator in _shipNameSeparators )
 			{
 				Int32 currentStartIndex = 0;
-				Int32 nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex );
+				Int32 nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex, StringComparison.InvariantCultureIgnoreCase );
 				if ( nextSeparatorIndex < 0 )
 				{
 					continue;
@@ -99,7 +98,7 @@ namespace Alexandria.AO3.Utils
 					String character = shipTag.Substring( currentStartIndex, nextSeparatorIndex - currentStartIndex );
 					characters.Add( new AO3CharacterRequestHandle( character.Trim() ) );
 					currentStartIndex = nextSeparatorIndex + separator.Key.Length;
-					nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex );
+					nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex, StringComparison.InvariantCultureIgnoreCase );
 				}
 
 				if ( currentStartIndex < shipTag.Length - 1 )

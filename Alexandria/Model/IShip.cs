@@ -4,14 +4,12 @@ using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {
-	public interface IShip
+	public interface IShip : IRequestable
 	{
 		String Name { get; }
 
 		ShipType Type { get; }
 
 		IReadOnlyList<ICharacterRequestHandle> Characters { get; }
-
-		IShipInfoRequestHandle Info { get; }
 	}
 }

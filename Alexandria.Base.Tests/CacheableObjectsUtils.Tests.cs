@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Alexandria.Model;
 using Alexandria.Utils;
 
 namespace Alexandria.Base.Tests
@@ -34,9 +33,12 @@ namespace Alexandria.Base.Tests
 				new ObjectInfo( CacheableObjects.FanficJson, false, true ),
 				new ObjectInfo( CacheableObjects.AuthorHtml, true, false ),
 				new ObjectInfo( CacheableObjects.AuthorJson, false, true ),
+				new ObjectInfo( CacheableObjects.AuthorFanficsHtml, true, false ),
 				new ObjectInfo( CacheableObjects.TagHtml, true, false ),
 				new ObjectInfo( CacheableObjects.TagJson, false, true ),
 				new ObjectInfo( CacheableObjects.TagFanficsHtml, true, false ),
+				new ObjectInfo( CacheableObjects.SeriesHtml, true, false ),
+				new ObjectInfo( CacheableObjects.SeriesJson, false, true ),
 				new ObjectInfo( CacheableObjects.All, false, false )
 			};
 		}

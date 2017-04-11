@@ -26,7 +26,8 @@ namespace Alexandria.AO3.Tests
 
 			Assert.IsNotNull( fanfic.Ships );
 			Assert.AreEqual( 1, fanfic.Ships.Count );
-			AO3Assert.IsShipSterek( fanfic.Ships[0] );
+			Assert.IsNotNull( fanfic.Ships[0] );
+			Assert.AreEqual( "Derek Hale/Stiles Stilinski", fanfic.Ships[0].ShipTag );
 
 			Assert.IsNotNull( fanfic.Characters );
 			Assert.AreEqual( 2, fanfic.Characters.Count );
@@ -108,13 +109,10 @@ namespace Alexandria.AO3.Tests
 
 			Assert.IsNotNull( fanfic.Ships );
 			Assert.AreEqual( 2, fanfic.Ships.Count );
-			AO3Assert.IsShipSterek( fanfic.Ships[0], false );
+			Assert.IsNotNull( fanfic.Ships[0] );
+			Assert.AreEqual( "Stiles Stilinski/Derek Hale", fanfic.Ships[0].ShipTag );
 			Assert.IsNotNull( fanfic.Ships[1] );
-			Assert.AreEqual( "Minor or Background Relationship(s)", fanfic.Ships[1].Name );
-			Assert.AreEqual( ShipType.Unknown, fanfic.Ships[1].Type );
-			Assert.IsNotNull( fanfic.Ships[1].Characters );
-			Assert.AreEqual( 0, fanfic.Ships[1].Characters.Count );
-			Assert.AreEqual( "Minor or Background Relationship(s)", fanfic.Ships[1].Info.ShipTag );
+			Assert.AreEqual( "Minor or Background Relationship(s)", fanfic.Ships[1].ShipTag );
 
 			Assert.IsNotNull( fanfic.Characters );
 			Assert.AreEqual( 9, fanfic.Characters.Count );
@@ -178,19 +176,12 @@ namespace Alexandria.AO3.Tests
 
 			Assert.IsNotNull( fanfic.Ships );
 			Assert.AreEqual( 3, fanfic.Ships.Count );
-			AO3Assert.IsShipSterek( fanfic.Ships[0] );
+			Assert.IsNotNull( fanfic.Ships[0] );
+			Assert.AreEqual( "Derek Hale/Stiles Stilinski", fanfic.Ships[0].ShipTag );
 			Assert.IsNotNull( fanfic.Ships[1] );
-			Assert.AreEqual( "Derek Hale & Kira Yukimura", fanfic.Ships[1].Name );
-			Assert.AreEqual( ShipType.Platonic, fanfic.Ships[1].Type );
-			Assert.IsNotNull( fanfic.Ships[1].Characters );
-			Assert.AreEqual( 2, fanfic.Ships[1].Characters.Count );
-			Assert.AreEqual( "Derek Hale", fanfic.Ships[1].Characters[0].FullName );
-			Assert.AreEqual( "Kira Yukimura", fanfic.Ships[1].Characters[1].FullName );
+			Assert.AreEqual( "Derek Hale & Kira Yukimura", fanfic.Ships[1].ShipTag );
 			Assert.IsNotNull( fanfic.Ships[2] );
-			Assert.AreEqual( "(Derek-Kira friendship)", fanfic.Ships[2].Name );
-			Assert.AreEqual( ShipType.Unknown, fanfic.Ships[2].Type );
-			Assert.IsNotNull( fanfic.Ships[2].Characters );
-			Assert.AreEqual( 0, fanfic.Ships[2].Characters.Count );
+			Assert.AreEqual( "(Derek-Kira friendship)", fanfic.Ships[2].ShipTag );
 
 			Assert.IsNotNull( fanfic.Characters );
 			Assert.AreEqual( 3, fanfic.Characters.Count );

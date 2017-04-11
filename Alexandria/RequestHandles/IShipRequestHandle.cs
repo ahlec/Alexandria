@@ -3,7 +3,7 @@ using Alexandria.Model;
 
 namespace Alexandria.RequestHandles
 {
-	public interface IShipInfoRequestHandle : IRequestHandle<IShipInfo>
+	public interface IShipRequestHandle : IRequestHandle<IShip>
 	{
 		String ShipTag { get; }
 	}

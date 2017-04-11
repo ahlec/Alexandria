@@ -52,8 +52,10 @@
     <Compile Include="FullAuthorParsing.Tests.cs" />
     <Compile Include="FanficParsing.Tests.cs" />
     <Compile Include="FullFanficParsing.Tests.cs" />
+    <Compile Include="FullSeriesParsing.Tests.cs" />
     <Compile Include="FullTagParsing.Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QueryResults.Tests.cs" />
     <Compile Include="RequestUtils.Tests.cs" />
     <Compile Include="UnitTestConstants.cs" />
   </ItemGroup>

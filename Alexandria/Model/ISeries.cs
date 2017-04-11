@@ -1,19 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {
 	public interface ISeries : IRequestable
 	{
-		IAuthor Author { get; }
+		IAuthorRequestHandle Author { get; }
 
-		DateTime DateTimeStartedUtc { get; }
+		DateTime DateStarted { get; }
 
 		Boolean IsCompleted { get; }
 
-		IFanfic FirstWork { get; }
+		IReadOnlyList<IFanficRequestHandle> Fanfics { get; }
 	}
 }

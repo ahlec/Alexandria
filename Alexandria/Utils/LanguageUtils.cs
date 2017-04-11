@@ -11,19 +11,19 @@ namespace Alexandria.Utils
 			foreach ( String value in Enum.GetNames( typeof( Language ) ) )
 			{
 				Language enumValue = (Language) Enum.Parse( typeof( Language ), value );
-				s_languageStrings.Add( value, enumValue );
+				_languageStrings.Add( value, enumValue );
 
 				String nativeLanguage = GetNativeLanguage( enumValue );
-				if ( !s_languageStrings.ContainsKey( nativeLanguage ) )
+				if ( !_languageStrings.ContainsKey( nativeLanguage ) )
 				{
-					s_languageStrings.Add( nativeLanguage, enumValue );
+					_languageStrings.Add( nativeLanguage, enumValue );
 				}
 			}
 		}
 
 		public static Language Parse( String str )
 		{
-			return s_languageStrings[str.Trim()];
+			return _languageStrings[str.Trim()];
 		}
 
 		public static String GetNativeLanguage( Language language )
@@ -42,6 +42,6 @@ namespace Alexandria.Utils
 			return renderName.Name;
 		}
 
-		private static IDictionary<String, Language> s_languageStrings = new Dictionary<String, Language>();
+		static readonly IDictionary<String, Language> _languageStrings = new Dictionary<String, Language>();
 	}
 }

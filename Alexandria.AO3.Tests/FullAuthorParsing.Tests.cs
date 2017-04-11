@@ -29,6 +29,11 @@ namespace Alexandria.AO3.Tests
 I do not, however, give permition for these works of fiction to be re-published anywhere else without my consent. Nor do I give permition for them to be read out-loud or exposed to any type of media excluding this plataform in any way. Writers, producers, other fans, any kind of external source that wants to use this and take it themselves to use is not allowed to do so.", author.Biography );
 
 			Assert.IsTrue( author.NumberFanfics >= 97 );
+
+			IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = author.QueryFanfics();
+			Assert.IsNotNull( fanfics );
+			Assert.IsTrue( fanfics.HasMoreResults );
+			Assert.AreEqual( 20, fanfics.Results.Count );
 		}
 
 		readonly LibrarySource _source = new AO3Source();

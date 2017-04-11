@@ -49,8 +49,9 @@
   <ItemGroup>
     <Compile Include="Model\AO3Author.cs" />
     <Compile Include="Model\AO3ChapterInfo.cs" />
+    <Compile Include="Model\AO3Series.cs" />
     <Compile Include="Model\AO3Tag.cs" />
-    <Compile Include="Model\AO3Tag.QueryResults.cs" />
+    <Compile Include="Model\AO3QueryResults.cs" />
     <Compile Include="RequestHandles\AO3AuthorRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3CharacterRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3FanficRequestHandle.cs" />
@@ -60,7 +61,7 @@
     <Compile Include="Model\AO3SeriesEntry.cs" />
     <Compile Include="Model\AO3Ship.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestHandles\AO3ShipInfoRequestHandle.cs" />
+    <Compile Include="RequestHandles\AO3ShipRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3TagRequestHandle.cs" />
     <Compile Include="Utils\AO3RequestUtils.cs" />
     <Compile Include="Utils\ParseUtils.cs" />

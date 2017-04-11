@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.AO3.Utils;

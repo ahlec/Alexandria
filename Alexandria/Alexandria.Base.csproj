@@ -60,7 +60,6 @@
     <Compile Include="Model\ISeries.cs" />
     <Compile Include="Model\ISeriesEntry.cs" />
     <Compile Include="Model\IShip.cs" />
-    <Compile Include="Model\IShipInfo.cs" />
     <Compile Include="Model\ITag.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\MaturityRating.cs" />
@@ -68,7 +67,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LibrarySource.cs" />
     <Compile Include="RequestHandles\ISeriesRequestHandle.cs" />
-    <Compile Include="RequestHandles\IShipInfoRequestHandle.cs" />
+    <Compile Include="RequestHandles\IShipRequestHandle.cs" />
     <Compile Include="RequestHandles\ITagRequestHandle.cs" />
     <Compile Include="Utils\CacheableObjectsUtils.cs" />
     <Compile Include="Utils\FlagUtils.cs" />
@@ -79,6 +78,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Queries\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
