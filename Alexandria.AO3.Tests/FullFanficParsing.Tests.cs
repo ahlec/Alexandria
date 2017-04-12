@@ -48,8 +48,8 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "Mild Transphobia", fanfic.Tags[9].Text );
 
 			Assert.AreEqual( 101000, fanfic.NumberWords );
-			Assert.AreEqual( new DateTime( 2012, 10, 16 ), fanfic.DateStarted.Date );
-			Assert.AreEqual( new DateTime( 2013, 04, 25 ), fanfic.DateLastUpdated.Date );
+			AO3Assert.IsDate( 2012, 10, 16, fanfic.DateStarted );
+			AO3Assert.IsDate( 2013, 04, 25, fanfic.DateLastUpdated );
 			Assert.IsTrue( fanfic.NumberComments > 2000 );
 			Assert.IsTrue( fanfic.NumberLikes > 17000 );
 			Assert.IsNull( fanfic.SeriesInfo );
@@ -139,8 +139,8 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "Week 9", fanfic.Tags[8].Text );
 
 			Assert.AreEqual( 4084, fanfic.NumberWords );
-			Assert.AreEqual( new DateTime( 2015, 3, 22 ), fanfic.DateStarted.Date );
-			Assert.AreEqual( new DateTime( 2015, 3, 22 ), fanfic.DateLastUpdated.Date );
+			AO3Assert.IsDate( 2015, 3, 22, fanfic.DateStarted );
+			AO3Assert.IsDate( 2015, 3, 22, fanfic.DateLastUpdated );
 			Assert.IsTrue( fanfic.NumberComments > 80 );
 			Assert.IsTrue( fanfic.NumberLikes > 2400 );
 
@@ -199,8 +199,8 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "Humor", fanfic.Tags[5].Text );
 
 			Assert.AreEqual( 1653, fanfic.NumberWords );
-			Assert.AreEqual( new DateTime( 2016, 4, 19 ), fanfic.DateStarted.Date );
-			Assert.AreEqual( new DateTime( 2016, 4, 19 ), fanfic.DateLastUpdated.Date );
+			AO3Assert.IsDate( 2016, 4, 19, fanfic.DateStarted );
+			AO3Assert.IsDate( 2016, 4, 19, fanfic.DateLastUpdated );
 			Assert.IsTrue( fanfic.NumberComments > 50 );
 			Assert.IsTrue( fanfic.NumberLikes > 1800 );
 			Assert.IsNotNull( fanfic.SeriesInfo );

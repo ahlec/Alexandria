@@ -4,7 +4,7 @@ using Alexandria.RequestHandles;
 
 namespace Alexandria
 {
-	public interface IQueryResultsPage<TModel, TRequestHandle> where TModel : IRequestable where TRequestHandle : IRequestHandle<TModel>
+	public interface IQueryResultsPage<TModel, out TRequestHandle> where TModel : IRequestable where TRequestHandle : IRequestHandle<TModel>
 	{
 		IReadOnlyList<TRequestHandle> Results { get; }
 

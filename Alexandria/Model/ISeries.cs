@@ -10,6 +10,8 @@ namespace Alexandria.Model
 
 		DateTime DateStarted { get; }
 
+		DateTime DateLastUpdated { get; }
+
 		Boolean IsCompleted { get; }
 
 		IReadOnlyList<IFanficRequestHandle> Fanfics { get; }

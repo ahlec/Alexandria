@@ -188,6 +188,32 @@ namespace Alexandria.AO3.Utils
 			return text;
 		}
 
+		public static IEnumerable<Tuple<String, HtmlNode>> EnumerateDlTable( this HtmlNode dl )
+		{
+			String lastDtText = null;
+			foreach ( HtmlNode child in dl.ChildNodes )
+			{
+				if ( child.Name.Equals( "dt" ) )
+				{
+					lastDtText = child.InnerText.Trim().TrimEnd( ':' );
+					continue;
+				}
+
+				if ( !child.Name.Equals( "dd" ) )
+				{
+					continue;
+				}
+
+				yield return new Tuple<String, HtmlNode>( lastDtText, child );
+				lastDtText = null;
+			}
+
+			if ( lastDtText != null )
+			{
+				yield return new Tuple<String, HtmlNode>( lastDtText, null );
+			}
+		}
+
 		static readonly ImmutableDictionary<String, ShipType> _shipNameSeparators = new Dictionary<String, ShipType>
 		{
 			{ "/", ShipType.Romantic },

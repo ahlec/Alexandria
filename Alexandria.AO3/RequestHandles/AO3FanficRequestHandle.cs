@@ -1,5 +1,6 @@
 ﻿using System;
 using Alexandria.RequestHandles;
+using HtmlAgilityPack;
 
 namespace Alexandria.AO3.RequestHandles
 {
@@ -11,6 +12,12 @@ namespace Alexandria.AO3.RequestHandles
 		}
 
 		public String Handle { get; }
+
+		internal static AO3FanficRequestHandle ParseFromWorkLi( HtmlNode li )
+		{
+			String fanficHandle = li.GetAttributeValue( "id", null ).Substring( "work_".Length );
+			return new AO3FanficRequestHandle( fanficHandle );
+		}
 
 		public override String ToString()
 		{

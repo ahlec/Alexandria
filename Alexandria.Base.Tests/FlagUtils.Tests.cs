@@ -10,10 +10,10 @@ namespace Alexandria.Base.Tests
 		[TestMethod]
 		public void FlagUtils_DetectsMultipleFlags()
 		{
-			Assert.IsFalse( FlagUtils.HasMultipleFlagsSet( CacheableObjects.FanficHtml ) );
-			Assert.IsTrue( FlagUtils.HasMultipleFlagsSet( CacheableObjects.FanficHtml | CacheableObjects.TagHtml ) );
-			Assert.IsTrue( FlagUtils.HasMultipleFlagsSet( CacheableObjects.All ) );
-			Assert.IsFalse( FlagUtils.HasMultipleFlagsSet( CacheableObjects.None ) );
+			Assert.IsFalse( CacheableObjects.FanficHtml.HasMultipleFlagsSet() );
+			Assert.IsTrue( ( CacheableObjects.FanficHtml | CacheableObjects.TagHtml ).HasMultipleFlagsSet() );
+			Assert.IsTrue( CacheableObjects.All.HasMultipleFlagsSet() );
+			Assert.IsFalse( CacheableObjects.None.HasMultipleFlagsSet() );
 		}
 	}
 }

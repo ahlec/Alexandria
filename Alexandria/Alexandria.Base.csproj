@@ -48,6 +48,7 @@
     <Compile Include="IQueryResultsPage.cs" />
     <Compile Include="IRequestable.cs" />
     <Compile Include="Model\IChapterInfo.cs" />
+    <Compile Include="Model\ILanguageInfo.cs" />
     <Compile Include="Model\TagType.cs" />
     <Compile Include="RequestHandles\IAuthorRequestHandle.cs" />
     <Compile Include="RequestHandles\ICharacterRequestHandle.cs" />

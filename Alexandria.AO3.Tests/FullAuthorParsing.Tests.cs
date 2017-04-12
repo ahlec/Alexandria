@@ -21,7 +21,7 @@ namespace Alexandria.AO3.Tests
 			Assert.IsNotNull( author.Nicknames );
 			Assert.AreEqual( 1, author.Nicknames.Count );
 			Assert.AreEqual( "crossroadswrite", author.Nicknames[0] );
-			Assert.AreEqual( new DateTime( 2013, 11, 15 ), author.DateJoined );
+			AO3Assert.IsDate( 2013, 11, 15, author.DateJoined );
 			Assert.AreEqual( "Portugal", author.Location );
 			Assert.IsNull( author.Birthday );
 

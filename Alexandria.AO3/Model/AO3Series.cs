@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
 using HtmlAgilityPack;
@@ -20,6 +21,8 @@ namespace Alexandria.AO3.Model
 
 		public DateTime DateStarted { get; private set; }
 
+		public DateTime DateLastUpdated { get; private set; }
+
 		public Boolean IsCompleted { get; private set; }
 
 		public IReadOnlyList<IFanficRequestHandle> Fanfics { get; private set; }
@@ -33,34 +36,42 @@ namespace Alexandria.AO3.Model
 			HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@id='main']" );
 
 			HtmlNode seriesMetaGroupDl = mainDiv.SelectSingleNode( ".//dl[@class='series meta group']" );
-			String lastDtText = null;
-			foreach ( HtmlNode child in seriesMetaGroupDl.ChildNodes )
+			Boolean hasDateLastUpdated = false;
+			foreach ( Tuple<String, HtmlNode> row in seriesMetaGroupDl.EnumerateDlTable() )
 			{
-				if ( child.Name.Equals( "dt" ) )
+				switch ( row.Item1 )
 				{
-					lastDtText = child.InnerText.Trim();
-					continue;
-				}
-
-				if ( !child.Name.Equals( "dd" ) )
-				{
-					continue;
-				}
-
-				switch ( lastDtText )
-				{
-					case "Creator:":
+					case "Creator":
 						{
-							parsed.Author = AO3AuthorRequestHandle.Parse( child.Element( "a" ) );
+							parsed.Author = AO3AuthorRequestHandle.Parse( row.Item2.Element( "a" ) );
 							break;
 						}
-					case "Series Begun:":
+					case "Series Begun":
 						{
-							parsed.DateStarted = DateTime.Parse( child.InnerText );
+							parsed.DateStarted = DateTime.Parse( row.Item2.InnerText );
+							break;
+						}
+					case "Series Updated":
+						{
+							parsed.DateLastUpdated = DateTime.Parse( row.Item2.InnerText );
+							hasDateLastUpdated = true;
+							break;
+						}
+					case "Stats":
+						{
+							Tuple<String, HtmlNode> completeDd = row.Item2.EnumerateDlTable().FirstOrDefault( kvp => kvp.Item1.Equals( "Complete" ) );
+							parsed.IsCompleted = ( completeDd?.Item2.InnerText.Equals( "Yes", StringComparison.InvariantCultureIgnoreCase ) == true );
 							break;
 						}
 				}
 			}
+			if ( !hasDateLastUpdated )
+			{
+				parsed.DateLastUpdated = parsed.DateStarted;
+			}
+
+			HtmlNode seriesWorkUl = mainDiv.SelectSingleNode( ".//ul[contains(@class, 'series work' )]" );
+			parsed.Fanfics = seriesWorkUl.Elements( "li" ).Select( AO3FanficRequestHandle.ParseFromWorkLi ).Cast<IFanficRequestHandle>().ToList();
 
 			return parsed;
 		}

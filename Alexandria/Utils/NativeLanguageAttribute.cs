@@ -10,6 +10,6 @@ namespace Alexandria.Utils
 			Native = native;
 		}
 
-		public String Native { get; set; }
+		public String Native { get; }
 	}
 }

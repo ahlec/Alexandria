@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -54,14 +55,8 @@ namespace Alexandria.AO3.Model
 			HtmlNode nextA = paginationOl?.SelectSingleNode( ".//a[@rel='next']" );
 			results.HasMoreResults = ( nextA != null );
 
-			List<IFanficRequestHandle> handles = new List<IFanficRequestHandle>();
 			HtmlNode worksOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='work index group']" );
-			foreach ( HtmlNode li in worksOl.Elements( "li" ) )
-			{
-				String fanficHandle = li.GetAttributeValue( "id", null ).Substring( "work_".Length );
-				handles.Add( new AO3FanficRequestHandle( fanficHandle ) );
-			}
-			results.Results = handles;
+			results.Results = worksOl.Elements( "li" ).Select( AO3FanficRequestHandle.ParseFromWorkLi ).Cast<IFanficRequestHandle>().ToList();
 
 			return results;
 		}

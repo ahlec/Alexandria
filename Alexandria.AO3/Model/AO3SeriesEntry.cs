@@ -31,7 +31,7 @@ namespace Alexandria.AO3.Model
 
 			HtmlNode positionSpan = seriesSpan.SelectSingleNode( "span[@class='position']" );
 			// The text comes in the format of "Part XXX of the [name] series"
-			String entryNumberText = positionSpan.InnerText.Substring( "Part ".Length, positionSpan.InnerText.IndexOf( "of" ) - "Part ".Length );
+			String entryNumberText = positionSpan.InnerText.Substring( "Part ".Length, positionSpan.InnerText.IndexOf( "of", StringComparison.InvariantCultureIgnoreCase ) - "Part ".Length );
 			parsed.EntryNumber = Int32.Parse( entryNumberText );
 			HtmlNode seriesA = positionSpan.Element( "a" );
 			String[] seriesHrefPieces = seriesA.GetAttributeValue( "href", null ).Split( '/', '\\' );

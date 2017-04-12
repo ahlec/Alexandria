@@ -180,11 +180,8 @@ namespace Alexandria.AO3.Model
 				parsed.Footnote = workEndnotesBlockquote.ReadableInnerText().Trim();
 			}
 
-			HtmlNode userstuffModuleDiv = document.DocumentNode.SelectSingleNode( "//div[@class='userstuff module']" );
-			if ( userstuffModuleDiv == null )
-			{
-				userstuffModuleDiv = document.DocumentNode.SelectSingleNode( "//div[@id='chapters']/div[contains( @class, 'userstuff' )]" );
-			}
+			HtmlNode userstuffModuleDiv = document.DocumentNode.SelectSingleNode( "//div[@class='userstuff module']" ) ??
+										  document.DocumentNode.SelectSingleNode( "//div[@id='chapters']/div[contains( @class, 'userstuff' )]" );
 			userstuffModuleDiv.Element( "h3" )?.Remove();
 			parsed.Text = userstuffModuleDiv.ReadableInnerText().Trim();
 
