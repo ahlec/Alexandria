@@ -9,6 +9,10 @@ namespace Alexandria.AO3
 {
 	public class AO3Source : LibrarySource
 	{
+		public AO3Source( LibrarySourceConfig config ) : base( config )
+		{
+		}
+
 		public override T MakeRequest<T>( IRequestHandle<T> request )
 		{
 			if ( request == null )

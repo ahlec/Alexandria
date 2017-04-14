@@ -13,10 +13,9 @@ namespace Alexandria.AO3.Tests
 		[TestMethod]
 		public void AO3Fanfic_PrinceAmongWolves()
 		{
-			LibrarySource source = new AO3Source();
 			IFanficRequestHandle request = AO3RequestUtils.MakeFanficRequest( UnitTestConstants.FicHandle_PrinceAmongWolves );
 
-			IFanfic fanfic = source.MakeRequest( request );
+			IFanfic fanfic = _source.MakeRequest( request );
 
 			Assert.IsNotNull( fanfic );
 			Assert.AreEqual( "Prince Among Wolves", fanfic.Title );
@@ -96,10 +95,9 @@ namespace Alexandria.AO3.Tests
 		[TestMethod]
 		public void AO3Fanfic_PossibilityOfSilence()
 		{
-			LibrarySource source = new AO3Source();
 			IFanficRequestHandle request = AO3RequestUtils.MakeFanficRequest( UnitTestConstants.FicHandle_PossibilityOfSilence );
 
-			IFanfic fanfic = source.MakeRequest( request );
+			IFanfic fanfic = _source.MakeRequest( request );
 
 			Assert.IsNotNull( fanfic );
 			Assert.AreEqual( "The Possibility of Silence and the Reality of Sound", fanfic.Title );
@@ -163,10 +161,9 @@ namespace Alexandria.AO3.Tests
 		[TestMethod]
 		public void AO3Fanfic_ItsNotMyLovestory()
 		{
-			LibrarySource source = new AO3Source();
 			IFanficRequestHandle request = AO3RequestUtils.MakeFanficRequest( UnitTestConstants.FicHandle_ItsNotMyLovestory );
 
-			IFanfic fanfic = source.MakeRequest( request );
+			IFanfic fanfic = _source.MakeRequest( request );
 
 			Assert.IsNotNull( fanfic );
 			Assert.AreEqual( "It's Not My Lovestory", fanfic.Title );
@@ -219,5 +216,7 @@ Every single person in his acquaintance had a soulband, God! Even Greenberg had 
 			Assert.AreEqual( @"Thank you Jonjo for the beta work. You are amazing <3", fanfic.AuthorsNote );
 			Assert.AreEqual( @"I am on tumblr - Here - my Sterek blog.", fanfic.Footnote );
 		}
+
+		readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
 	}
 }

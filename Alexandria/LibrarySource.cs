@@ -11,11 +11,20 @@ namespace Alexandria
 {
 	public abstract class LibrarySource
 	{
-		protected LibrarySource()
+		protected LibrarySource( LibrarySourceConfig config )
 		{
-			_objectsBeingCached = CacheableObjects.All;
-			CacheDirectory = Path.Combine( "cache", GetType().Name );
-			CacheLifetime = TimeSpan.FromDays( 1.0D );
+			if ( config == null )
+			{
+				throw new ArgumentNullException( nameof( config ) );
+			}
+
+			if ( !config.IsSealed )
+			{
+				throw new ArgumentException( $"You can only construct new {nameof( LibrarySource )} instances with a sealed {nameof( LibrarySourceConfig )}" );
+			}
+
+			_config = config;
+			_personalCacheDirectory = Path.Combine( config.CacheBaseDirectory, GetType().Name );
 		}
 
 		public abstract T MakeRequest<T>( IRequestHandle<T> request ) where T : IRequestable;
@@ -101,16 +110,12 @@ namespace Alexandria
 				throw new ArgumentException( $"The provided {nameof( CacheableObjects )} must only have a single flag set!", nameof( objectType ) );
 			}
 
-			return _objectsBeingCached.HasFlag( objectType );
+			return _config.CachedObjects.HasFlag( objectType );
 		}
-
-		public String CacheDirectory { get; private set; }
-
-		public TimeSpan CacheLifetime { get; private set; }
 
 		String GetCacheFileName( CacheableObjects objectType, String cacheHandle )
 		{
-			return Path.Combine( CacheDirectory, objectType.ToString(), cacheHandle + ".htm" );
+			return Path.Combine( _personalCacheDirectory, objectType.ToString(), cacheHandle + ".htm" );
 		}
 
 		void WriteToCache( CacheableObjects objectType, String cacheHandle, String text )
@@ -125,6 +130,7 @@ namespace Alexandria
 
 		public const String OptionsHtmlTag = "my_option";
 
-		CacheableObjects _objectsBeingCached = CacheableObjects.None;
+		readonly LibrarySourceConfig _config;
+		readonly String _personalCacheDirectory;
 	}
 }

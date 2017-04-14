@@ -36,6 +36,6 @@ I do not, however, give permition for these works of fiction to be re-published 
 			Assert.AreEqual( 20, fanfics.Results.Count );
 		}
 
-		readonly LibrarySource _source = new AO3Source();
+		readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
 	}
 }

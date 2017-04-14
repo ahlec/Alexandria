@@ -47,6 +47,7 @@
     <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="IQueryResultsPage.cs" />
     <Compile Include="IRequestable.cs" />
+    <Compile Include="LibrarySourceConfig.cs" />
     <Compile Include="Model\IChapterInfo.cs" />
     <Compile Include="Model\ILanguageInfo.cs" />
     <Compile Include="Model\TagType.cs" />
