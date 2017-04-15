@@ -35,6 +35,11 @@ namespace Alexandria.AO3.Utils
 			throw new ApplicationException( "There must always be a base language jump (should be English)" );
 		}
 
+		/// <summary>
+		/// AO3 lists all of the languages in database integer order, but like with all database entries, they delete
+		/// languages (for whatever reason they have), and the languages coming after don't shift down to fill the spot.
+		/// Every time there's a gap in the number (ie, 1 2 3 7 8 9) we'll define the base after each jump (here, 1 and 7)
+		/// </summary>
 		static readonly LanguageJump[] _languageJumps =
 		{
 			new LanguageJump( Language.Bosnian, 82 ),
