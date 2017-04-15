@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Text;
 using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.AO3.Model;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.Searching;
 
 namespace Alexandria.AO3
 {
@@ -37,7 +39,7 @@ namespace Alexandria.AO3
 			AO3TagRequestHandle tagRequest = request as AO3TagRequestHandle;
 			if ( tagRequest != null )
 			{
-				return (T)(Object) GetTag( tagRequest.Text );
+				return (T) (Object) GetTag( tagRequest.Text );
 			}
 
 			AO3SeriesRequestHandle seriesRequest = request as AO3SeriesRequestHandle;
@@ -92,6 +94,23 @@ namespace Alexandria.AO3
 			String endpoint = $"http://archiveofourown.org/series/{handle}";
 			HtmlDocument document = GetWebPage( CacheableObjects.SeriesHtml, handle, endpoint, false, out Uri responseUrl );
 			return AO3Series.Parse( document );
+		}
+
+		/// <inheritdoc />
+		public override IQueryResultsPage<IFanfic, IFanficRequestHandle> Search( LibrarySearch searchCriteria )
+		{
+			if ( searchCriteria == null )
+			{
+				throw new ArgumentNullException( nameof( searchCriteria ) );
+			}
+
+			StringBuilder searchUrl = new StringBuilder( "http://www.archiveofourown.org/works/search?utf8=✓&commit=Search" );
+			if ( searchCriteria.OnlyIncludeCompleteFanfics )
+			{
+				searchUrl.Append( "&work_search[complete]=1" );
+			}
+
+			throw new NotImplementedException();
 		}
 	}
 }

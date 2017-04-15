@@ -71,8 +71,10 @@
     <Compile Include="RequestHandles\ISeriesRequestHandle.cs" />
     <Compile Include="RequestHandles\IShipRequestHandle.cs" />
     <Compile Include="RequestHandles\ITagRequestHandle.cs" />
+    <Compile Include="Searching\LibrarySearch.cs" />
     <Compile Include="Utils\CacheableObjectsUtils.cs" />
     <Compile Include="Utils\FlagUtils.cs" />
+    <Compile Include="Utils\HtmlUtils.cs" />
     <Compile Include="Utils\LanguageUtils.cs" />
     <Compile Include="Utils\NativeLanguageAttribute.cs" />
     <Compile Include="Utils\RenderLanguageNameAttribute.cs" />

@@ -5,6 +5,7 @@ using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
+using Alexandria.Utils;
 
 namespace Alexandria.AO3.Model
 {
@@ -33,7 +34,7 @@ namespace Alexandria.AO3.Model
 			AO3ChapterInfo parsed = new AO3ChapterInfo();
 			List<IFanficRequestHandle> chapters = new List<IFanficRequestHandle>( chapterDropdownSelect.ChildNodes.Count );
 			Int32 chapterNumber = 1;
-			foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( LibrarySource.OptionsHtmlTag ) )
+			foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
 			{
 				String fanficHandle = chapterOption.GetAttributeValue( "value", null );
 				chapters.Add( new AO3FanficRequestHandle( fanficHandle ) );

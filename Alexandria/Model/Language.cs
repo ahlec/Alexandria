@@ -7,17 +7,11 @@ namespace Alexandria.Model
 		[NativeLanguage( "English" )]
 		English,
 
-		[NativeLanguage( "العربية" )]
-		Arabic,
+		[NativeLanguage( "فارسی" )]
+		Persian,
 
-		[NativeLanguage( "so" )]
-		Soko,
-
-		[NativeLanguage( "беларуская" )]
-		Belarusian,
-
-		[NativeLanguage( "Български език" )]
-		Bulgarian,
+		[NativeLanguage( "ਪੰਜਾਬੀ" )]
+		Punjabi,
 
 		[NativeLanguage( "Català" )]
 		Catalan,
@@ -25,64 +19,23 @@ namespace Alexandria.Model
 		[NativeLanguage( "Čeština" )]
 		Czech,
 
-		[NativeLanguage( "Cymraeg" )]
-		Welsh,
-
 		[NativeLanguage( "Dansk" )]
 		Danish,
 
 		[NativeLanguage( "Deutsch" )]
 		German,
 
-		[NativeLanguage( "Ελληνικά" )]
-		Greek,
-
-		[NativeLanguage( "Esperanto" )]
-		Esperanto,
+		[NativeLanguage( "Français" )]
+		French,
 
 		[NativeLanguage( "Español" )]
 		Spanish,
 
-		[NativeLanguage( "eesti keel" )]
-		Estonian,
-
-		[NativeLanguage( "فارسی" )]
-		Persian,
-
-		[NativeLanguage( "Suomi" )]
-		Finnish,
-
-		[NativeLanguage( "Wikang Filipino" )]
-		Tagalog,
-
-		[NativeLanguage( "Français" )]
-		French,
-
 		[NativeLanguage( "Gaeilge" )]
 		Irish,
 
-		[NativeLanguage( "Gàidhlig" )]
-		[RenderLanguageName( "Scottish Gaelic" )]
-		ScottishGaelic,
-
-		[NativeLanguage( "Sprēkō Þiudiskō" )]
-		[RenderLanguageName( "??? tbh idek" )]
-		OldIcelandicMaybeIdk,
-
-		[NativeLanguage( "עברית" )]
-		Hebrew,
-
-		[NativeLanguage( "हिन्दी" )]
-		Hindi,
-
 		[NativeLanguage( "Hrvatski" )]
 		Croatian,
-
-		[NativeLanguage( "Magyar" )]
-		Hungarian,
-
-		[NativeLanguage( "Bahasa Indonesia" )]
-		Indonesian,
 
 		[NativeLanguage( "Íslenska" )]
 		Icelandic,
@@ -90,26 +43,14 @@ namespace Alexandria.Model
 		[NativeLanguage( "Italiano" )]
 		Italian,
 
-		[NativeLanguage( "日本語" )]
-		Japanese,
-
-		[NativeLanguage( "한국어" )]
-		Korean,
-
-		[NativeLanguage( "Lingua latina" )]
-		Latin,
+		[NativeLanguage( "Latviešu valoda" )]
+		Latvian,
 
 		[NativeLanguage( "Lietuvių" )]
 		Lithuanian,
 
-		[NativeLanguage( "Latviešu valoda" )]
-		Latvian,
-
-		[NativeLanguage( "मराठी" )]
-		Marathi,
-
-		[NativeLanguage( "بهاس ملايو" )]
-		Malay,
+		[NativeLanguage( "Magyar" )]
+		Hungarian,
 
 		[NativeLanguage( "Nederlands" )]
 		Dutch,
@@ -117,69 +58,149 @@ namespace Alexandria.Model
 		[NativeLanguage( "Norsk" )]
 		Norwegian,
 
-		[NativeLanguage( "ਪੰਜਾਬੀ" )]
-		Punjabi,
-
-		[NativeLanguage( "Polsk" )]
+		[NativeLanguage( "Polski" )]
 		Polish,
 
 		[NativeLanguage( "Português brasileiro" )]
 		[RenderLanguageName( "Brazilian Portuguese" )]
 		BrazilianPortuguese,
 
-		[NativeLanguage( "Português europeu" )]
-		[RenderLanguageName( "European Portuguese" )]
-		EuropeanPortuguese,
-
-		[NativeLanguage( "Quenya" )]
-		Elvish,
-
 		[NativeLanguage( "Română" )]
 		Romanian,
-
-		[NativeLanguage( "Русский" )]
-		Russian,
-
-		[NativeLanguage( "Slovenčina" )]
-		Slovak,
-
-		[NativeLanguage( "af Soomaali" )]
-		Somali,
 
 		[NativeLanguage( "Shqip" )]
 		Albanian,
 
-		[NativeLanguage( "српски" )]
-		Serbian,
-
-		[NativeLanguage( "Svenska" )]
-		Swedish,
-
-		[NativeLanguage( "Kiswahili" )]
-		Swahili,
-
-		[NativeLanguage( "ไทย" )]
-		Thai,
-
-		[NativeLanguage( "tlhIngan-Hol" )]
-		Klingon,
-
-		[NativeLanguage( "Thermian" )]
-		Thermian,
+		[NativeLanguage( "Suomi" )]
+		Finnish,
 
 		[NativeLanguage( "Türkçe" )]
 		Turkish,
 
+		[NativeLanguage( "Svenska" )]
+		Swedish,
+
+		[NativeLanguage( "Wikang Filipino" )]
+		Tagalog,
+
+		[NativeLanguage( "Ελληνικά" )]
+		Greek,
+
+		[NativeLanguage( "беларуская" )]
+		Belarusian,
+
+		[NativeLanguage( "Български език" )]
+		Bulgarian,
+
+		[NativeLanguage( "Русский" )]
+		Russian,
+
+		[NativeLanguage( "srpski" )]
+		Serbian,
+
 		[NativeLanguage( "українська" )]
 		Ukranian,
 
-		[NativeLanguage( "Tiếng Việt" )]
-		Vietnamese,
+		[NativeLanguage( "עברית" )]
+		Hebrew,
+
+		[NativeLanguage( "العربية" )]
+		Arabic,
+
+		[NativeLanguage( "한국어" )]
+		Korean,
+
+		[NativeLanguage( "日本語" )]
+		Japanese,
+
+		[NativeLanguage( "हिन्दी" )]
+		Hindi,
+
+		[NativeLanguage( "Bahasa Indonesia" )]
+		Indonesian,
+
+		[NativeLanguage( "بهاس ملايو" )]
+		Malay,
 
 		[NativeLanguage( "中文" )]
 		Chinese,
 
+		[NativeLanguage( "Lingua latina" )]
+		Latin,
+
+		[NativeLanguage( "Gàidhlig" )]
+		[RenderLanguageName( "Scottish Gaelic" )]
+		ScottishGaelic,
+
+		[NativeLanguage( "Cymraeg" )]
+		Welsh,
+
+		[NativeLanguage( "Tiếng Việt" )]
+		Vietnamese,
+
+		[NativeLanguage( "Esperanto" )]
+		Esperanto,
+
+		[NativeLanguage( "मराठी" )]
+		Marathi,
+
+		[NativeLanguage( "ไทย" )]
+		Thai,
+
+		[NativeLanguage( "Thermian" )]
+		Thermian,
+
+		[NativeLanguage( "tlhIngan-Hol" )]
+		Klingon,
+
+		[NativeLanguage( "Quenya" )]
+		Elvish,
+
+		[NativeLanguage( "eesti keel" )]
+		Estonian,
+
+		[NativeLanguage( "Slovenčina" )]
+		Slovak,
+
 		[NativeLanguage( "Bahasa Malaysia" )]
-		Malaysian
+		Malaysian,
+
+		[NativeLanguage( "Kiswahili" )]
+		Swahili,
+
+		[NativeLanguage( "so" )]
+		Soko,
+
+		[NativeLanguage( "af Soomaali" )]
+		Somali,
+
+		[NativeLanguage( "Português europeu" )]
+		[RenderLanguageName( "European Portuguese" )]
+		EuropeanPortuguese,
+
+		[NativeLanguage( "Sprēkō Þiudiskō" )]
+		[RenderLanguageName( "??? tbh idek" )]
+		OldIcelandicMaybeIdk,
+
+		[NativeLanguage( "Plattdüütsch" )]
+		LowGerman,
+
+		[NativeLanguage( "Slovenščina" )]
+		Slovene,
+
+		[NativeLanguage( "Afrikaans" )]
+		Afrikaans,
+
+		[NativeLanguage( "Sindarin" )]
+		Sindarin,
+
+		[NativeLanguage( "Khuzdul" )]
+		Khuzdul,
+
+		[NativeLanguage( "বাংলা" )]
+		Bengali,
+
+		[NativeLanguage( "Bosanski" )]
+		Bosnian
 	}
 }
