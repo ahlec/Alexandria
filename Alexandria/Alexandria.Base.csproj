@@ -35,6 +35,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -71,7 +72,20 @@
     <Compile Include="RequestHandles\ISeriesRequestHandle.cs" />
     <Compile Include="RequestHandles\IShipRequestHandle.cs" />
     <Compile Include="RequestHandles\ITagRequestHandle.cs" />
+    <Compile Include="Searching\AfterDateSearchCriteria.cs" />
+    <Compile Include="Searching\BeforeDateSearchCriteria.cs" />
+    <Compile Include="Searching\DateField.cs" />
+    <Compile Include="Searching\DateSearchCriteria.cs" />
+    <Compile Include="Searching\ExactDateSearchCriteria.cs" />
+    <Compile Include="Searching\ExactNumberSearchCriteria.cs" />
+    <Compile Include="Searching\GreaterThanNumberSearchCriteria.cs" />
+    <Compile Include="Searching\LessThanNumberSearchCriteria.cs" />
     <Compile Include="Searching\LibrarySearch.cs" />
+    <Compile Include="Searching\NumberSearchCriteria.cs" />
+    <Compile Include="Searching\RangeDateSearchCriteria.cs" />
+    <Compile Include="Searching\RangeNumberSearchCriteria.cs" />
+    <Compile Include="Searching\SearchField.cs" />
+    <Compile Include="Searching\SortDirection.cs" />
     <Compile Include="Utils\CacheableObjectsUtils.cs" />
     <Compile Include="Utils\FlagUtils.cs" />
     <Compile Include="Utils\HtmlUtils.cs" />

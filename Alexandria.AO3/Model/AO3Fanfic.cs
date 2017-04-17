@@ -11,9 +11,16 @@ namespace Alexandria.AO3.Model
 {
 	internal sealed class AO3Fanfic : IFanfic
 	{
-		AO3Fanfic()
+		AO3Fanfic( Uri url )
 		{
+			Url = url;
 		}
+
+		#region IRequestable
+
+		public Uri Url { get; }
+
+		#endregion
 
 		#region IFanfic
 
@@ -59,13 +66,13 @@ namespace Alexandria.AO3.Model
 
 		#endregion // IFanfic
 
-		public static AO3Fanfic Parse( HtmlDocument document )
+		public static AO3Fanfic Parse( Uri url, HtmlDocument document )
 		{
-			AO3Fanfic parsed = new AO3Fanfic();
+			AO3Fanfic parsed = new AO3Fanfic( url );
 
 			HtmlNode workMetaGroup = document.DocumentNode.SelectSingleNode( "//dl[@class='work meta group']" );
-			parsed.Rating = ParseUtils.ParseMaturityRatingFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='rating tags']//a" ).InnerText );
-			parsed.ContentWarnings = ParseUtils.ParseContentWarningsFromAO3( workMetaGroup.SelectSingleNode( "dd[@class='warning tags']/ul" ) );
+			parsed.Rating = AO3MaturityRatingUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='rating tags']//a" ).InnerText );
+			parsed.ContentWarnings = AO3ContentWarningUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='warning tags']/ul" ) );
 
 			HtmlNode relationshipsUl = workMetaGroup.SelectSingleNode( "dd[@class='relationship tags']/ul" );
 			List<IShipRequestHandle> ships = new List<IShipRequestHandle>();

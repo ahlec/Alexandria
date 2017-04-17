@@ -47,7 +47,7 @@ namespace Alexandria
 				{
 					document = new HtmlDocument();
 					document.Load( cacheFilename, Encoding.UTF8 );
-					responseUrl = null;
+					responseUrl = new Uri( endpoint );
 					return document;
 				}
 			}

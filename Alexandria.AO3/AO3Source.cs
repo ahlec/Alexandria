@@ -5,6 +5,7 @@ using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.AO3.Model;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.AO3.Utils;
 using Alexandria.Searching;
 
 namespace Alexandria.AO3
@@ -61,7 +62,7 @@ namespace Alexandria.AO3
 		{
 			String endpoint = $"http://archiveofourown.org/users/{username}/profile";
 			HtmlDocument document = GetWebPage( CacheableObjects.AuthorHtml, username, endpoint, false, out Uri responseUrl );
-			return AO3Author.Parse( this, document );
+			return AO3Author.Parse( this, responseUrl, document );
 		}
 
 		IFanfic GetFanficInternal( String handle, String endpoint, Boolean isRetryingOnResponseUrl )
@@ -70,7 +71,7 @@ namespace Alexandria.AO3
 
 			if ( document.DocumentNode.SelectSingleNode( "//div[@id='workskin']" ) != null )
 			{
-				return AO3Fanfic.Parse( document );
+				return AO3Fanfic.Parse( responseUrl, document );
 			}
 
 			if ( isRetryingOnResponseUrl )
@@ -86,14 +87,14 @@ namespace Alexandria.AO3
 			tag = tag.Replace( "/", "*s*" );
 			String endpoint = $"http://archiveofourown.org/tags/{tag}";
 			HtmlDocument document = GetWebPage( CacheableObjects.TagHtml, tag, endpoint, false, out Uri responseUrl );
-			return AO3Tag.Parse( document, this );
+			return AO3Tag.Parse( this, responseUrl, document );
 		}
 
 		ISeries GetSeries( String handle )
 		{
 			String endpoint = $"http://archiveofourown.org/series/{handle}";
 			HtmlDocument document = GetWebPage( CacheableObjects.SeriesHtml, handle, endpoint, false, out Uri responseUrl );
-			return AO3Series.Parse( document );
+			return AO3Series.Parse( responseUrl, document );
 		}
 
 		/// <inheritdoc />
@@ -104,13 +105,191 @@ namespace Alexandria.AO3
 				throw new ArgumentNullException( nameof( searchCriteria ) );
 			}
 
+			String searchUrl = CreateSearchUrl( searchCriteria );
+
+			throw new NotImplementedException();
+		}
+
+		String CreateSearchUrl( LibrarySearch searchCriteria )
+		{
 			StringBuilder searchUrl = new StringBuilder( "http://www.archiveofourown.org/works/search?utf8=✓&commit=Search" );
+
+			// Work Info
+			if ( !String.IsNullOrWhiteSpace( searchCriteria.Title ) )
+			{
+				searchUrl.Append( "&work_search[title]=" );
+				searchUrl.Append( searchCriteria.Title );
+			}
+			if ( !String.IsNullOrWhiteSpace( searchCriteria.Author ) )
+			{
+				searchUrl.Append( "&work_search[creator]=" );
+				searchUrl.Append( searchCriteria.Author );
+			}
+			if ( searchCriteria.Date != null )
+			{
+				searchUrl.Append( "&work_search[revised_at]=" );
+				searchUrl.Append( searchCriteria.Date );
+			}
 			if ( searchCriteria.OnlyIncludeCompleteFanfics )
 			{
 				searchUrl.Append( "&work_search[complete]=1" );
 			}
+			if ( searchCriteria.OnlyIncludeSingleChapterFanfics )
+			{
+				searchUrl.Append( "&work_search[single_chapter]=1" );
+			}
+			if ( searchCriteria.WordCount != null )
+			{
+				searchUrl.Append( "&work_search[word_count]=" );
+				searchUrl.Append( searchCriteria.WordCount );
+			}
+			if ( searchCriteria.Language != null )
+			{
+				searchUrl.Append( "&work_search[language_id]=" );
+				searchUrl.Append( AO3LanguageUtils.GetId( searchCriteria.Language.Value ) );
+			}
 
-			throw new NotImplementedException();
+			// Work Tags
+			if ( searchCriteria.Fandoms?.Count > 0 )
+			{
+				searchUrl.Append( "&work_search[fandom_names]=" );
+				for ( Int32 index = 0; index < searchCriteria.Fandoms.Count; ++index )
+				{
+					if ( index > 0 )
+					{
+						searchUrl.Append( "," );
+					}
+					searchUrl.Append( searchCriteria.Fandoms[index] );
+				}
+			}
+			if ( searchCriteria.Rating != null )
+			{
+				searchUrl.Append( "&work_search[rating_ids]=" );
+				searchUrl.Append( AO3MaturityRatingUtils.GetId( searchCriteria.Rating.Value ) );
+			}
+			if ( searchCriteria.ContentWarnings != null )
+			{
+				foreach ( Int32 warningId in AO3ContentWarningUtils.GetIds( searchCriteria.ContentWarnings.Value ) )
+				{
+					searchUrl.Append( "&work_search[warning_ids][]=" );
+					searchUrl.Append( warningId );
+				}
+			}
+			if ( searchCriteria.CharacterNames?.Count > 0 )
+			{
+				searchUrl.Append( "&work_search[character_names]=" );
+				for ( Int32 index = 0; index < searchCriteria.CharacterNames.Count; ++index )
+				{
+					if ( index > 0 )
+					{
+						searchUrl.Append( "," );
+					}
+					searchUrl.Append( searchCriteria.CharacterNames[index] );
+				}
+			}
+			if ( searchCriteria.Ships?.Count > 0 )
+			{
+				searchUrl.Append( "&work_search[relationship_names]=" );
+				for ( Int32 index = 0; index < searchCriteria.Ships.Count; ++index )
+				{
+					if ( index > 0 )
+					{
+						searchUrl.Append( "," );
+					}
+					searchUrl.Append( searchCriteria.Ships[index] );
+				}
+			}
+			if ( searchCriteria.Tags?.Count > 0 )
+			{
+				searchUrl.Append( "&work_search[freeform_names]=" );
+				for ( Int32 index = 0; index < searchCriteria.Tags.Count; ++index )
+				{
+					if ( index > 0 )
+					{
+						searchUrl.Append( "," );
+					}
+					searchUrl.Append( searchCriteria.Tags[index] );
+				}
+			}
+
+			// Work Stats
+			if ( searchCriteria.NumberLikes != null )
+			{
+				searchUrl.Append( "&work_search[kudos_count]=" );
+				searchUrl.Append( searchCriteria.NumberLikes );
+			}
+			if ( searchCriteria.NumberComments != null )
+			{
+				searchUrl.Append( "&work_search[comments_count]=" );
+				searchUrl.Append( searchCriteria.NumberComments );
+			}
+
+			// Search
+			searchUrl.Append( "&work_search[sort_column]=" );
+			switch ( searchCriteria.SortField )
+			{
+				case SearchField.BestMatch:
+					{
+						// Apparently doesn't have a search value?
+						break;
+					}
+				case SearchField.Author:
+					{
+						searchUrl.Append( "authors_to_sort_on" );
+						break;
+					}
+				case SearchField.Title:
+					{
+						searchUrl.Append( "title_to_sort_on" );
+						break;
+					}
+				case SearchField.DatedPosted:
+					{
+						searchUrl.Append( "created_at" );
+						break;
+					}
+				case SearchField.DateLastUpdated:
+					{
+						searchUrl.Append( "revised_at" );
+						break;
+					}
+				case SearchField.WordCount:
+					{
+						searchUrl.Append( "word_count" );
+						break;
+					}
+				case SearchField.NumberLikes:
+					{
+						searchUrl.Append( "kudos_count" );
+						break;
+					}
+				case SearchField.NumberComments:
+					{
+						searchUrl.Append( "comments_count" );
+						break;
+					}
+				default:
+					throw new NotImplementedException();
+			}
+
+			searchUrl.Append( "&work_search[sort_direction]=" );
+			switch ( searchCriteria.SortDirection )
+			{
+				case SortDirection.Ascending:
+				{
+					searchUrl.Append( "asc" );
+					break;
+				}
+				case SortDirection.Descending:
+				{
+					searchUrl.Append( "desc" );
+					break;
+				}
+				default:
+					throw new NotImplementedException();
+			}
+
+			return searchUrl.ToString();
 		}
 	}
 }

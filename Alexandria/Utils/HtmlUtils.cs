@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Web;
 using HtmlAgilityPack;
 
 namespace Alexandria.Utils
@@ -69,6 +70,80 @@ namespace Alexandria.Utils
 			}
 
 			return document;
+		}
+
+		public static String ReadableInnerText( this HtmlNode node )
+		{
+			// Strip out all of the HTML tags, EXCEPT for <br> and <br /> and <p>, which should be transformed into newline characters
+			String innerHtml = node.InnerHtml;
+			StringBuilder builder = new StringBuilder( innerHtml.Length );
+			Boolean currentlyInsideTag = false;
+			Int32 currentTagIndex = 0;
+			Boolean wasLinebreakTag = false;
+			Char firstCharacterInTag = '\0';
+			foreach ( Char character in innerHtml )
+			{
+				if ( character == '<' )
+				{
+					currentlyInsideTag = true;
+					currentTagIndex = 0;
+					wasLinebreakTag = false;
+					continue;
+				}
+				else if ( character == '>' )
+				{
+					currentlyInsideTag = false;
+					if ( wasLinebreakTag )
+					{
+						builder.AppendLine();
+					}
+					wasLinebreakTag = false;
+					continue;
+				}
+
+				if ( !currentlyInsideTag )
+				{
+					builder.Append( character );
+				}
+				else
+				{
+					switch ( currentTagIndex )
+					{
+						case 0:
+						{
+							wasLinebreakTag = ( character == 'b' || character == 'B' || character == 'p' || character == 'P' );
+							firstCharacterInTag = character;
+							break;
+						}
+						case 1:
+						{
+							if ( wasLinebreakTag )
+							{
+								if ( firstCharacterInTag == 'b' || firstCharacterInTag == 'B' )
+								{
+									wasLinebreakTag = ( character == 'r' || character == 'R' );
+								}
+								else
+								{
+									wasLinebreakTag = Char.IsWhiteSpace( character );
+								}
+							}
+							break;
+						}
+						default:
+						{
+							wasLinebreakTag = wasLinebreakTag && Char.IsWhiteSpace( character );
+							break;
+						}
+					}
+					currentTagIndex++;
+				}
+			}
+
+			builder.Trim();
+
+			String text = HttpUtility.HtmlDecode( builder.ToString() );
+			return text;
 		}
 	}
 }

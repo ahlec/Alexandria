@@ -5,15 +5,23 @@ using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.AO3.Utils;
+using Alexandria.Utils;
 
 namespace Alexandria.AO3.Model
 {
 	internal sealed class AO3Author : IAuthor
 	{
-		AO3Author( AO3Source source )
+		AO3Author( AO3Source source, Uri url )
 		{
 			_source = source;
+			Url = url;
 		}
+
+		#region IRequestable
+
+		public Uri Url { get; }
+
+		#endregion
 
 		#region IAuthor
 
@@ -46,9 +54,9 @@ namespace Alexandria.AO3.Model
 			}
 		}
 
-		public static AO3Author Parse( AO3Source source, HtmlDocument profileDocument )
+		public static AO3Author Parse( AO3Source source, Uri url, HtmlDocument profileDocument )
 		{
-			AO3Author parsed = new AO3Author( source );
+			AO3Author parsed = new AO3Author( source, url );
 
 			HtmlNode userHomeProfile = profileDocument.DocumentNode.SelectSingleNode( "//div[@class='user home profile']" );
 			parsed.Name = userHomeProfile.SelectSingleNode( "div[@class='primary header module']/h2[@class='heading']/a" ).ReadableInnerText().Trim();

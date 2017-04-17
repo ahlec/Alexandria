@@ -5,15 +5,23 @@ using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
+using Alexandria.Utils;
 
 namespace Alexandria.AO3.Model
 {
 	internal sealed class AO3Tag : ITag
 	{
-		AO3Tag( AO3Source source )
+		AO3Tag( AO3Source source, Uri url )
 		{
 			_source = source;
+			Url = url;
 		}
+
+		#region IRequestable
+
+		public Uri Url { get; }
+
+		#endregion
 
 		#region ITag
 
@@ -33,9 +41,9 @@ namespace Alexandria.AO3.Model
 
 		#endregion
 
-		internal static AO3Tag Parse( HtmlDocument document, AO3Source source )
+		internal static AO3Tag Parse( AO3Source source, Uri url, HtmlDocument document )
 		{
-			AO3Tag parsed = new AO3Tag( source );
+			AO3Tag parsed = new AO3Tag( source, url );
 
 			HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@class='tags-show region']" );
 

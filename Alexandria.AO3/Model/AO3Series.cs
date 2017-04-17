@@ -11,9 +11,16 @@ namespace Alexandria.AO3.Model
 {
 	internal sealed class AO3Series : ISeries
 	{
-		AO3Series()
+		AO3Series( Uri url )
 		{
+			Url = url;
 		}
+
+		#region IRequestable
+
+		public Uri Url { get; }
+
+		#endregion
 
 		#region ISeries
 
@@ -29,9 +36,9 @@ namespace Alexandria.AO3.Model
 
 		#endregion
 
-		public static AO3Series Parse( HtmlDocument document )
+		public static AO3Series Parse( Uri url, HtmlDocument document )
 		{
-			AO3Series parsed = new AO3Series();
+			AO3Series parsed = new AO3Series( url );
 
 			HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@id='main']" );
 
