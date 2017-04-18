@@ -4,6 +4,8 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using Alexandria.Model;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.Bibliothecary
 {
@@ -14,6 +16,8 @@ namespace Alexandria.Bibliothecary
 		/// </summary>
 		static void Main()
 		{
+			IQueryResultsPage<IFanfic, IFanficRequestHandle> results = Config.Sources[0].Search( Config.SearchQuery );
+
 			ServiceBase[] ServicesToRun;
 			ServicesToRun = new ServiceBase[]
 			{

@@ -63,6 +63,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RequestHandles\AO3ShipRequestHandle.cs" />
     <Compile Include="RequestHandles\AO3TagRequestHandle.cs" />
+    <Compile Include="Searching\AO3FanficSearchResults.cs" />
     <Compile Include="Utils\AO3ContentWarningUtils.cs" />
     <Compile Include="Utils\AO3LanguageUtils.cs" />
     <Compile Include="Utils\AO3MaturityRatingUtils.cs" />

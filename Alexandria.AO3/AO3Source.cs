@@ -5,8 +5,10 @@ using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.AO3.Model;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.AO3.Searching;
 using Alexandria.AO3.Utils;
 using Alexandria.Searching;
+using Alexandria.Utils;
 
 namespace Alexandria.AO3
 {
@@ -107,7 +109,9 @@ namespace Alexandria.AO3
 
 			String searchUrl = CreateSearchUrl( searchCriteria );
 
-			throw new NotImplementedException();
+			HtmlDocument document = HtmlUtils.GetWebPage( searchUrl );
+
+			return AO3FanficSearchResults.Parse( searchUrl, 1, document );
 		}
 
 		String CreateSearchUrl( LibrarySearch searchCriteria )

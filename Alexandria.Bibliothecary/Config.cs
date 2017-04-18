@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Alexandria.AO3;
+using Alexandria.Model;
+using Alexandria.Searching;
 
 namespace Alexandria.Bibliothecary
 {
@@ -12,8 +14,21 @@ namespace Alexandria.Bibliothecary
 			{
 				new AO3Source( LibrarySourceConfig.Default )
 			};
+
+			SearchQuery = new LibrarySearch
+			{
+				Language = Language.English,
+				Ships = new List<String>
+				{
+					"Hiccup Horrendous Haddock III/Jack Frost (Guardians of Childhood)"
+				},
+				SortField = SearchField.DateLastUpdated,
+				SortDirection = SortDirection.Descending
+			};
 		}
 
 		public static IReadOnlyList<LibrarySource> Sources { get; }
+
+		public static LibrarySearch SearchQuery { get; }
 	}
 }
