@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
+using Bibliothecary.Database;
 
 namespace Alexandria.Bibliothecary
 {
@@ -16,6 +17,7 @@ namespace Alexandria.Bibliothecary
 		/// </summary>
 		static void Main()
 		{
+			Database database = Database.Open( "bibliothecary.sqlite" );
 			IQueryResultsPage<IFanfic, IFanficRequestHandle> results = Config.Sources[0].Search( Config.SearchQuery );
 
 			ServiceBase[] ServicesToRun;

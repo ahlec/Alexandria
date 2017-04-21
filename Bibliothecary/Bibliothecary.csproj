@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5D84CF82-6E06-44AF-B762-B6261C7F3473}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Alexandria.Bibliothecary</RootNamespace>
-    <AssemblyName>Alexandria.Bibliothecary</AssemblyName>
+    <RootNamespace>Bibliothecary</RootNamespace>
+    <AssemblyName>Bibliothecary</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -30,6 +30,9 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -60,6 +63,13 @@
       <Project>{25a32de3-ce8f-4f48-a111-bedb2a2594d3}</Project>
       <Name>Alexandria.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Bibliothecary.Database\Bibliothecary.Database.csproj">
+      <Project>{4727de96-8497-48d6-a8f3-54ab7d2d1c0a}</Project>
+      <Name>Bibliothecary.Database</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)\packages\System.Data.SQLite.Core.1.0.105.0\build\net46\x86\SQLite.Interop.dll" "$(OutputDir)" /y /f</PostBuildEvent>
+  </PropertyGroup>
 </Project>
