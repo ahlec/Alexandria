@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Bibliothecary.Database.Schema;
+using Bibliothecary.Data.Schema;
 
-namespace Bibliothecary.Database
+namespace Bibliothecary.Data
 {
 	public sealed class Database : IDisposable
 	{
@@ -37,8 +37,7 @@ namespace Bibliothecary.Database
 				throw new ArgumentNullException( nameof( filename ) );
 			}
 
-			Boolean isCreatingFile = !File.Exists( filename );
-			if ( isCreatingFile )
+			if ( !File.Exists( filename ) )
 			{
 				SQLiteConnection.CreateFile( filename );
 			}
@@ -47,10 +46,6 @@ namespace Bibliothecary.Database
 			SQLiteConnection connection = new SQLiteConnection( connectionString );
 			connection.Open();
 
-			if ( isCreatingFile )
-			{
-				SchemaUpdater.ApplyBaseSchema( connection );
-			}
 			SchemaUpdater.Update( connection );
 
 			return new Database( filename, connection );

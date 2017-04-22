@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Alexandria;
 using Alexandria.AO3;
 using Alexandria.Model;
 using Alexandria.Searching;
 
-namespace Alexandria.Bibliothecary
+namespace Bibliothecary
 {
 	public static class Config
 	{

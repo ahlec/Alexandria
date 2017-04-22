@@ -4,11 +4,12 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using Alexandria;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Bibliothecary.Database;
+using Bibliothecary.Data;
 
-namespace Alexandria.Bibliothecary
+namespace Bibliothecary
 {
 	internal static class Program
 	{

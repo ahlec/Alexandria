@@ -63,9 +63,9 @@
       <Project>{25a32de3-ce8f-4f48-a111-bedb2a2594d3}</Project>
       <Name>Alexandria.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Bibliothecary.Database\Bibliothecary.Database.csproj">
+    <ProjectReference Include="..\Bibliothecary.Data\Bibliothecary.Data.csproj">
       <Project>{4727de96-8497-48d6-a8f3-54ab7d2d1c0a}</Project>
-      <Name>Bibliothecary.Database</Name>
+      <Name>Bibliothecary.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

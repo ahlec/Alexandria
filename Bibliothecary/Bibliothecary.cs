@@ -8,7 +8,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Alexandria.Bibliothecary
+namespace Bibliothecary
 {
 	[DesignerCategory( "" )]
 	public class Bibliothecary : ServiceBase

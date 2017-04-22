@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 
-namespace Bibliothecary.Database.Utils
+namespace Bibliothecary.Data.Utils
 {
 	// ReSharper disable once InconsistentNaming
 	// It's the name of a library
