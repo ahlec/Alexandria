@@ -20,6 +20,10 @@ namespace Bibliothecary
 		{
 			Database database = Database.Open( "bibliothecary.sqlite" );
 			Project test = database.GetProject( 1 ); //database.CreateNewProject();
+			test.SearchQuery.Ships.Add( "Hiccup Horrendous Haddock III/Jack Frost (Rise of the Guardians)" );
+			test.SearchQuery.Rating = MaturityRating.Explicit;
+			test.SearchQuery.Language = Language.English;
+			database.SaveProject( test );
 
 			ServiceBase[] ServicesToRun;
 			ServicesToRun = new ServiceBase[]

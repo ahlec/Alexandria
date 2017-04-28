@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using Alexandria.Searching;
 using Bibliothecary.Data.Utils;
@@ -16,11 +17,38 @@ namespace Bibliothecary.Data
 			_projectId = projectId;
 		}
 
+		public Boolean HasUnsavedChanges
+		{
+			get
+			{
+				if ( !String.Equals( _lastSavedName, Name, StringComparison.CurrentCulture ) )
+				{
+					return true;
+				}
+
+				if ( (Int32) _lastSavedUpdateFrequency.TotalMinutes != (UInt32) UpdateFrequency.TotalMinutes )
+				{
+					return true;
+				}
+
+				if ( !_lastSavedSearchQuery.Equals( SearchQuery ) )
+				{
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		#region Project Fields
+
 		public String Name { get; private set; }
 
 		public TimeSpan UpdateFrequency { get; private set; }
 
 		public LibrarySearch SearchQuery { get; private set; }
+
+		#endregion
 
 		internal static Project Create( SQLiteConnection connection )
 		{
@@ -102,8 +130,76 @@ namespace Bibliothecary.Data
 			return parsed;
 		}
 
-		internal void Save()
+		internal void Save( SQLiteConnection connection )
 		{
+			SQLiteUtils.ValidateConnection( connection );
+
+			using ( SQLiteTransaction transaction = connection.BeginTransaction() )
+			{
+				try
+				{
+					using ( SQLiteCommand updateProjectCommand = new SQLiteCommand( connection ) )
+					{
+						updateProjectCommand.CommandText = "UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency WHERE project_id = @projectId";
+						updateProjectCommand.Parameters.AddWithValue( "@projectId", _projectId );
+						updateProjectCommand.Parameters.AddWithValue( "@name", Name );
+						updateProjectCommand.Parameters.AddWithValue( "@frequency", UpdateFrequency.TotalMinutes );
+						Int32 numberRowsAffected = updateProjectCommand.ExecuteNonQuery();
+						if ( numberRowsAffected != 1 )
+						{
+							throw new ApplicationException( "Unable to update the project in the database!" );
+						}
+					}
+
+					HashSet<KeyValuePair<String, String>> lastSavedSearchSql = new HashSet<KeyValuePair<String, String>>( LibrarySearchUtils.GetProjectSearchFields( _lastSavedSearchQuery ) );
+					foreach ( KeyValuePair<String, String> fieldSql in LibrarySearchUtils.GetProjectSearchFields( SearchQuery ) )
+					{
+						if ( lastSavedSearchSql.Remove( fieldSql ) )
+						{
+							// Was removed from the old list of fields, so that means that it was there before, so we don't need to update.
+							continue;
+						}
+
+						using ( SQLiteCommand insertFieldCommand = new SQLiteCommand( connection ) )
+						{
+							insertFieldCommand.CommandText = "INSERT INTO project_search_fields( project_id, field_name, field_value ) VALUES( @projectId, @fieldName, @fieldValue )";
+							insertFieldCommand.Parameters.AddWithValue( "@projectId", _projectId );
+							insertFieldCommand.Parameters.AddWithValue( "@fieldName", fieldSql.Key );
+							insertFieldCommand.Parameters.AddWithValue( "@fieldValue", fieldSql.Value );
+							Int32 numberRowsAffected = insertFieldCommand.ExecuteNonQuery();
+							if ( numberRowsAffected != 1 )
+							{
+								throw new ApplicationException( $"Unable to insert a project_search_field of key '{fieldSql.Key}' and value '{fieldSql.Value}' into project {_projectId}" );
+							}
+						}
+					}
+
+					foreach ( KeyValuePair<String, String> removedField in lastSavedSearchSql )
+					{
+						using ( SQLiteCommand deleteFieldCommand = new SQLiteCommand( connection ) )
+						{
+							deleteFieldCommand.CommandText = "DELETE FROM project_search_fields WHERE project_id = @projectId AND field_name = @fieldName AND field_value = @fieldValue";
+							deleteFieldCommand.Parameters.AddWithValue( "@projectId", _projectId );
+							deleteFieldCommand.Parameters.AddWithValue( "@fieldName", removedField.Key );
+							deleteFieldCommand.Parameters.AddWithValue( "@fieldValue", removedField.Value );
+							Int32 numberRowsAffected = deleteFieldCommand.ExecuteNonQuery();
+							if ( numberRowsAffected != 1 )
+							{
+								throw new ApplicationException( $"Unable to delete a project_search_field of key '{removedField.Key}' and value '{removedField.Value}' from project {_projectId}" );
+							}
+						}
+					}
+
+					transaction.Commit();
+				}
+				catch
+				{
+					transaction.Rollback();
+					throw;
+				}
+			}
+
+			MarkLastSavedData();
 		}
 
 		void MarkLastSavedData()

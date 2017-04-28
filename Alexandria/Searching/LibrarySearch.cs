@@ -5,7 +5,7 @@ using Alexandria.Model;
 
 namespace Alexandria.Searching
 {
-	public sealed class LibrarySearch
+	public sealed class LibrarySearch : IEquatable<LibrarySearch>
 	{
 		public String Title { get; set; }
 
@@ -63,6 +63,118 @@ namespace Alexandria.Searching
 				SortField = SortField,
 				SortDirection = SortDirection
 			};
+		}
+
+		public Boolean Equals( LibrarySearch other )
+		{
+			if ( other == null )
+			{
+				return false;
+			}
+
+			if ( !String.Equals( Title, other.Title, StringComparison.CurrentCultureIgnoreCase ) )
+			{
+				return false;
+			}
+
+			if ( !String.Equals( Author, other.Author, StringComparison.CurrentCultureIgnoreCase ) )
+			{
+				return false;
+			}
+
+			if ( ( Date == null ) != ( other.Date == null ) || Date?.Equals( other.Date ) != true )
+			{
+				return false;
+			}
+
+			if ( OnlyIncludeCompleteFanfics != other.OnlyIncludeCompleteFanfics )
+			{
+				return false;
+			}
+
+			if ( OnlyIncludeSingleChapterFanfics != other.OnlyIncludeSingleChapterFanfics )
+			{
+				return false;
+			}
+
+			if ( ( WordCount == null ) != ( other.WordCount == null ) || WordCount?.Equals( other.WordCount ) != true )
+			{
+				return false;
+			}
+
+			if ( Language != other.Language )
+			{
+				return false;
+			}
+
+			if ( Fandoms.Count != other.Fandoms.Count || Fandoms.Except( other.Fandoms, StringComparer.CurrentCultureIgnoreCase ).Any() )
+			{
+				return false;
+			}
+
+			if ( Rating != other.Rating )
+			{
+				return false;
+			}
+
+			if ( ContentWarnings != other.ContentWarnings )
+			{
+				return false;
+			}
+
+			if ( CharacterNames.Count != other.CharacterNames.Count || CharacterNames.Except( other.CharacterNames, StringComparer.CurrentCultureIgnoreCase ).Any() )
+			{
+				return false;
+			}
+
+			if ( Ships.Count != other.Ships.Count || Ships.Except( other.Ships, StringComparer.CurrentCultureIgnoreCase ).Any() )
+			{
+				return false;
+			}
+
+			if ( Tags.Count != other.Tags.Count || Tags.Except( other.Tags, StringComparer.CurrentCultureIgnoreCase ).Any() )
+			{
+				return false;
+			}
+
+			if ( ( NumberLikes == null ) != ( other.NumberLikes == null ) || NumberLikes?.Equals( other.NumberLikes ) != true )
+			{
+				return false;
+			}
+
+			if ( ( NumberComments == null ) != ( other.NumberComments == null ) || NumberComments?.Equals( other.NumberComments ) != true )
+			{
+				return false;
+			}
+
+			if ( SortField != other.SortField )
+			{
+				return false;
+			}
+
+			if ( SortDirection != other.SortDirection )
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		/// <inheritdoc />
+		public override Boolean Equals( Object obj )
+		{
+			if ( ReferenceEquals( obj, null ) )
+			{
+				return false;
+			}
+
+			if ( ReferenceEquals( obj, this ) )
+			{
+				return true;
+			}
+
+			LibrarySearch other = obj as LibrarySearch;
+			return Equals( other );
 		}
 	}
 }

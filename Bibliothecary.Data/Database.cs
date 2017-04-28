@@ -57,6 +57,16 @@ namespace Bibliothecary.Data
 			return Project.Read( Connection, projectId );
 		}
 
+		public void SaveProject( Project project )
+		{
+			if ( project == null )
+			{
+				throw new ArgumentNullException( nameof( project ) );
+			}
+
+			project.Save( Connection );
+		}
+
 		SQLiteConnection Connection
 		{
 			get
