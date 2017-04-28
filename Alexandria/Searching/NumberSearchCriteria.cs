@@ -14,6 +14,8 @@ namespace Alexandria.Searching
 			return number;
 		}
 
+		public abstract NumberSearchCriteria Clone();
+
 		/// <inheritdoc />
 		public override String ToString()
 		{

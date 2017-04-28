@@ -16,6 +16,12 @@ namespace Alexandria.Searching
 		}
 
 		/// <inheritdoc />
+		public override NumberSearchCriteria Clone()
+		{
+			return new ExactNumberSearchCriteria( Number );
+		}
+
+		/// <inheritdoc />
 		public override String ToString()
 		{
 			return Number.ToString();

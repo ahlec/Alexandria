@@ -16,6 +16,12 @@ namespace Alexandria.Searching
 		}
 
 		/// <inheritdoc />
+		public override NumberSearchCriteria Clone()
+		{
+			return new GreaterThanNumberSearchCriteria( Number );
+		}
+
+		/// <inheritdoc />
 		public override String ToString()
 		{
 			return String.Concat( ">", Number );

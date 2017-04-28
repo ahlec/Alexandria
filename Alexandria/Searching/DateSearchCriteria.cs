@@ -21,6 +21,8 @@ namespace Alexandria.Searching
 			return number;
 		}
 
+		public abstract DateSearchCriteria Clone();
+
 		/// <inheritdoc />
 		public override String ToString()
 		{

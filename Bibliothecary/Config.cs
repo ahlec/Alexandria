@@ -15,21 +15,8 @@ namespace Bibliothecary
 			{
 				new AO3Source( LibrarySourceConfig.Default )
 			};
-
-			SearchQuery = new LibrarySearch
-			{
-				Language = Language.English,
-				Ships = new List<String>
-				{
-					"Hiccup Horrendous Haddock III/Jack Frost (Guardians of Childhood)"
-				},
-				SortField = SearchField.DateLastUpdated,
-				SortDirection = SortDirection.Descending
-			};
 		}
 
 		public static IReadOnlyList<LibrarySource> Sources { get; }
-
-		public static LibrarySearch SearchQuery { get; }
 	}
 }

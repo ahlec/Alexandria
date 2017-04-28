@@ -16,6 +16,12 @@ namespace Alexandria.Searching
 		}
 
 		/// <inheritdoc />
+		public override DateSearchCriteria Clone()
+		{
+			return new BeforeDateSearchCriteria( DateUnit, Amount );
+		}
+
+		/// <inheritdoc />
 		public override String ToString()
 		{
 			return String.Concat( "> ", Amount, " ", DateUnit, "s ago" );

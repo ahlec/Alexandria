@@ -23,6 +23,12 @@ namespace Alexandria.Searching
 		}
 
 		/// <inheritdoc />
+		public override DateSearchCriteria Clone()
+		{
+			return new RangeDateSearchCriteria( DateUnit, Minimum, Maximum );
+		}
+
+		/// <inheritdoc />
 		public override String ToString()
 		{
 			return String.Concat( Minimum, "-", Maximum, " ", DateUnit, "s ago" );

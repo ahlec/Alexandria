@@ -33,11 +33,7 @@ namespace Alexandria.AO3.Model
 
 		internal static AO3Ship Parse( Uri url, HtmlDocument document )
 		{
-			AO3Ship parsed = new AO3Ship( url );
-
 			throw new NotImplementedException(); ;
-
-			return parsed;
 		}
 	}
 }

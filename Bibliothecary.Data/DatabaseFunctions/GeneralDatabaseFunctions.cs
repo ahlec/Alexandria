@@ -12,9 +12,18 @@ namespace Bibliothecary.Data.DatabaseFunctions
 
 			try
 			{
-				SQLiteCommand command = new SQLiteCommand( "SELECT version_number FROM db_version", connection );
-				Object versionObj = command.ExecuteScalar();
-				return (Int32) (Int64) versionObj;
+				using ( SQLiteCommand command = new SQLiteCommand( "SELECT version_number FROM db_version", connection ) )
+				{
+					using ( SQLiteDataReader reader = command.ExecuteReader() )
+					{
+						if ( !reader.Read() )
+						{
+							return -1;
+						}
+
+						return reader.GetInt32( 0 );
+					}
+				}
 			}
 			catch ( Exception ex )
 			{

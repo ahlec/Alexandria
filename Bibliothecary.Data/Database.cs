@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Bibliothecary.Data.Schema;
 
 namespace Bibliothecary.Data
@@ -49,6 +45,16 @@ namespace Bibliothecary.Data
 			SchemaUpdater.Update( connection );
 
 			return new Database( filename, connection );
+		}
+
+		public Project CreateNewProject()
+		{
+			return Project.Create( Connection );
+		}
+
+		public Project GetProject( Int32 projectId )
+		{
+			return Project.Read( Connection, projectId );
 		}
 
 		SQLiteConnection Connection

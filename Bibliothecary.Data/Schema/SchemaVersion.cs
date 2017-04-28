@@ -36,7 +36,7 @@ namespace Bibliothecary.Data.Schema
 					}
 					return succeeded;
 				}
-				catch ( Exception ex )
+				catch
 				{
 					transaction.Rollback();
 					return false;

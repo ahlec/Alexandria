@@ -23,6 +23,12 @@ namespace Alexandria.Searching
 		}
 
 		/// <inheritdoc />
+		public override NumberSearchCriteria Clone()
+		{
+			return new RangeNumberSearchCriteria( Minimum, Maximum );
+		}
+
+		/// <inheritdoc />
 		public override String ToString()
 		{
 			return String.Concat( Minimum, "-", Maximum );

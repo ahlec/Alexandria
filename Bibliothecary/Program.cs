@@ -19,7 +19,7 @@ namespace Bibliothecary
 		static void Main()
 		{
 			Database database = Database.Open( "bibliothecary.sqlite" );
-			IQueryResultsPage<IFanfic, IFanficRequestHandle> results = Config.Sources[0].Search( Config.SearchQuery );
+			Project test = database.GetProject( 1 ); //database.CreateNewProject();
 
 			ServiceBase[] ServicesToRun;
 			ServicesToRun = new ServiceBase[]
