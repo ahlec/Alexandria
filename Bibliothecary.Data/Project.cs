@@ -10,7 +10,7 @@ namespace Bibliothecary.Data
 	{
 		const String DefaultProjectName = "Untitled";
 		const Int32 DefaultUpdateFrequencyMinutes = 24 * 60; // 1 day
-		const Int32 MinimumUpdateFrequencyMinutes = 1; // I mean, really??
+		public const Int32 MinimumUpdateFrequencyMinutes = 1; // I mean, really??
 
 		Project( Int32 projectId )
 		{
@@ -49,6 +49,49 @@ namespace Bibliothecary.Data
 		public LibrarySearch SearchQuery { get; private set; }
 
 		#endregion
+
+		public Boolean SetName( String name )
+		{
+			name = name ?? String.Empty;
+			if ( String.Equals( Name, name ) )
+			{
+				return false;
+			}
+			Name = name;
+			return true;
+		}
+
+		public Boolean SetUpdateFrequency( Int32 minutes )
+		{
+			if ( minutes < MinimumUpdateFrequencyMinutes )
+			{
+				throw new ArgumentOutOfRangeException( nameof( minutes ) );
+			}
+
+			if ( minutes == (UInt32) UpdateFrequency.TotalMinutes )
+			{
+				return false;
+			}
+
+			UpdateFrequency = TimeSpan.FromMinutes( minutes );
+			return true;
+		}
+
+		internal static IEnumerable<Int32> GetAllProjectIds( SQLiteConnection connection )
+		{
+			SQLiteUtils.ValidateConnection( connection );
+
+			using ( SQLiteCommand selectCommand = new SQLiteCommand( "SELECT project_id FROM projects", connection ) )
+			{
+				using ( SQLiteDataReader reader = selectCommand.ExecuteReader() )
+				{
+					while ( reader.Read() )
+					{
+						yield return reader.GetInt32( 0 );
+					}
+				}
+			}
+		}
 
 		internal static Project Create( SQLiteConnection connection )
 		{

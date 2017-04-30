@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -58,18 +58,22 @@
     <ProjectReference Include="..\Alexandria.AO3\Alexandria.AO3.csproj">
       <Project>{fc380674-2a3d-491a-b65c-c572e04252d4}</Project>
       <Name>Alexandria.AO3</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Alexandria\Alexandria.Base.csproj">
       <Project>{25a32de3-ce8f-4f48-a111-bedb2a2594d3}</Project>
       <Name>Alexandria.Base</Name>
+      <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Bibliothecary.Data\Bibliothecary.Data.csproj">
       <Project>{4727de96-8497-48d6-a8f3-54ab7d2d1c0a}</Project>
       <Name>Bibliothecary.Data</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)\packages\System.Data.SQLite.Core.1.0.105.0\build\net46\x86\SQLite.Interop.dll" "$(OutputDir)" /y /f</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
