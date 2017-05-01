@@ -53,27 +53,7 @@ namespace Bibliothecary.Data
 			return Project.GetAllProjectIds( Connection );
 		}
 
-		public Project CreateNewProject()
-		{
-			return Project.Create( Connection );
-		}
-
-		public Project GetProject( Int32 projectId )
-		{
-			return Project.Read( Connection, projectId );
-		}
-
-		public void SaveProject( Project project )
-		{
-			if ( project == null )
-			{
-				throw new ArgumentNullException( nameof( project ) );
-			}
-
-			project.Save( Connection );
-		}
-
-		SQLiteConnection Connection
+		internal SQLiteConnection Connection
 		{
 			get
 			{

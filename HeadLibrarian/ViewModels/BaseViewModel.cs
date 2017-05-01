@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace HeadLibrarian.ViewModels
 {
-	internal abstract class BaseViewModel : INotifyPropertyChanged
+	public abstract class BaseViewModel : INotifyPropertyChanged
 	{
 		#region INotifyPropertyChanged
 

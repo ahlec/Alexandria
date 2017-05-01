@@ -3,9 +3,12 @@
 		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:local="clr-namespace:HeadLibrarian"
 		xmlns:viewModels="clr-namespace:HeadLibrarian.ViewModels"
 		xmlns:converters="clr-namespace:HeadLibrarian.Converters"
+		xmlns:views="clr-namespace:HeadLibrarian.Views"
+		xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+		xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+		xmlns:triggerActions="clr-namespace:HeadLibrarian.TriggerActions"
 		mc:Ignorable="d"
 		Title="MainWindow"
 		ResizeMode="CanMinimize"
@@ -17,39 +20,85 @@
 
 	<Window.Resources>
 		<converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
+		<converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
+		<converters:ProjectDisplayNameMultiConverter x:Key="ProjectDisplayNameMultiConverter" />
+		<converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter" />
 	</Window.Resources>
+
+	<i:Interaction.Triggers>
+		<i:EventTrigger EventName="Loaded">
+			<i:InvokeCommandAction Command="{Binding ConnectToDatabaseCommand}" />
+		</i:EventTrigger>
+	</i:Interaction.Triggers>
 
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-		
+
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="200" />
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
-		
-		<ListBox Grid.Row="0"
+
+		<ListBox x:Name="ProjectsListBox"
+				 Grid.Row="0"
 				 Grid.Column="0"
 				 ItemsSource="{Binding Projects}">
 			<ListBox.ItemTemplate>
 				<DataTemplate DataType="viewModels:ProjectViewModel">
-					<TextBlock Text="{Binding Name}" />
+					<TextBlock>
+						<TextBlock.Text>
+							<MultiBinding Converter="{StaticResource ProjectDisplayNameMultiConverter}">
+								<Binding Path="Name" />
+								<Binding Path="HasUnsavedChanges" />
+							</MultiBinding>
+						</TextBlock.Text>
+					</TextBlock>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
+
+			<i:Interaction.Triggers>
+				<ei:DataTrigger Binding="{Binding IsConnectedToDatabase}"
+								Value="True">
+					<ei:ChangePropertyAction TargetName="ProjectsListBox"
+											 PropertyName="SelectedIndex"
+											 Value="0" />
+				</ei:DataTrigger>
+				<i:EventTrigger EventName="ProjectCreated">
+					<triggerActions:SetSelectedItemToEventArgsAction ListBox="{x:Reference ProjectsListBox}" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
 		</ListBox>
-		
+
 		<StackPanel Grid.Row="1"
 					Grid.Column="0"
 					Orientation="Horizontal"
 					HorizontalAlignment="Right">
-			<Button Command="{Binding CreateProjectCommand}">
+			<Button Command="{Binding CreateProjectCommand}"
+					ToolTip="Create New Project">
 				<Image Source="../Resources/add-icon.png"
 					   Width="16"
 					   Height="16" />
 			</Button>
+			<Button Command="{Binding DeleteProjectCommand}"
+					CommandParameter="{Binding SelectedItem, ElementName=ProjectsListBox}"
+					ToolTip="Delete Selected Project"
+					IsEnabled="{Binding SelectedItem, ElementName=ProjectsListBox, Converter={StaticResource NotNullToBooleanConverter}}">
+				<Image Source="../Resources/delete-icon.png"
+					   Width="16"
+					   Height="16" />
+			</Button>
 		</StackPanel>
+
+		<ScrollViewer Grid.Row="0"
+					  Grid.RowSpan="2"
+					  Grid.Column="1"
+					  HorizontalScrollBarVisibility="Hidden"
+					  VerticalScrollBarVisibility="Auto">
+			<views:ProjectView DataContext="{Binding SelectedItem, ElementName=ProjectsListBox}" />
+		</ScrollViewer>
 
 		<!-- Lockout -->
 		<StackPanel Grid.Row="0"
@@ -60,7 +109,9 @@
 					Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
 			<Button Command="{Binding ConnectToDatabaseCommand}"
 					HorizontalAlignment="Center"
-					VerticalAlignment="Center">Connect to Database</Button>
+					VerticalAlignment="Center"
+					IsEnabled="{Binding IsAttemptingConnectionToDatabase, Converter={StaticResource InvertedBooleanConverter}}">Connect to Database</Button>
 		</StackPanel>
 	</Grid>
 </Window>
+

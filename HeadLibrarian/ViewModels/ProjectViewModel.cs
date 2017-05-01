@@ -1,41 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Bibliothecary.Data;
 
 namespace HeadLibrarian.ViewModels
 {
-	internal sealed class ProjectViewModel : BaseViewModel
+	public sealed class ProjectViewModel : BaseViewModel
 	{
 		public ProjectViewModel( Database database, Project project )
 		{
 			_database = database;
-			_project = project;
+			Project = project;
 			SearchQuery = new LibrarySearchViewModel( project.SearchQuery );
 		}
 
+		public Project Project { get; }
+
+		public Int32 ProjectId => Project.ProjectId;
+
+		public Boolean HasUnsavedChanges => Project.HasUnsavedChanges;
+
 		public String Name
 		{
-			get => _project.Name;
+			get => Project.Name;
 			set
 			{
-				if ( _project.SetName( value ) )
+				if ( Project.SetName( value ) )
 				{
 					OnPropertyChanged( nameof( Name ) );
+					OnPropertyChanged( nameof( HasUnsavedChanges ) );
 				}
 			}
 		}
 
 		public TimeSpan UpdateFrequency
 		{
-			get => _project.UpdateFrequency;
+			get => Project.UpdateFrequency;
 			set
 			{
-				if ( _project.SetUpdateFrequency( (Int32) value.TotalMinutes ) )
+				if ( Project.SetUpdateFrequency( (Int32) value.TotalMinutes ) )
 				{
 					OnPropertyChanged( nameof( UpdateFrequency ) );
+					OnPropertyChanged( nameof( HasUnsavedChanges ) );
 				}
 			}
 		}
@@ -43,6 +47,5 @@ namespace HeadLibrarian.ViewModels
 		public LibrarySearchViewModel SearchQuery { get; }
 
 		readonly Database _database;
-		readonly Project _project;
 	}
 }

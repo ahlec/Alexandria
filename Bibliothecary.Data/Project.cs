@@ -12,9 +12,10 @@ namespace Bibliothecary.Data
 		const Int32 DefaultUpdateFrequencyMinutes = 24 * 60; // 1 day
 		public const Int32 MinimumUpdateFrequencyMinutes = 1; // I mean, really??
 
-		Project( Int32 projectId )
+		Project( Database database, Int32 projectId )
 		{
-			_projectId = projectId;
+			_database = database;
+			ProjectId = projectId;
 		}
 
 		public Boolean HasUnsavedChanges
@@ -41,6 +42,8 @@ namespace Bibliothecary.Data
 		}
 
 		#region Project Fields
+
+		public Int32 ProjectId { get; }
 
 		public String Name { get; private set; }
 
@@ -93,15 +96,19 @@ namespace Bibliothecary.Data
 			}
 		}
 
-		internal static Project Create( SQLiteConnection connection )
+		public static Project Create( Database database )
 		{
-			SQLiteUtils.ValidateConnection( connection );
+			if ( database == null )
+			{
+				throw new ArgumentNullException( nameof( database ) );
+			}
+			SQLiteUtils.ValidateConnection( database.Connection );
 
-			using ( SQLiteTransaction transaction = connection.BeginTransaction() )
+			using ( SQLiteTransaction transaction = database.Connection.BeginTransaction() )
 			{
 				try
 				{
-					using ( SQLiteCommand insertCommand = new SQLiteCommand( connection ) )
+					using ( SQLiteCommand insertCommand = new SQLiteCommand( database.Connection ) )
 					{
 						insertCommand.CommandText = "INSERT INTO projects( project_name, update_frequency_minutes ) VALUES( @name, @frequency )";
 						insertCommand.Parameters.AddWithValue( "@name", DefaultProjectName );
@@ -114,7 +121,7 @@ namespace Bibliothecary.Data
 					}
 
 					Project newProject;
-					using ( SQLiteCommand getProjectId = new SQLiteCommand( "SELECT last_insert_rowid()", connection ) )
+					using ( SQLiteCommand getProjectId = new SQLiteCommand( "SELECT last_insert_rowid()", database.Connection ) )
 					{
 						using ( SQLiteDataReader reader = getProjectId.ExecuteReader() )
 						{
@@ -123,7 +130,7 @@ namespace Bibliothecary.Data
 								throw new ApplicationException( "No result from last_insert_rowid?" );
 							}
 							Int32 projectId = reader.GetInt32( 0 );
-							newProject = new Project( projectId )
+							newProject = new Project( database, projectId )
 							{
 								Name = DefaultProjectName,
 								UpdateFrequency = TimeSpan.FromMinutes( DefaultUpdateFrequencyMinutes ),
@@ -146,12 +153,16 @@ namespace Bibliothecary.Data
 			}
 		}
 
-		internal static Project Read( SQLiteConnection connection, Int32 projectId )
+		public static Project Read( Database database, Int32 projectId )
 		{
-			SQLiteUtils.ValidateConnection( connection );
+			if ( database == null )
+			{
+				throw new ArgumentNullException( nameof( database ) );
+			}
+			SQLiteUtils.ValidateConnection( database.Connection );
 
-			Project parsed = new Project( projectId );
-			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( "SELECT project_name, update_frequency_minutes FROM projects WHERE project_id = @projectId", connection ) )
+			Project parsed = new Project( database, projectId );
+			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( "SELECT project_name, update_frequency_minutes FROM projects WHERE project_id = @projectId", database.Connection ) )
 			{
 				selectBasicDataCommand.Parameters.AddWithValue( "@projectId", projectId );
 				using ( SQLiteDataReader reader = selectBasicDataCommand.ExecuteReader() )
@@ -166,25 +177,23 @@ namespace Bibliothecary.Data
 					parsed.UpdateFrequency = TimeSpan.FromMinutes( updateFrequencyMinutes );
 				}
 			}
-			parsed.SearchQuery = LibrarySearchUtils.ReadFromDatabase( connection, projectId );
+			parsed.SearchQuery = LibrarySearchUtils.ReadFromDatabase( database.Connection, projectId );
 
 			parsed.MarkLastSavedData();
 
 			return parsed;
 		}
 
-		internal void Save( SQLiteConnection connection )
+		public void Save()
 		{
-			SQLiteUtils.ValidateConnection( connection );
-
-			using ( SQLiteTransaction transaction = connection.BeginTransaction() )
+			using ( SQLiteTransaction transaction = _database.Connection.BeginTransaction() )
 			{
 				try
 				{
-					using ( SQLiteCommand updateProjectCommand = new SQLiteCommand( connection ) )
+					using ( SQLiteCommand updateProjectCommand = new SQLiteCommand( _database.Connection ) )
 					{
 						updateProjectCommand.CommandText = "UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency WHERE project_id = @projectId";
-						updateProjectCommand.Parameters.AddWithValue( "@projectId", _projectId );
+						updateProjectCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 						updateProjectCommand.Parameters.AddWithValue( "@name", Name );
 						updateProjectCommand.Parameters.AddWithValue( "@frequency", UpdateFrequency.TotalMinutes );
 						Int32 numberRowsAffected = updateProjectCommand.ExecuteNonQuery();
@@ -203,32 +212,32 @@ namespace Bibliothecary.Data
 							continue;
 						}
 
-						using ( SQLiteCommand insertFieldCommand = new SQLiteCommand( connection ) )
+						using ( SQLiteCommand insertFieldCommand = new SQLiteCommand( _database.Connection ) )
 						{
 							insertFieldCommand.CommandText = "INSERT INTO project_search_fields( project_id, field_name, field_value ) VALUES( @projectId, @fieldName, @fieldValue )";
-							insertFieldCommand.Parameters.AddWithValue( "@projectId", _projectId );
+							insertFieldCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 							insertFieldCommand.Parameters.AddWithValue( "@fieldName", fieldSql.Key );
 							insertFieldCommand.Parameters.AddWithValue( "@fieldValue", fieldSql.Value );
 							Int32 numberRowsAffected = insertFieldCommand.ExecuteNonQuery();
 							if ( numberRowsAffected != 1 )
 							{
-								throw new ApplicationException( $"Unable to insert a project_search_field of key '{fieldSql.Key}' and value '{fieldSql.Value}' into project {_projectId}" );
+								throw new ApplicationException( $"Unable to insert a project_search_field of key '{fieldSql.Key}' and value '{fieldSql.Value}' into project {ProjectId}" );
 							}
 						}
 					}
 
 					foreach ( KeyValuePair<String, String> removedField in lastSavedSearchSql )
 					{
-						using ( SQLiteCommand deleteFieldCommand = new SQLiteCommand( connection ) )
+						using ( SQLiteCommand deleteFieldCommand = new SQLiteCommand( _database.Connection ) )
 						{
 							deleteFieldCommand.CommandText = "DELETE FROM project_search_fields WHERE project_id = @projectId AND field_name = @fieldName AND field_value = @fieldValue";
-							deleteFieldCommand.Parameters.AddWithValue( "@projectId", _projectId );
+							deleteFieldCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 							deleteFieldCommand.Parameters.AddWithValue( "@fieldName", removedField.Key );
 							deleteFieldCommand.Parameters.AddWithValue( "@fieldValue", removedField.Value );
 							Int32 numberRowsAffected = deleteFieldCommand.ExecuteNonQuery();
 							if ( numberRowsAffected != 1 )
 							{
-								throw new ApplicationException( $"Unable to delete a project_search_field of key '{removedField.Key}' and value '{removedField.Value}' from project {_projectId}" );
+								throw new ApplicationException( $"Unable to delete a project_search_field of key '{removedField.Key}' and value '{removedField.Value}' from project {ProjectId}" );
 							}
 						}
 					}
@@ -245,6 +254,41 @@ namespace Bibliothecary.Data
 			MarkLastSavedData();
 		}
 
+		public Boolean Delete()
+		{
+			using ( SQLiteTransaction transaction = _database.Connection.BeginTransaction() )
+			{
+				try
+				{
+					using ( SQLiteCommand deleteFromProjectsCommand = new SQLiteCommand( _database.Connection ) )
+					{
+						deleteFromProjectsCommand.CommandText = "DELETE FROM projects WHERE project_id = @projectId";
+						deleteFromProjectsCommand.Parameters.AddWithValue( "@projectId", ProjectId );
+						Int32 numberRowsAffected = deleteFromProjectsCommand.ExecuteNonQuery();
+						if ( numberRowsAffected != 1 )
+						{
+							throw new ApplicationException( "Unable to update the project in the database!" );
+						}
+					}
+
+					using ( SQLiteCommand deleteFromProjectSearchFieldsCommand = new SQLiteCommand( _database.Connection ) )
+					{
+						deleteFromProjectSearchFieldsCommand.CommandText = "DELETE FROM project_search_fields WHERE project_id = @projectId";
+						deleteFromProjectSearchFieldsCommand.Parameters.AddWithValue( "@projectId", ProjectId );
+						deleteFromProjectSearchFieldsCommand.ExecuteNonQuery();
+					}
+
+					transaction.Commit();
+					return true;
+				}
+				catch
+				{
+					transaction.Rollback();
+					return false;
+				}
+			}
+		}
+
 		void MarkLastSavedData()
 		{
 			_lastSavedName = Name;
@@ -252,7 +296,7 @@ namespace Bibliothecary.Data
 			_lastSavedSearchQuery = SearchQuery.Clone();
 		}
 
-		readonly Int32 _projectId;
+		readonly Database _database;
 		String _lastSavedName;
 		TimeSpan _lastSavedUpdateFrequency;
 		LibrarySearch _lastSavedSearchQuery;

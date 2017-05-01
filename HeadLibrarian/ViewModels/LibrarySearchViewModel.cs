@@ -7,7 +7,7 @@ using Alexandria.Searching;
 
 namespace HeadLibrarian.ViewModels
 {
-	internal sealed class LibrarySearchViewModel : BaseViewModel
+	public sealed class LibrarySearchViewModel : BaseViewModel
 	{
 		public LibrarySearchViewModel( LibrarySearch search )
 		{

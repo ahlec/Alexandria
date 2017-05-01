@@ -82,7 +82,7 @@ namespace Alexandria.Searching
 				return false;
 			}
 
-			if ( ( Date == null ) != ( other.Date == null ) || Date?.Equals( other.Date ) != true )
+			if ( ( Date == null ) != ( other.Date == null ) || ( Date != null && !Date.Equals( other.Date ) ) )
 			{
 				return false;
 			}
@@ -97,7 +97,7 @@ namespace Alexandria.Searching
 				return false;
 			}
 
-			if ( ( WordCount == null ) != ( other.WordCount == null ) || WordCount?.Equals( other.WordCount ) != true )
+			if ( ( WordCount == null ) != ( other.WordCount == null ) || ( WordCount != null && !WordCount.Equals( other.WordCount ) ) )
 			{
 				return false;
 			}
@@ -137,12 +137,12 @@ namespace Alexandria.Searching
 				return false;
 			}
 
-			if ( ( NumberLikes == null ) != ( other.NumberLikes == null ) || NumberLikes?.Equals( other.NumberLikes ) != true )
+			if ( ( NumberLikes == null ) != ( other.NumberLikes == null ) || ( NumberLikes != null && !NumberLikes.Equals( other.NumberLikes ) ) )
 			{
 				return false;
 			}
 
-			if ( ( NumberComments == null ) != ( other.NumberComments == null ) || NumberComments?.Equals( other.NumberComments ) != true )
+			if ( ( NumberComments == null ) != ( other.NumberComments == null ) || ( NumberComments != null && !NumberComments.Equals( other.NumberComments ) ) )
 			{
 				return false;
 			}
