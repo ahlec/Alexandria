@@ -7,36 +7,40 @@
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance viewModels:ProjectViewModel}">
 	<UserControl.Resources>
-		<Style TargetType="Label" x:Key="FieldNameLabel">
-			<Setter Property="FontWeight" Value="Bold" />
+		<Style TargetType="TextBlock"
+			   x:Key="FieldNameLabel">
+			<Setter Property="FontWeight"
+					Value="Bold" />
 		</Style>
 	</UserControl.Resources>
-	
+
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
-		
+
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition MaxWidth="200" Width="Auto" />
+			<ColumnDefinition MaxWidth="200"
+							  Width="Auto" />
+			<ColumnDefinition Width="6" />
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
 
-		<Label Grid.Row="0"
-			   Grid.Column="0"
-			   Style="{StaticResource FieldNameLabel}">Project Id:</Label>
-		
-		<Label Grid.Row="0"
-			   Grid.Column="1"
-			   Content="{Binding ProjectId}" />
-		
-		<Label Grid.Row="1"
-			   Grid.Column="0"
-			   Style="{StaticResource FieldNameLabel}">Name:</Label>
-		
+		<TextBlock Grid.Row="0"
+				   Grid.Column="0"
+				   Style="{StaticResource FieldNameLabel}">Project Id:</TextBlock>
+
+		<TextBlock Grid.Row="0"
+				   Grid.Column="2"
+				   Text="{Binding ProjectId}" />
+
+		<TextBlock Grid.Row="1"
+				   Grid.Column="0"
+				   Style="{StaticResource FieldNameLabel}">Name:</TextBlock>
+
 		<TextBox Grid.Row="1"
-				 Grid.Column="1"
+				 Grid.Column="2"
 				 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
 	</Grid>
 </UserControl>

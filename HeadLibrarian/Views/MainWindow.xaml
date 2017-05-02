@@ -25,6 +25,15 @@
 		<converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter" />
 	</Window.Resources>
 
+	<Window.InputBindings>
+		<KeyBinding Key="Z"
+					Modifiers="Control"
+					Command="{Binding UndoCommand}" />
+		<KeyBinding Key="Y"
+					Modifiers="Control"
+					Command="{Binding RedoCommand}" />
+	</Window.InputBindings>
+
 	<i:Interaction.Triggers>
 		<i:EventTrigger EventName="Loaded">
 			<i:InvokeCommandAction Command="{Binding ConnectToDatabaseCommand}" />
@@ -33,19 +42,25 @@
 
 	<Grid>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="200" />
+			<ColumnDefinition Width="200" MinWidth="100" MaxWidth="450" />
 			<ColumnDefinition Width="*" />
 		</Grid.ColumnDefinitions>
 
+		<Label Grid.Row="0"
+			   Grid.Column="0"
+			   FontWeight="Bold">Projects</Label>
+
 		<ListBox x:Name="ProjectsListBox"
-				 Grid.Row="0"
+				 Grid.Row="1"
 				 Grid.Column="0"
-				 ItemsSource="{Binding Projects}">
+				 ItemsSource="{Binding Projects}"
+				 Margin="6,6,11,6">
 			<ListBox.ItemTemplate>
 				<DataTemplate DataType="viewModels:ProjectViewModel">
 					<TextBlock>
@@ -72,10 +87,18 @@
 			</i:Interaction.Triggers>
 		</ListBox>
 
-		<StackPanel Grid.Row="1"
+		<StackPanel Grid.Row="2"
 					Grid.Column="0"
 					Orientation="Horizontal"
-					HorizontalAlignment="Right">
+					HorizontalAlignment="Right"
+					Margin="6,0,11,6">
+			<StackPanel.Resources>
+				<Style TargetType="Button">
+					<Setter Property="Margin"
+							Value="6,0,0,0" />
+				</Style>
+			</StackPanel.Resources>
+
 			<Button Command="{Binding CreateProjectCommand}"
 					ToolTip="Create New Project">
 				<Image Source="../Resources/add-icon.png"
@@ -92,17 +115,25 @@
 			</Button>
 		</StackPanel>
 
-		<ScrollViewer Grid.Row="0"
+		<ScrollViewer Grid.Row="1"
 					  Grid.RowSpan="2"
 					  Grid.Column="1"
 					  HorizontalScrollBarVisibility="Hidden"
-					  VerticalScrollBarVisibility="Auto">
+					  VerticalScrollBarVisibility="Auto"
+					  Margin="6">
 			<views:ProjectView DataContext="{Binding SelectedItem, ElementName=ProjectsListBox}" />
 		</ScrollViewer>
 
+		<GridSplitter Grid.Row="0"
+					  Grid.RowSpan="3"
+					  Grid.Column="0"
+					  HorizontalAlignment="Right"
+					  VerticalAlignment="Stretch"
+					  Width="5" />
+		
 		<!-- Lockout -->
 		<StackPanel Grid.Row="0"
-					Grid.RowSpan="2"
+					Grid.RowSpan="3"
 					Grid.Column="0"
 					Grid.ColumnSpan="2"
 					Visibility="{Binding IsConnectedToDatabase, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"

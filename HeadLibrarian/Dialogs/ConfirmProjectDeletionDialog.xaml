@@ -6,9 +6,10 @@
 		mc:Ignorable="d"
 		x:Name="ConfirmProjectDeletionDialogWindow"
 		Title="Confirm Project Deletion"
-		Width="300"
+		Width="450"
 		SizeToContent="Height"
-		WindowStartupLocation="CenterOwner">
+		WindowStartupLocation="CenterOwner"
+		ResizeMode="NoResize">
 	<Grid IsSharedSizeScope="True"
 		  Margin="6">
 		<Grid.RowDefinitions>

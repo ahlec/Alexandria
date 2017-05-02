@@ -73,6 +73,8 @@
       <DependentUpon>ConfirmProjectDeletionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="TriggerActions\SetSelectedItemToEventArgsAction.cs" />
+    <Compile Include="IUndoRedoAction.cs" />
+    <Compile Include="UndoRedoStack.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\LibrarySearchViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -149,6 +151,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\confirmation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\arrow-redo-icon.png" />
+    <Resource Include="Resources\arrow-undo-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

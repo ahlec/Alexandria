@@ -23,12 +23,19 @@ namespace HeadLibrarian.ViewModels
 			get => Project.Name;
 			set
 			{
+				String oldName = Name;
 				if ( Project.SetName( value ) )
 				{
-					OnPropertyChanged( nameof( Name ) );
-					OnPropertyChanged( nameof( HasUnsavedChanges ) );
+					UndoRedoStack.Push( new SetNameUndoAction( this, oldName, Name ) );
+					InvokeNameChanged();
 				}
 			}
+		}
+
+		void InvokeNameChanged()
+		{
+			OnPropertyChanged( nameof( Name ) );
+			OnPropertyChanged( nameof( HasUnsavedChanges ) );
 		}
 
 		public TimeSpan UpdateFrequency
@@ -47,5 +54,31 @@ namespace HeadLibrarian.ViewModels
 		public LibrarySearchViewModel SearchQuery { get; }
 
 		readonly Database _database;
+
+		class SetNameUndoAction : IUndoRedoAction
+		{
+			public SetNameUndoAction( ProjectViewModel project, String oldName, String newName )
+			{
+				_project = project;
+				_oldName = oldName;
+				_newName = newName;
+			}
+
+			public void Undo()
+			{
+				_project.Project.SetName( _oldName );
+				_project.InvokeNameChanged();
+			}
+
+			public void Redo()
+			{
+				_project.Project.SetName( _newName );
+				_project.InvokeNameChanged();
+			}
+
+			readonly ProjectViewModel _project;
+			readonly String _oldName;
+			readonly String _newName;
+		}
 	}
 }
