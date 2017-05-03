@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Windows.Input;
 using Bibliothecary.Data;
+using HeadLibrarian.WPF;
 
 namespace HeadLibrarian.ViewModels
 {
@@ -7,26 +9,70 @@ namespace HeadLibrarian.ViewModels
 	{
 		public ProjectViewModel( Database database, Project project )
 		{
+			UndoStack = new UndoRedoStack();
+			UndoStack.UndoPerformed += OnUndoRedo;
+			UndoStack.RedoPerformed += OnUndoRedo;
+			UndoCommand = new Command( null, CommandUndo );
+			RedoCommand = new Command( null, CommandRedo );
+
 			_database = database;
-			Project = project;
+			_project = project;
 			SearchQuery = new LibrarySearchViewModel( project.SearchQuery );
+
+			SaveCommand = new Command( null, CommandSave );
 		}
 
-		public Project Project { get; }
+		#region UndoStack
 
-		public Int32 ProjectId => Project.ProjectId;
+		public UndoRedoStack UndoStack { get; }
 
-		public Boolean HasUnsavedChanges => Project.HasUnsavedChanges;
+		public Boolean CanUndo
+		{
+			get => _canUndo;
+			private set => SetProperty( ref _canUndo, value );
+		}
+
+		public Boolean CanRedo
+		{
+			get => _canRedo;
+			private set => SetProperty( ref _canRedo, value );
+		}
+
+		void OnUndoRedo( Int32 undoStackSize, Int32 redoStackSize )
+		{
+			CanUndo = ( undoStackSize > 0 );
+			CanRedo = ( redoStackSize > 0 );
+		}
+
+		public ICommand UndoCommand { get; }
+
+		void CommandUndo( Object o )
+		{
+			UndoStack.Undo();
+		}
+
+		public ICommand RedoCommand { get; }
+
+		void CommandRedo( Object o )
+		{
+			UndoStack.Redo();
+		}
+
+		#endregion
+
+		public Int32 ProjectId => _project.ProjectId;
+
+		public Boolean HasUnsavedChanges => _project.HasUnsavedChanges;
 
 		public String Name
 		{
-			get => Project.Name;
+			get => _project.Name;
 			set
 			{
 				String oldName = Name;
-				if ( Project.SetName( value ) )
+				if ( _project.SetName( value ) )
 				{
-					UndoRedoStack.Push( new SetNameUndoAction( this, oldName, Name ) );
+					UndoStack.Push( new SetNameUndoAction( this, oldName, Name ) );
 					InvokeNameChanged();
 				}
 			}
@@ -40,10 +86,10 @@ namespace HeadLibrarian.ViewModels
 
 		public TimeSpan UpdateFrequency
 		{
-			get => Project.UpdateFrequency;
+			get => _project.UpdateFrequency;
 			set
 			{
-				if ( Project.SetUpdateFrequency( (Int32) value.TotalMinutes ) )
+				if ( _project.SetUpdateFrequency( (Int32) value.TotalMinutes ) )
 				{
 					OnPropertyChanged( nameof( UpdateFrequency ) );
 					OnPropertyChanged( nameof( HasUnsavedChanges ) );
@@ -53,32 +99,52 @@ namespace HeadLibrarian.ViewModels
 
 		public LibrarySearchViewModel SearchQuery { get; }
 
+		public ICommand SaveCommand { get; }
+
+		void CommandSave( Object o )
+		{
+			_project.Save();
+			OnPropertyChanged( nameof( HasUnsavedChanges ) );
+		}
+
+		public Boolean Delete()
+		{
+			return _project.Delete();
+		}
+
 		readonly Database _database;
+		readonly Project _project;
+		Boolean _canUndo;
+		Boolean _canRedo;
+
+		#region Undo Commands
 
 		class SetNameUndoAction : IUndoRedoAction
 		{
-			public SetNameUndoAction( ProjectViewModel project, String oldName, String newName )
+			public SetNameUndoAction( ProjectViewModel viewModel, String oldName, String newName )
 			{
-				_project = project;
+				_viewModel = viewModel;
 				_oldName = oldName;
 				_newName = newName;
 			}
 
 			public void Undo()
 			{
-				_project.Project.SetName( _oldName );
-				_project.InvokeNameChanged();
+				_viewModel._project.SetName( _oldName );
+				_viewModel.InvokeNameChanged();
 			}
 
 			public void Redo()
 			{
-				_project.Project.SetName( _newName );
-				_project.InvokeNameChanged();
+				_viewModel._project.SetName( _newName );
+				_viewModel.InvokeNameChanged();
 			}
 
-			readonly ProjectViewModel _project;
+			readonly ProjectViewModel _viewModel;
 			readonly String _oldName;
 			readonly String _newName;
 		}
+
+		#endregion
 	}
 }

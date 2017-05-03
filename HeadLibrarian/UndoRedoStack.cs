@@ -5,9 +5,9 @@ namespace HeadLibrarian
 {
 	public delegate void UndoRedoStackEventHandler( Int32 currentUndoStackSize, Int32 currentRedoStackSize );
 
-	public static class UndoRedoStack
+	public class UndoRedoStack
 	{
-		public static void Push( IUndoRedoAction action )
+		public void Push( IUndoRedoAction action )
 		{
 			if ( action == null )
 			{
@@ -21,7 +21,7 @@ namespace HeadLibrarian
 			}
 		}
 
-		public static Int32 UndoStackSize
+		public Int32 UndoStackSize
 		{
 			get
 			{
@@ -32,7 +32,7 @@ namespace HeadLibrarian
 			}
 		}
 
-		public static Int32 RedoStackSize
+		public Int32 RedoStackSize
 		{
 			get
 			{
@@ -43,7 +43,7 @@ namespace HeadLibrarian
 			}
 		}
 
-		public static void Undo()
+		public void Undo()
 		{
 			lock ( _stackLock )
 			{
@@ -60,9 +60,9 @@ namespace HeadLibrarian
 			}
 		}
 
-		public static event UndoRedoStackEventHandler UndoPerformed;
+		public event UndoRedoStackEventHandler UndoPerformed;
 
-		public static void Redo()
+		public void Redo()
 		{
 			lock ( _stackLock )
 			{
@@ -79,10 +79,10 @@ namespace HeadLibrarian
 			}
 		}
 
-		public static event UndoRedoStackEventHandler RedoPerformed;
+		public event UndoRedoStackEventHandler RedoPerformed;
 
-		static readonly Object _stackLock = new Object();
-		static readonly Stack<IUndoRedoAction> _undoStack = new Stack<IUndoRedoAction>();
-		static readonly Stack<IUndoRedoAction> _redoStack = new Stack<IUndoRedoAction>();
+		readonly Object _stackLock = new Object();
+		readonly Stack<IUndoRedoAction> _undoStack = new Stack<IUndoRedoAction>();
+		readonly Stack<IUndoRedoAction> _redoStack = new Stack<IUndoRedoAction>();
 	}
 }

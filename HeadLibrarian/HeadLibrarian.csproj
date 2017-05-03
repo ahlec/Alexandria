@@ -67,8 +67,10 @@
     </ApplicationDefinition>
     <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
+    <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
     <Compile Include="Converters\NotNullToBooleanConverter.cs" />
     <Compile Include="Converters\ProjectDisplayNameMultiConverter.cs" />
+    <Compile Include="Converters\SaveProjectButtonMultiConverter.cs" />
     <Compile Include="Dialogs\ConfirmProjectDeletionDialog.xaml.cs">
       <DependentUpon>ConfirmProjectDeletionDialog.xaml</DependentUpon>
     </Compile>
@@ -155,6 +157,9 @@
   <ItemGroup>
     <Resource Include="Resources\arrow-redo-icon.png" />
     <Resource Include="Resources\arrow-undo-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\disk-icon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

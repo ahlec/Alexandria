@@ -12,6 +12,7 @@
 			<Setter Property="FontWeight"
 					Value="Bold" />
 		</Style>
+		<Thickness x:Key="ExpanderInternalGridMargin">20,0,0,0</Thickness>
 	</UserControl.Resources>
 
 	<Grid>
@@ -20,27 +21,58 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition MaxWidth="200"
-							  Width="Auto" />
-			<ColumnDefinition Width="6" />
-			<ColumnDefinition Width="*" />
-		</Grid.ColumnDefinitions>
+		<Expander Grid.Row="0"
+				  IsExpanded="True"
+				  Padding="{StaticResource ExpanderInternalGridMargin}"
+				  Header="Basic Project Properties">
+			<Grid IsSharedSizeScope="True">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
 
-		<TextBlock Grid.Row="0"
-				   Grid.Column="0"
-				   Style="{StaticResource FieldNameLabel}">Project Id:</TextBlock>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition MaxWidth="200"
+									  Width="Auto"
+									  SharedSizeGroup="FieldName" />
+					<ColumnDefinition Width="6"
+									  SharedSizeGroup="Separator" />
+					<ColumnDefinition Width="*"
+									  SharedSizeGroup="FieldEditor" />
+				</Grid.ColumnDefinitions>
 
-		<TextBlock Grid.Row="0"
-				   Grid.Column="2"
-				   Text="{Binding ProjectId}" />
+				<TextBlock Grid.Row="0"
+						   Grid.Column="0"
+						   Style="{StaticResource FieldNameLabel}">Project Id:</TextBlock>
 
-		<TextBlock Grid.Row="1"
-				   Grid.Column="0"
-				   Style="{StaticResource FieldNameLabel}">Name:</TextBlock>
+				<TextBlock Grid.Row="0"
+						   Grid.Column="2"
+						   Text="{Binding ProjectId}" />
 
-		<TextBox Grid.Row="1"
-				 Grid.Column="2"
-				 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+				<TextBlock Grid.Row="1"
+						   Grid.Column="0"
+						   Style="{StaticResource FieldNameLabel}">Name:</TextBlock>
+
+				<TextBox Grid.Row="1"
+						 Grid.Column="2"
+						 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+			</Grid>
+		</Expander>
+
+		<Expander Grid.Row="1"
+				  IsExpanded="True"
+				  Padding="{StaticResource ExpanderInternalGridMargin}"
+				  Header="Search Query">
+			<Grid IsSharedSizeScope="True">
+				<Grid.RowDefinitions />
+
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition SharedSizeGroup="FieldName" />
+					<ColumnDefinition SharedSizeGroup="Separator" />
+					<ColumnDefinition SharedSizeGroup="FieldEditor" />
+				</Grid.ColumnDefinitions>
+			</Grid>
+		</Expander>
 	</Grid>
 </UserControl>

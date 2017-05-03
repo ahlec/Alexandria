@@ -17,12 +17,6 @@ namespace HeadLibrarian.ViewModels
 		public MainWindowViewModel()
 		{
 			ConnectToDatabaseCommand = new Command( null, CommandConnectToDatabase );
-
-			UndoRedoStack.UndoPerformed += OnUndoRedo;
-			UndoRedoStack.RedoPerformed += OnUndoRedo;
-			UndoCommand = new Command( null, CommandUndo );
-			RedoCommand = new Command( null, CommandRedo );
-
 			CreateProjectCommand = new Command( null, CommandCreateProject );
 			DeleteProjectCommand = new Command( null, CommandDeleteProject );
 			BindingOperations.EnableCollectionSynchronization( Projects, _projectsCollectionLock );
@@ -84,47 +78,18 @@ namespace HeadLibrarian.ViewModels
 				}
 			}
 			IsAttemptingConnectionToDatabase = false;
-		}
-
-		#endregion
-
-		#region UndoRedo
-
-		public Boolean CanUndo
-		{
-			get => _canUndo;
-			private set => SetProperty( ref _canUndo, value );
-		}
-
-		public Boolean CanRedo
-		{
-			get => _canRedo;
-			private set => SetProperty( ref _canRedo, value );
-		}
-
-		void OnUndoRedo( Int32 undoStackSize, Int32 redoStackSize )
-		{
-			CanUndo = ( undoStackSize > 0 );
-			CanRedo = ( redoStackSize > 0 );
-		}
-
-		public ICommand UndoCommand { get; }
-
-		void CommandUndo( Object o )
-		{
-			UndoRedoStack.Undo();
-		}
-
-		public ICommand RedoCommand { get; }
-
-		void CommandRedo( Object o )
-		{
-			UndoRedoStack.Redo();
+			SelectedProject = Projects.FirstOrDefault();
 		}
 
 		#endregion
 
 		public ObservableCollection<ProjectViewModel> Projects { get; } = new ObservableCollection<ProjectViewModel>();
+
+		public ProjectViewModel SelectedProject
+		{
+			get => _selectedProject;
+			set => SetProperty( ref _selectedProject, value );
+		}
 
 		public ICommand CreateProjectCommand { get; }
 
@@ -136,10 +101,8 @@ namespace HeadLibrarian.ViewModels
 			{
 				Projects.Add( viewModel );
 			}
-			ProjectCreated?.Invoke( this, viewModel );
+			SelectedProject = viewModel;
 		}
-
-		public event EventHandler<ProjectViewModel> ProjectCreated;
 
 		public ICommand DeleteProjectCommand { get; }
 
@@ -163,7 +126,7 @@ namespace HeadLibrarian.ViewModels
 				throw new InvalidOperationException();
 			}
 
-			Boolean deleteSuccess = project.Project.Delete();
+			Boolean deleteSuccess = project.Delete();
 			if ( !deleteSuccess )
 			{
 				return;
@@ -183,7 +146,6 @@ namespace HeadLibrarian.ViewModels
 		Boolean _isConnectedToDatabase;
 		Boolean _isAttemptingConnectionToDatabase;
 		Database _database;
-		Boolean _canUndo;
-		Boolean _canRedo;
+		ProjectViewModel _selectedProject;
 	}
 }
