@@ -17,7 +17,7 @@ namespace HeadLibrarian.ViewModels
 
 			_database = database;
 			_project = project;
-			SearchQuery = new LibrarySearchViewModel( project.SearchQuery );
+			SearchQuery = new LibrarySearchViewModel( this, project.SearchQuery );
 
 			SaveCommand = new Command( null, CommandSave );
 		}
@@ -104,6 +104,11 @@ namespace HeadLibrarian.ViewModels
 		void CommandSave( Object o )
 		{
 			_project.Save();
+			OnPropertyChanged( nameof( HasUnsavedChanges ) );
+		}
+
+		public void RefreshHasSavedChanged()
+		{
 			OnPropertyChanged( nameof( HasUnsavedChanges ) );
 		}
 

@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="HeadLibrarian.Views.LibrarySearchView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:viewModels="clr-namespace:HeadLibrarian.ViewModels"
+			 mc:Ignorable="d"
+			 d:DataContext="{d:DesignInstance viewModels:LibrarySearchViewModel}">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="{StaticResource FieldNameWidth}" />
+			<ColumnDefinition Width="{StaticResource FieldSeparatorWidth}" />
+			<ColumnDefinition Width="{StaticResource FieldEditorWidth}" />
+		</Grid.ColumnDefinitions>
+
+		<TextBlock Grid.Row="0"
+				   Grid.Column="0"
+				   Style="{StaticResource FieldNameLabel}">Title:</TextBlock>
+
+		<TextBox Grid.Row="0"
+				 Grid.Column="2"
+				 Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+	</Grid>
+</UserControl>
