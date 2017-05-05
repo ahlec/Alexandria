@@ -4,27 +4,42 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:viewModels="clr-namespace:HeadLibrarian.ViewModels"
+			 xmlns:controls="clr-namespace:HeadLibrarian.Controls"
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance viewModels:LibrarySearchViewModel}">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+	<StackPanel>
+		<controls:LibrarySearchViewRow FieldName="Title:">
+			<TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
+		</controls:LibrarySearchViewRow>
 
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="{StaticResource FieldNameWidth}" />
-			<ColumnDefinition Width="{StaticResource FieldSeparatorWidth}" />
-			<ColumnDefinition Width="{StaticResource FieldEditorWidth}" />
-		</Grid.ColumnDefinitions>
+		<controls:LibrarySearchViewRow FieldName="Author:">
+			<TextBox Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
+		</controls:LibrarySearchViewRow>
 
-		<TextBlock Grid.Row="0"
+		<TextBlock Grid.Row="2"
 				   Grid.Column="0"
-				   Style="{StaticResource FieldNameLabel}">Title:</TextBlock>
+				   Style="{StaticResource FieldNameLabel}">Only Include Complete Fanfics:</TextBlock>
 
-		<TextBox Grid.Row="0"
-				 Grid.Column="2"
-				 Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
-	</Grid>
+		<CheckBox Grid.Row="2"
+				  Grid.Column="2"
+				  IsChecked="{Binding OnlyIncludeComplete, UpdateSourceTrigger=PropertyChanged}" />
+
+		<TextBlock Grid.Row="3"
+				   Grid.Column="0"
+				   Style="{StaticResource FieldNameLabel}">Only Include Single Chapter Fanfics:</TextBlock>
+
+		<CheckBox Grid.Row="3"
+				  Grid.Column="2"
+				  IsChecked="{Binding OnlyIncludeSingleChapter, UpdateSourceTrigger=PropertyChanged}" />
+
+		<controls:LibrarySearchViewRow FieldName="Language:">
+			<ComboBox ItemsSource="{Binding AllLanguages}"
+					  SelectedItem="{Binding Language, UpdateSourceTrigger=PropertyChanged}" />
+		</controls:LibrarySearchViewRow>
+
+		<controls:LibrarySearchViewRow FieldName="Maturity Rating:">
+			<ComboBox ItemsSource="{Binding AllMaturityRatings}"
+					  SelectedItem="{Binding MaturityRating, UpdateSourceTrigger=PropertyChanged}" />
+		</controls:LibrarySearchViewRow>
+	</StackPanel>
 </UserControl>

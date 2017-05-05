@@ -20,8 +20,10 @@
 			   x:Key="FieldNameLabel">
 			<Setter Property="FontWeight"
 					Value="Bold" />
+			<Setter Property="TextWrapping"
+					Value="WrapWithOverflow" />
 		</Style>
-		<GridLength x:Key="FieldNameWidth">70</GridLength>
+		<GridLength x:Key="FieldNameWidth">140</GridLength>
 		<GridLength x:Key="FieldSeparatorWidth">6</GridLength>
 		<GridLength x:Key="FieldEditorWidth">*</GridLength>
 	</Application.Resources>
