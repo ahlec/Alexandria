@@ -8,38 +8,70 @@
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance viewModels:LibrarySearchViewModel}">
 	<StackPanel>
-		<controls:LibrarySearchViewRow FieldName="Title:">
+		<controls:ProjectViewRow FieldName="Title:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
 			<TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
-		</controls:LibrarySearchViewRow>
+		</controls:ProjectViewRow>
 
-		<controls:LibrarySearchViewRow FieldName="Author:">
+		<controls:ProjectViewRow FieldName="Author:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
 			<TextBox Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
-		</controls:LibrarySearchViewRow>
+		</controls:ProjectViewRow>
 
-		<TextBlock Grid.Row="2"
-				   Grid.Column="0"
-				   Style="{StaticResource FieldNameLabel}">Only Include Complete Fanfics:</TextBlock>
+		<StackPanel Orientation="Horizontal"
+					Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+			<TextBlock Style="{StaticResource FieldNameLabel}">Only Include Complete Fanfics:</TextBlock>
+			
+			<CheckBox IsChecked="{Binding OnlyIncludeComplete, UpdateSourceTrigger=PropertyChanged}" />
+		</StackPanel>
 
-		<CheckBox Grid.Row="2"
-				  Grid.Column="2"
-				  IsChecked="{Binding OnlyIncludeComplete, UpdateSourceTrigger=PropertyChanged}" />
+		<StackPanel Orientation="Horizontal"
+					Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+			<TextBlock Style="{StaticResource FieldNameLabel}">Only Include Single Chapter Fanfics:</TextBlock>
 
-		<TextBlock Grid.Row="3"
-				   Grid.Column="0"
-				   Style="{StaticResource FieldNameLabel}">Only Include Single Chapter Fanfics:</TextBlock>
+			<CheckBox IsChecked="{Binding OnlyIncludeSingleChapter, UpdateSourceTrigger=PropertyChanged}" />
+		</StackPanel>
 
-		<CheckBox Grid.Row="3"
-				  Grid.Column="2"
-				  IsChecked="{Binding OnlyIncludeSingleChapter, UpdateSourceTrigger=PropertyChanged}" />
+		<controls:ProjectViewRow FieldName="Word Count:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+			<controls:NumberSearchCriteriaEditor DataContext="{Binding WordCount}" />
+		</controls:ProjectViewRow>
 
-		<controls:LibrarySearchViewRow FieldName="Language:">
+		<controls:ProjectViewRow FieldName="Language:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
 			<ComboBox ItemsSource="{Binding AllLanguages}"
 					  SelectedItem="{Binding Language, UpdateSourceTrigger=PropertyChanged}" />
-		</controls:LibrarySearchViewRow>
+		</controls:ProjectViewRow>
 
-		<controls:LibrarySearchViewRow FieldName="Maturity Rating:">
+		<controls:ProjectViewRow FieldName="Maturity Rating:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
 			<ComboBox ItemsSource="{Binding AllMaturityRatings}"
 					  SelectedItem="{Binding MaturityRating, UpdateSourceTrigger=PropertyChanged}" />
-		</controls:LibrarySearchViewRow>
+		</controls:ProjectViewRow>
+
+		<controls:ProjectViewRow FieldName="Number Likes:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+			<controls:NumberSearchCriteriaEditor DataContext="{Binding NumberLikes}" />
+		</controls:ProjectViewRow>
+
+		<controls:ProjectViewRow FieldName="Number Comments:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+			<controls:NumberSearchCriteriaEditor DataContext="{Binding NumberComments}" />
+		</controls:ProjectViewRow>
 	</StackPanel>
 </UserControl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

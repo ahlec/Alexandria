@@ -155,7 +155,8 @@ namespace Bibliothecary.Data.Utils
 								}
 							case FieldNameWordCount:
 								{
-									throw new NotImplementedException();
+									search.WordCount = NumberSearchCriteria.Parse( fieldValue );
+									break;
 								}
 							case FieldNameLanguage:
 								{
@@ -198,11 +199,13 @@ namespace Bibliothecary.Data.Utils
 								}
 							case FieldNameNumberLikes:
 								{
-									throw new NotImplementedException();
+									search.NumberLikes = NumberSearchCriteria.Parse( fieldValue );
+									break;
 								}
 							case FieldNameNumberComments:
 								{
-									throw new NotImplementedException();
+									search.NumberComments = NumberSearchCriteria.Parse( fieldValue );
+									break;
 								}
 							case FieldNameSortField:
 								{

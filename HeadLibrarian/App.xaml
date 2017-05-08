@@ -26,5 +26,6 @@
 		<GridLength x:Key="FieldNameWidth">140</GridLength>
 		<GridLength x:Key="FieldSeparatorWidth">6</GridLength>
 		<GridLength x:Key="FieldEditorWidth">*</GridLength>
+		<Thickness x:Key="ProjectViewModelVerticalRowPadding">0,2,0,1</Thickness>
 	</Application.Resources>
 </Application>

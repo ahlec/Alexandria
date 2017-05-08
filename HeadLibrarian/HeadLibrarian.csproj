@@ -65,9 +65,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Controls\LibrarySearchViewRow.xaml.cs">
-      <DependentUpon>LibrarySearchViewRow.xaml</DependentUpon>
+    <Compile Include="Controls\NumberSearchCriteriaEditor.xaml.cs">
+      <DependentUpon>NumberSearchCriteriaEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ProjectViewRow.xaml.cs">
+      <DependentUpon>ProjectViewRow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SearchCriteriaTemplateSelector.cs" />
     <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
@@ -84,7 +88,11 @@
     <Compile Include="ViewModels\LibrarySearchViewModel.cs" />
     <Compile Include="ViewModels\LibrarySearchViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\NumberSearchCriteriaViewModel.cs" />
+    <Compile Include="ViewModels\NumberSearchCriteriaViewModel.Subclasses.cs" />
+    <Compile Include="ViewModels\NumberSearchCriteriaViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\ProjectViewModel.cs" />
+    <Compile Include="ViewModels\SearchCriteriaViewModelType.cs" />
     <Compile Include="Views\LibrarySearchView.xaml.cs">
       <DependentUpon>LibrarySearchView.xaml</DependentUpon>
     </Compile>
@@ -92,7 +100,11 @@
       <DependentUpon>ProjectView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPF\Command.cs" />
-    <Page Include="Controls\LibrarySearchViewRow.xaml">
+    <Page Include="Controls\NumberSearchCriteriaEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ProjectViewRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

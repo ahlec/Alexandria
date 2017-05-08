@@ -40,24 +40,29 @@
 
 		<TextBlock Grid.Row="1"
 				   Grid.Column="1"
-				   Style="{StaticResource FieldNameLabel}">Project Id:</TextBlock>
+				   Style="{StaticResource FieldNameLabel}"
+				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Project Id:</TextBlock>
 
 		<TextBlock Grid.Row="1"
 				   Grid.Column="3"
-				   Text="{Binding ProjectId}" />
+				   Text="{Binding ProjectId}"
+				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
 
 		<TextBlock Grid.Row="2"
 				   Grid.Column="1"
-				   Style="{StaticResource FieldNameLabel}">Name:</TextBlock>
+				   Style="{StaticResource FieldNameLabel}"
+				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Name:</TextBlock>
 
 		<TextBox Grid.Row="2"
 				 Grid.Column="3"
-				 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" />
+				 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+				 Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
 		
 		<TextBlock Grid.Row="3"
 				   Grid.Column="0"
 				   Grid.ColumnSpan="4"
-				   Style="{StaticResource SectionHeader}">Search Query</TextBlock>
+				   Style="{StaticResource SectionHeader}"
+				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Search Query</TextBlock>
 
 		<views:LibrarySearchView Grid.Row="4"
 								 Grid.Column="1"

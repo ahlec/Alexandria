@@ -5,9 +5,9 @@ using System.Windows.Markup;
 namespace HeadLibrarian.Controls
 {
 	[ContentProperty( nameof( FieldEditor ) )]
-	public partial class LibrarySearchViewRow
+	public partial class ProjectViewRow
 	{
-		public LibrarySearchViewRow()
+		public ProjectViewRow()
 		{
 			InitializeComponent();
 		}
@@ -24,7 +24,7 @@ namespace HeadLibrarian.Controls
 			set => SetValue( FieldEditorProperty, value );
 		}
 
-		public static readonly DependencyProperty FieldNameProperty = DependencyProperty.Register( "FieldName", typeof( String ), typeof( LibrarySearchViewRow ) );
-		public static readonly DependencyProperty FieldEditorProperty = DependencyProperty.Register( "FieldEditor", typeof( FrameworkElement ), typeof( LibrarySearchViewRow ) );
+		public static readonly DependencyProperty FieldNameProperty = DependencyProperty.Register( "FieldName", typeof( String ), typeof( ProjectViewRow ) );
+		public static readonly DependencyProperty FieldEditorProperty = DependencyProperty.Register( "FieldEditor", typeof( FrameworkElement ), typeof( ProjectViewRow ) );
 	}
 }

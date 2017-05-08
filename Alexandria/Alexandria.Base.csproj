@@ -77,13 +77,10 @@
     <Compile Include="Searching\DateField.cs" />
     <Compile Include="Searching\DateSearchCriteria.cs" />
     <Compile Include="Searching\ExactDateSearchCriteria.cs" />
-    <Compile Include="Searching\ExactNumberSearchCriteria.cs" />
-    <Compile Include="Searching\GreaterThanNumberSearchCriteria.cs" />
-    <Compile Include="Searching\LessThanNumberSearchCriteria.cs" />
     <Compile Include="Searching\LibrarySearch.cs" />
     <Compile Include="Searching\NumberSearchCriteria.cs" />
     <Compile Include="Searching\RangeDateSearchCriteria.cs" />
-    <Compile Include="Searching\RangeNumberSearchCriteria.cs" />
+    <Compile Include="Searching\SearchCriteriaType.cs" />
     <Compile Include="Searching\SearchField.cs" />
     <Compile Include="Searching\SortDirection.cs" />
     <Compile Include="Utils\CacheableObjectsUtils.cs" />

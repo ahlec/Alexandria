@@ -11,6 +11,10 @@ namespace HeadLibrarian.ViewModels
 		{
 			_projectViewModel = projectViewModel;
 			_search = search;
+
+			WordCount = new NumberSearchCriteriaViewModel.WordCount( projectViewModel, search );
+			NumberLikes = new NumberSearchCriteriaViewModel.NumberLikes( projectViewModel, search );
+			NumberComments = new NumberSearchCriteriaViewModel.NumberComments( projectViewModel, search );
 		}
 
 		public String Title
@@ -105,6 +109,8 @@ namespace HeadLibrarian.ViewModels
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
+		public NumberSearchCriteriaViewModel WordCount { get; }
+
 		public IEnumerable<Language?> AllLanguages { get; } = GetAllNullableEnumValues<Language>();
 
 		public Language? Language
@@ -154,6 +160,10 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( MaturityRating ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
+
+		public NumberSearchCriteriaViewModel NumberLikes { get; }
+
+		public NumberSearchCriteriaViewModel NumberComments { get; }
 
 		static IEnumerable<T?> GetAllNullableEnumValues<T>() where T : struct, IConvertible
 		{
