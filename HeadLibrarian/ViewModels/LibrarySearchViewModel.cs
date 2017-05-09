@@ -13,6 +13,10 @@ namespace HeadLibrarian.ViewModels
 			_search = search;
 
 			WordCount = new NumberSearchCriteriaViewModel.WordCount( projectViewModel, search );
+			Fandoms = new StringListViewModel( projectViewModel, search.Fandoms );
+			CharacterNames = new StringListViewModel( projectViewModel, search.CharacterNames );
+			Ships = new StringListViewModel( projectViewModel, search.Ships );
+			Tags = new StringListViewModel( projectViewModel, search.Tags );
 			NumberLikes = new NumberSearchCriteriaViewModel.NumberLikes( projectViewModel, search );
 			NumberComments = new NumberSearchCriteriaViewModel.NumberComments( projectViewModel, search );
 		}
@@ -138,6 +142,8 @@ namespace HeadLibrarian.ViewModels
 
 		public IEnumerable<MaturityRating?> AllMaturityRatings { get; } = GetAllNullableEnumValues<MaturityRating>();
 
+		public StringListViewModel Fandoms { get; }
+
 		public MaturityRating? MaturityRating
 		{
 			get => _search.Rating;
@@ -160,6 +166,12 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( MaturityRating ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
+
+		public StringListViewModel CharacterNames { get; }
+
+		public StringListViewModel Ships { get; }
+
+		public StringListViewModel Tags { get; }
 
 		public NumberSearchCriteriaViewModel NumberLikes { get; }
 
