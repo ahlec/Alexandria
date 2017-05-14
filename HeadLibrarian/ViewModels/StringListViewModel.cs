@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -7,7 +8,7 @@ using HeadLibrarian.WPF;
 
 namespace HeadLibrarian.ViewModels
 {
-	public sealed partial class StringListViewModel : BaseViewModel, INotifyCollectionChanged
+	public sealed partial class StringListViewModel : BaseViewModel, INotifyCollectionChanged, IEnumerable<String>
 	{
 		public StringListViewModel( ProjectViewModel projectViewModel, List<String> list )
 		{
@@ -15,42 +16,50 @@ namespace HeadLibrarian.ViewModels
 			_list = list;
 		}
 
-		public IEnumerable<String> Items => _list;
+		public String CurrentInputText
+		{
+			get => _currentInputText;
+			set => SetProperty( ref _currentInputText, value );
+		}
+
+		public IEnumerator<String> GetEnumerator()
+		{
+			return _list.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return _list.GetEnumerator();
+		}
 
 		void InvokeItemAdded( String item, Int32 index )
 		{
-			OnPropertyChanged( nameof( Items ) );
 			CollectionChanged?.Invoke( this, new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, item, index ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
 		void InvokeItemRemoved( String item, Int32 index )
 		{
-			OnPropertyChanged( nameof( Items ) );
 			CollectionChanged?.Invoke( this, new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Remove, item, index ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
 		void CommandAdd( Object o )
 		{
-			if ( !( o is String ) )
-			{
-				throw new ArgumentException( "Argument must be a string!", nameof( o ) );
-			}
-			String item = (String) o;
-			if ( String.IsNullOrWhiteSpace( item ) )
+			if ( String.IsNullOrWhiteSpace( CurrentInputText ) )
 			{
 				return;
 			}
 
-			if ( _list.Contains( item, StringComparer.InvariantCultureIgnoreCase ) )
+			if ( _list.Contains( CurrentInputText, StringComparer.InvariantCultureIgnoreCase ) )
 			{
 				return;
 			}
 
-			_list.Add( item );
-			_projectViewModel.UndoStack.Push( new AddStringUndoAction( this, _list, item ) );
-			InvokeItemAdded( item, _list.Count - 1 );
+			_list.Add( CurrentInputText );
+			_projectViewModel.UndoStack.Push( new AddStringUndoAction( this, _list, CurrentInputText ) );
+			InvokeItemAdded( CurrentInputText, _list.Count - 1 );
+			CurrentInputText = null;
 		}
 
 		void CommandRemove( Object o )
@@ -80,5 +89,6 @@ namespace HeadLibrarian.ViewModels
 		readonly List<String> _list;
 		ICommand _addCommand;
 		ICommand _removeCommand;
+		String _currentInputText;
 	}
 }

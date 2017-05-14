@@ -22,13 +22,14 @@
 		<ItemsControl Grid.Row="0"
 					  Grid.Column="0"
 					  Grid.ColumnSpan="2"
-					  ItemsSource="{Binding Items}">
+					  ItemsSource="{Binding}">
 			<ItemsControl.ItemTemplate>
 				<DataTemplate DataType="system:String">
 					<StackPanel Orientation="Horizontal">
 						<TextBlock Text="{Binding}" />
 						<Button Command="{Binding DataContext.RemoveCommand, ElementName=StringListEditorControl}"
-								CommandParameter="{Binding}">
+								CommandParameter="{Binding}"
+								Margin="6,0,0,0">
 							<Image Source="../Resources/delete-icon.png"
 								   Width="16"
 								   Height="16" />
@@ -40,12 +41,17 @@
 		
 		<TextBox x:Name="NewItemTextBox"
 				 Grid.Row="1"
-				 Grid.Column="0" />
+				 Grid.Column="0"
+				 Text="{Binding CurrentInputText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+			<TextBox.InputBindings>
+				<KeyBinding Command="{Binding AddCommand}" Key="Return" />
+			</TextBox.InputBindings>
+		</TextBox>
 		
 		<Button Grid.Row="1"
 				Grid.Column="1"
 				Command="{Binding AddCommand}"
-				CommandParameter="{Binding Text, ElementName=NewItemTextBox}">
+				Margin="6,0,0,0">
 			<Image Source="../Resources/add-icon.png"
 				   Width="16"
 				   Height="16" />
