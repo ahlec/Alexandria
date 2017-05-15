@@ -6,7 +6,7 @@ namespace Alexandria.Searching
 	{
 		public const Int32 MaximumNumberValue = 9999999;
 
-		public SearchCriteriaType Type { get; set; }
+		public NumberSearchCriteriaType Type { get; set; }
 
 		public Int32 Number1
 		{
@@ -18,17 +18,17 @@ namespace Alexandria.Searching
 		{
 			get
 			{
-				if ( Type != SearchCriteriaType.Range )
+				if ( Type != NumberSearchCriteriaType.Range )
 				{
-					throw new InvalidOperationException( $"Only a type of {nameof( SearchCriteriaType.Range )} may have two numbers." );
+					throw new InvalidOperationException( $"Only a type of {nameof( NumberSearchCriteriaType.Range )} may have two numbers." );
 				}
 				return _number2;
 			}
 			set
 			{
-				if ( Type != SearchCriteriaType.Range )
+				if ( Type != NumberSearchCriteriaType.Range )
 				{
-					throw new InvalidOperationException( $"Only a type of {nameof( SearchCriteriaType.Range )} may have two numbers." );
+					throw new InvalidOperationException( $"Only a type of {nameof( NumberSearchCriteriaType.Range )} may have two numbers." );
 				}
 				_number2 = ValidateNumber( value );
 			}
@@ -65,27 +65,27 @@ namespace Alexandria.Searching
 
 			if ( text.StartsWith( "<=", StringComparison.InvariantCultureIgnoreCase ) )
 			{
-				parsed.Type = SearchCriteriaType.LessThanOrEqual;
+				parsed.Type = NumberSearchCriteriaType.LessThanOrEqual;
 				parsed.Number1 = parsed.ValidateNumber( Int32.Parse( text.Substring( 2 ) ) );
 			}
 			else if ( text.StartsWith( "<", StringComparison.InvariantCultureIgnoreCase ) )
 			{
-				parsed.Type = SearchCriteriaType.LessThan;
+				parsed.Type = NumberSearchCriteriaType.LessThan;
 				parsed.Number1 = parsed.ValidateNumber( Int32.Parse( text.Substring( 1 ) ) );
 			}
 			else if ( text.StartsWith( ">=", StringComparison.InvariantCultureIgnoreCase ) )
 			{
-				parsed.Type = SearchCriteriaType.GreaterThanOrEqual;
+				parsed.Type = NumberSearchCriteriaType.GreaterThanOrEqual;
 				parsed.Number1 = parsed.ValidateNumber( Int32.Parse( text.Substring( 2 ) ) );
 			}
 			else if ( text.StartsWith( ">", StringComparison.InvariantCultureIgnoreCase ) )
 			{
-				parsed.Type = SearchCriteriaType.GreaterThan;
+				parsed.Type = NumberSearchCriteriaType.GreaterThan;
 				parsed.Number1 = parsed.ValidateNumber( Int32.Parse( text.Substring( 1 ) ) );
 			}
 			else if ( text.Contains( "-" ) )
 			{
-				parsed.Type = SearchCriteriaType.Range;
+				parsed.Type = NumberSearchCriteriaType.Range;
 				String[] pieces = text.Split( '-' );
 				if ( pieces.Length != 2 )
 				{
@@ -96,7 +96,7 @@ namespace Alexandria.Searching
 			}
 			else
 			{
-				parsed.Type = SearchCriteriaType.ExactMatch;
+				parsed.Type = NumberSearchCriteriaType.ExactMatch;
 				parsed.Number1 = parsed.ValidateNumber( Int32.Parse( text ) );
 			}
 
@@ -108,17 +108,17 @@ namespace Alexandria.Searching
 		{
 			switch ( Type )
 			{
-				case SearchCriteriaType.ExactMatch:
+				case NumberSearchCriteriaType.ExactMatch:
 					return Number1.ToString();
-				case SearchCriteriaType.LessThan:
+				case NumberSearchCriteriaType.LessThan:
 					return String.Concat( "<", Number1 );
-				case SearchCriteriaType.LessThanOrEqual:
+				case NumberSearchCriteriaType.LessThanOrEqual:
 					return String.Concat( "<=", Number1 );
-				case SearchCriteriaType.GreaterThan:
+				case NumberSearchCriteriaType.GreaterThan:
 					return String.Concat( ">", Number1 );
-				case SearchCriteriaType.GreaterThanOrEqual:
+				case NumberSearchCriteriaType.GreaterThanOrEqual:
 					return String.Concat( ">=", Number1 );
-				case SearchCriteriaType.Range:
+				case NumberSearchCriteriaType.Range:
 					return String.Concat( Number1, "-", Number2 );
 				default:
 					throw new NotImplementedException();

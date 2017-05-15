@@ -141,7 +141,8 @@ namespace Bibliothecary.Data.Utils
 								}
 							case FieldNameDate:
 								{
-									throw new NotImplementedException();
+									search.Date = DateSearchCriteria.Parse( fieldValue );
+									break;
 								}
 							case FieldNameOnlyComplete:
 								{

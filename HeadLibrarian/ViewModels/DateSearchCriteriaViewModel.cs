@@ -3,9 +3,9 @@ using Alexandria.Searching;
 
 namespace HeadLibrarian.ViewModels
 {
-	public abstract partial class NumberSearchCriteriaViewModel : BaseViewModel
+	public partial class DateSearchCriteriaViewModel : BaseViewModel
 	{
-		protected NumberSearchCriteriaViewModel( ProjectViewModel projectViewModel, LibrarySearch search )
+		public DateSearchCriteriaViewModel( ProjectViewModel projectViewModel, LibrarySearch search )
 		{
 			_projectViewModel = projectViewModel;
 			Search = search;
@@ -15,12 +15,12 @@ namespace HeadLibrarian.ViewModels
 		{
 			get
 			{
-				if ( ActualObject == null )
+				if ( Search.Date == null )
 				{
 					return SearchCriteriaViewModelType.None;
 				}
 
-				return SearchCriteriaViewModelTypeUtils.FromAlexandriaNumberType( ActualObject.Type );
+				return SearchCriteriaViewModelTypeUtils.FromAlexandriaDateType( Search.Date.Type );
 			}
 			set
 			{
@@ -33,37 +33,41 @@ namespace HeadLibrarian.ViewModels
 				// Handle nulls
 				if ( value == SearchCriteriaViewModelType.None )
 				{
-					NumberSearchCriteria oldActualObject = ActualObject;
-					ActualObject = null;
+					DateSearchCriteria oldActualObject = Search.Date;
+					Search.Date = null;
 					_projectViewModel.UndoStack.Push( new SetActualObjectUndoAction( this, oldActualObject, null ) );
 					InvokeActualObjectChanged();
 					return;
 				}
 
-				NumberSearchCriteriaType newType = SearchCriteriaViewModelTypeUtils.ToAlexandriaNumberType( value );
+				DateSearchCriteriaType newType = SearchCriteriaViewModelTypeUtils.ToAlexandriaDateType( value );
 
 				if ( oldType == SearchCriteriaViewModelType.None )
 				{
-					ActualObject = new NumberSearchCriteria
+					Search.Date = new DateSearchCriteria
 					{
 						Type = newType
 					};
-					_projectViewModel.UndoStack.Push( new SetActualObjectUndoAction( this, null, ActualObject ) );
+					_projectViewModel.UndoStack.Push( new SetActualObjectUndoAction( this, null, Search.Date ) );
 					InvokeActualObjectChanged();
 					return;
 				}
 
 				// Otherwise
-				NumberSearchCriteriaType oldActualType = ActualObject.Type;
-				ActualObject.Type = newType;
+				DateSearchCriteriaType oldActualType = Search.Date.Type;
+				Search.Date.Type = newType;
 				_projectViewModel.UndoStack.Push( new SetTypeUndoAction( this, oldActualType, newType ) );
 				InvokeTypeChanged();
 			}
 		}
 
+		public Boolean HasType => ( Type != SearchCriteriaViewModelType.None );
+
 		void InvokeActualObjectChanged()
 		{
 			OnPropertyChanged( nameof( Type ) );
+			OnPropertyChanged( nameof( HasType ) );
+			OnPropertyChanged( nameof( DateUnit ) );
 			OnPropertyChanged( nameof( Number1 ) );
 			OnPropertyChanged( nameof( Number2 ) );
 			_projectViewModel.RefreshHasSavedChanged();
@@ -72,26 +76,55 @@ namespace HeadLibrarian.ViewModels
 		void InvokeTypeChanged()
 		{
 			OnPropertyChanged( nameof( Type ) );
+			OnPropertyChanged( nameof( HasType ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
+		public DateField DateUnit
+		{
+			get => Search.Date?.DateUnit ?? default( DateField );
+			set
+			{
+				if ( Search.Date == null )
+				{
+					throw new InvalidOperationException();
+				}
+
+				DateField oldDateUnit = Search.Date.DateUnit;
+				if ( oldDateUnit == value )
+				{
+					return;
+				}
+
+				Search.Date.DateUnit = value;
+				_projectViewModel.UndoStack.Push( new SetDateUnitUndoAction( this, oldDateUnit, value ) );
+				InvokeDateUnitChanged();
+			}
+		}
+
+		void InvokeDateUnitChanged()
+		{
+			OnPropertyChanged( nameof( DateUnit ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
 		public Int32 Number1
 		{
-			get => ActualObject?.Number1 ?? 0;
+			get => Search.Date?.Number1 ?? 0;
 			set
 			{
-				if ( ActualObject == null )
+				if ( Search.Date == null )
 				{
 					throw new InvalidOperationException();
 				}
 
-				Int32 oldNumber = ActualObject.Number1;
+				Int32 oldNumber = Search.Date.Number1;
 				if ( oldNumber == value )
 				{
 					return;
 				}
 
-				ActualObject.Number1 = value;
+				Search.Date.Number1 = value;
 				_projectViewModel.UndoStack.Push( new SetNumber1UndoAction( this, oldNumber, value ) );
 				InvokeNumber1Changed();
 			}
@@ -105,21 +138,21 @@ namespace HeadLibrarian.ViewModels
 
 		public Int32 Number2
 		{
-			get => ActualObject?.Number2 ?? 0;
+			get => Search.Date?.Number2 ?? 0;
 			set
 			{
-				if ( ActualObject == null )
+				if ( Search.Date == null )
 				{
 					throw new InvalidOperationException();
 				}
 
-				Int32 oldNumber = ActualObject.Number2;
+				Int32 oldNumber = Search.Date.Number2;
 				if ( oldNumber == value )
 				{
 					return;
 				}
 
-				ActualObject.Number2 = value;
+				Search.Date.Number2 = value;
 				_projectViewModel.UndoStack.Push( new SetNumber2UndoAction( this, oldNumber, value ) );
 				InvokeNumber2Changed();
 			}
@@ -130,8 +163,6 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( Number2 ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
-
-		protected abstract NumberSearchCriteria ActualObject { get; set; }
 
 		protected readonly LibrarySearch Search;
 		readonly ProjectViewModel _projectViewModel;

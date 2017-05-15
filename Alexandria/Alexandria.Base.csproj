@@ -72,15 +72,12 @@
     <Compile Include="RequestHandles\ISeriesRequestHandle.cs" />
     <Compile Include="RequestHandles\IShipRequestHandle.cs" />
     <Compile Include="RequestHandles\ITagRequestHandle.cs" />
-    <Compile Include="Searching\AfterDateSearchCriteria.cs" />
-    <Compile Include="Searching\BeforeDateSearchCriteria.cs" />
     <Compile Include="Searching\DateField.cs" />
     <Compile Include="Searching\DateSearchCriteria.cs" />
-    <Compile Include="Searching\ExactDateSearchCriteria.cs" />
+    <Compile Include="Searching\DateSearchCriteriaType.cs" />
     <Compile Include="Searching\LibrarySearch.cs" />
     <Compile Include="Searching\NumberSearchCriteria.cs" />
-    <Compile Include="Searching\RangeDateSearchCriteria.cs" />
-    <Compile Include="Searching\SearchCriteriaType.cs" />
+    <Compile Include="Searching\NumberSearchCriteriaType.cs" />
     <Compile Include="Searching\SearchField.cs" />
     <Compile Include="Searching\SortDirection.cs" />
     <Compile Include="Utils\CacheableObjectsUtils.cs" />

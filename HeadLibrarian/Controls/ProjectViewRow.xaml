@@ -11,7 +11,8 @@
 
 		<TextBlock Grid.Column="0"
 				   Style="{StaticResource FieldNameLabel}"
-				   Text="{Binding FieldName, ElementName=LibrarySearchViewRowControl}" />
+				   Text="{Binding FieldName, ElementName=LibrarySearchViewRowControl}"
+				   HorizontalAlignment="Right" />
 
 		<StackPanel Grid.Column="2">
 			<ContentPresenter Content="{Binding FieldEditor, ElementName=LibrarySearchViewRowControl}" />

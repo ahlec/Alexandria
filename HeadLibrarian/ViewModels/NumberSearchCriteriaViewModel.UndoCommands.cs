@@ -33,7 +33,7 @@ namespace HeadLibrarian.ViewModels
 
 		class SetTypeUndoAction : IUndoRedoAction
 		{
-			public SetTypeUndoAction( NumberSearchCriteriaViewModel viewModel, SearchCriteriaType oldType, SearchCriteriaType newType )
+			public SetTypeUndoAction( NumberSearchCriteriaViewModel viewModel, NumberSearchCriteriaType oldType, NumberSearchCriteriaType newType )
 			{
 				_viewModel = viewModel;
 				_oldType = oldType;
@@ -53,8 +53,8 @@ namespace HeadLibrarian.ViewModels
 			}
 
 			readonly NumberSearchCriteriaViewModel _viewModel;
-			readonly SearchCriteriaType _oldType;
-			readonly SearchCriteriaType _newType;
+			readonly NumberSearchCriteriaType _oldType;
+			readonly NumberSearchCriteriaType _newType;
 		}
 
 		class SetNumber1UndoAction : IUndoRedoAction

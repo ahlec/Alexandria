@@ -1,6 +1,6 @@
 ﻿namespace Alexandria.Searching
 {
-	public enum SearchCriteriaType
+	public enum NumberSearchCriteriaType
 	{
 		ExactMatch,
 		LessThan,

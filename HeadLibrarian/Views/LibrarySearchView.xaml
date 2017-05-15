@@ -17,6 +17,11 @@
 								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
 			<TextBox Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
 		</controls:ProjectViewRow>
+		
+		<controls:ProjectViewRow FieldName="Date:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+			<controls:DateSearchCriteriaEditor DataContext="{Binding Date}" />
+		</controls:ProjectViewRow>
 
 		<StackPanel Orientation="Horizontal"
 					Margin="{StaticResource ProjectViewModelVerticalRowPadding}">

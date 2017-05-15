@@ -12,6 +12,7 @@ namespace HeadLibrarian.ViewModels
 			_projectViewModel = projectViewModel;
 			_search = search;
 
+			Date = new DateSearchCriteriaViewModel( projectViewModel, search );
 			WordCount = new NumberSearchCriteriaViewModel.WordCount( projectViewModel, search );
 			Fandoms = new StringListViewModel( projectViewModel, search.Fandoms );
 			CharacterNames = new StringListViewModel( projectViewModel, search.CharacterNames );
@@ -66,6 +67,8 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( Author ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
+
+		public DateSearchCriteriaViewModel Date { get; }
 
 		public Boolean OnlyIncludeComplete
 		{

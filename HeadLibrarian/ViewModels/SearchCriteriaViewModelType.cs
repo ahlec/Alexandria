@@ -16,48 +16,107 @@ namespace HeadLibrarian.ViewModels
 
 	public static class SearchCriteriaViewModelTypeUtils
 	{
-		public static SearchCriteriaType ToAlexandriaType( SearchCriteriaViewModelType type )
+		public static NumberSearchCriteriaType ToAlexandriaNumberType( SearchCriteriaViewModelType type )
 		{
 			switch ( type )
 			{
 				case SearchCriteriaViewModelType.None:
 					throw new ArgumentException();
 				case SearchCriteriaViewModelType.ExactMatch:
-					return SearchCriteriaType.ExactMatch;
+					return NumberSearchCriteriaType.ExactMatch;
 				case SearchCriteriaViewModelType.LessThan:
-					return SearchCriteriaType.LessThan;
+					return NumberSearchCriteriaType.LessThan;
 				case SearchCriteriaViewModelType.LessThanOrEqual:
-					return SearchCriteriaType.LessThanOrEqual;
+					return NumberSearchCriteriaType.LessThanOrEqual;
 				case SearchCriteriaViewModelType.GreaterThan:
-					return SearchCriteriaType.GreaterThan;
+					return NumberSearchCriteriaType.GreaterThan;
 				case SearchCriteriaViewModelType.GreaterThanOrEqual:
-					return SearchCriteriaType.GreaterThanOrEqual;
+					return NumberSearchCriteriaType.GreaterThanOrEqual;
 				case SearchCriteriaViewModelType.Range:
-					return SearchCriteriaType.Range;
+					return NumberSearchCriteriaType.Range;
 				default:
 					throw new NotImplementedException();
 			}
 		}
 
-		public static SearchCriteriaViewModelType FromAlexandriaType( SearchCriteriaType type )
+		public static DateSearchCriteriaType ToAlexandriaDateType( SearchCriteriaViewModelType type )
 		{
 			switch ( type )
 			{
-				case SearchCriteriaType.ExactMatch:
+				case SearchCriteriaViewModelType.None:
+					throw new ArgumentException();
+				case SearchCriteriaViewModelType.ExactMatch:
+					return DateSearchCriteriaType.Exactly;
+				case SearchCriteriaViewModelType.LessThan:
+					return DateSearchCriteriaType.Before;
+				case SearchCriteriaViewModelType.LessThanOrEqual:
+					throw new ArgumentException();
+				case SearchCriteriaViewModelType.GreaterThan:
+					return DateSearchCriteriaType.After;
+				case SearchCriteriaViewModelType.GreaterThanOrEqual:
+					throw new ArgumentException();
+				case SearchCriteriaViewModelType.Range:
+					return DateSearchCriteriaType.Between;
+				default:
+					throw new NotImplementedException();
+			}
+		}
+
+		public static SearchCriteriaViewModelType FromAlexandriaNumberType( NumberSearchCriteriaType type )
+		{
+			switch ( type )
+			{
+				case NumberSearchCriteriaType.ExactMatch:
 					return SearchCriteriaViewModelType.ExactMatch;
-				case SearchCriteriaType.LessThan:
+				case NumberSearchCriteriaType.LessThan:
 					return SearchCriteriaViewModelType.LessThan;
-				case SearchCriteriaType.LessThanOrEqual:
+				case NumberSearchCriteriaType.LessThanOrEqual:
 					return SearchCriteriaViewModelType.LessThanOrEqual;
-				case SearchCriteriaType.GreaterThan:
+				case NumberSearchCriteriaType.GreaterThan:
 					return SearchCriteriaViewModelType.GreaterThan;
-				case SearchCriteriaType.GreaterThanOrEqual:
+				case NumberSearchCriteriaType.GreaterThanOrEqual:
 					return SearchCriteriaViewModelType.GreaterThanOrEqual;
-				case SearchCriteriaType.Range:
+				case NumberSearchCriteriaType.Range:
 					return SearchCriteriaViewModelType.Range;
 				default:
 					throw new NotImplementedException();
 			}
 		}
+
+		public static SearchCriteriaViewModelType FromAlexandriaDateType( DateSearchCriteriaType type )
+		{
+			switch ( type )
+			{
+				case DateSearchCriteriaType.Exactly:
+					return SearchCriteriaViewModelType.ExactMatch;
+				case DateSearchCriteriaType.Before:
+					return SearchCriteriaViewModelType.LessThanOrEqual;
+				case DateSearchCriteriaType.After:
+					return SearchCriteriaViewModelType.GreaterThan;
+				case DateSearchCriteriaType.Between:
+					return SearchCriteriaViewModelType.Range;
+				default:
+					throw new NotImplementedException();
+			}
+		}
+
+		public static readonly SearchCriteriaViewModelType[] AllValidNumberTypes =
+		{
+			SearchCriteriaViewModelType.None,
+			SearchCriteriaViewModelType.ExactMatch,
+			SearchCriteriaViewModelType.LessThan,
+			SearchCriteriaViewModelType.LessThanOrEqual,
+			SearchCriteriaViewModelType.GreaterThan,
+			SearchCriteriaViewModelType.GreaterThanOrEqual,
+			SearchCriteriaViewModelType.Range
+		};
+		public static readonly SearchCriteriaViewModelType[] AllValidDateTypes =
+		{
+			SearchCriteriaViewModelType.None,
+			SearchCriteriaViewModelType.ExactMatch,
+			SearchCriteriaViewModelType.LessThan,
+			SearchCriteriaViewModelType.GreaterThan,
+			SearchCriteriaViewModelType.Range
+		};
 	}
 }
