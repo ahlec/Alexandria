@@ -60,7 +60,7 @@ namespace Bibliothecary.Data.Utils
 				yield return new KeyValuePair<String, String>( FieldNameMaturityRating, search.Rating.ToString() );
 			}
 
-			if ( search.ContentWarnings != null && search.ContentWarnings != ContentWarnings.None )
+			if ( search.ContentWarnings != ContentWarnings.None )
 			{
 				foreach ( ContentWarnings warning in Enum.GetValues( typeof( ContentWarnings ) ) )
 				{
@@ -69,7 +69,7 @@ namespace Bibliothecary.Data.Utils
 						continue;
 					}
 
-					if ( search.ContentWarnings.Value.HasFlag( warning ) )
+					if ( search.ContentWarnings.HasFlag( warning ) )
 					{
 						yield return new KeyValuePair<String, String>( FieldNameContentWarning, warning.ToString() );
 					}

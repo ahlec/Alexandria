@@ -25,7 +25,7 @@ namespace Alexandria.Searching
 
 		public MaturityRating? Rating { get; set; }
 
-		public ContentWarnings? ContentWarnings { get; set; }
+		public ContentWarnings ContentWarnings { get; set; }
 
 		public List<String> CharacterNames { get; private set; } = new List<String>();
 

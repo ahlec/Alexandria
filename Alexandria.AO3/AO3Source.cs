@@ -171,9 +171,9 @@ namespace Alexandria.AO3
 				searchUrl.Append( "&work_search[rating_ids]=" );
 				searchUrl.Append( AO3MaturityRatingUtils.GetId( searchCriteria.Rating.Value ) );
 			}
-			if ( searchCriteria.ContentWarnings != null )
+			if ( searchCriteria.ContentWarnings != ContentWarnings.None )
 			{
-				foreach ( Int32 warningId in AO3ContentWarningUtils.GetIds( searchCriteria.ContentWarnings.Value ) )
+				foreach ( Int32 warningId in AO3ContentWarningUtils.GetIds( searchCriteria.ContentWarnings ) )
 				{
 					searchUrl.Append( "&work_search[warning_ids][]=" );
 					searchUrl.Append( warningId );

@@ -15,6 +15,7 @@ namespace HeadLibrarian.ViewModels
 			Date = new DateSearchCriteriaViewModel( projectViewModel, search );
 			WordCount = new NumberSearchCriteriaViewModel.WordCount( projectViewModel, search );
 			Fandoms = new StringListViewModel( projectViewModel, search.Fandoms );
+			ContentWarnings = new ContentWarningViewModel( projectViewModel, search );
 			CharacterNames = new StringListViewModel( projectViewModel, search.CharacterNames );
 			Ships = new StringListViewModel( projectViewModel, search.Ships );
 			Tags = new StringListViewModel( projectViewModel, search.Tags );
@@ -169,6 +170,8 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( MaturityRating ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
+
+		public ContentWarningViewModel ContentWarnings { get; }
 
 		public StringListViewModel CharacterNames { get; }
 

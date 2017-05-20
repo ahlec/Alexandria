@@ -58,6 +58,17 @@
 			<ComboBox ItemsSource="{Binding AllMaturityRatings}"
 					  SelectedItem="{Binding MaturityRating, UpdateSourceTrigger=PropertyChanged}" />
 		</controls:ProjectViewRow>
+		
+		<controls:ProjectViewRow FieldName="Content Warnings:"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+			<WrapPanel Orientation="Horizontal">
+				<CheckBox IsChecked="{Binding ContentWarnings.HasUndetermined}">Undetermined</CheckBox>
+				<CheckBox IsChecked="{Binding ContentWarnings.HasViolence}">Violence</CheckBox>
+				<CheckBox IsChecked="{Binding ContentWarnings.HasMajorCharacterDeath}">Major Character Death</CheckBox>
+				<CheckBox IsChecked="{Binding ContentWarnings.HasRape}">Rape</CheckBox>
+				<CheckBox IsChecked="{Binding ContentWarnings.HasUnderage}">Underage</CheckBox>
+			</WrapPanel>
+		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Characters:"
 								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
