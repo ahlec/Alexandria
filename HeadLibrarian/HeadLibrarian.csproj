@@ -81,6 +81,7 @@
     <Compile Include="Controls\StringListEditor.xaml.cs">
       <DependentUpon>StringListEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ValueNullTemplateSelector.cs" />
     <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="ViewModels\NumberSearchCriteriaViewModel.Subclasses.cs" />
     <Compile Include="ViewModels\NumberSearchCriteriaViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\ProjectViewModel.cs" />
+    <Compile Include="ViewModels\ProjectViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\SearchCriteriaViewModelType.cs" />
     <Compile Include="ViewModels\StringListViewModel.cs" />
     <Compile Include="ViewModels\StringListViewModel.UndoCommands.cs" />

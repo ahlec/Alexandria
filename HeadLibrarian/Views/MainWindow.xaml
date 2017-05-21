@@ -124,9 +124,9 @@
 					  Grid.Column="1"
 					  HorizontalScrollBarVisibility="Disabled"
 					  VerticalScrollBarVisibility="Auto"
-					  Margin="6"
 					  IsEnabled="{Binding SelectedProject, Converter={StaticResource NotNullToBooleanConverter}}">
-			<views:ProjectView DataContext="{Binding SelectedItem, ElementName=ProjectsListBox}" />
+			<views:ProjectView DataContext="{Binding SelectedItem, ElementName=ProjectsListBox}"
+							   Margin="6" />
 		</ScrollViewer>
 
 		<StackPanel Grid.Row="1"

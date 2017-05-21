@@ -5,7 +5,7 @@ using HeadLibrarian.WPF;
 
 namespace HeadLibrarian.ViewModels
 {
-	public sealed class ProjectViewModel : BaseViewModel
+	public sealed partial class ProjectViewModel : BaseViewModel
 	{
 		public ProjectViewModel( Database database, Project project )
 		{
@@ -97,6 +97,26 @@ namespace HeadLibrarian.ViewModels
 			}
 		}
 
+		public Boolean SearchAO3
+		{
+			get => _project.SearchAO3;
+			set
+			{
+				Boolean oldValue = SearchAO3;
+				if ( _project.SetSearchAO3( value ) )
+				{
+					UndoStack.Push( new SetSearchAO3UndoAction( this, oldValue, value ) );
+					InvokeSearchAO3Changed();
+				}
+			}
+		}
+
+		void InvokeSearchAO3Changed()
+		{
+			OnPropertyChanged( nameof( Name ) );
+			OnPropertyChanged( nameof( HasUnsavedChanges ) );
+		}
+
 		public LibrarySearchViewModel SearchQuery { get; }
 
 		public ICommand SaveCommand { get; }
@@ -121,35 +141,5 @@ namespace HeadLibrarian.ViewModels
 		readonly Project _project;
 		Boolean _canUndo;
 		Boolean _canRedo;
-
-		#region Undo Commands
-
-		class SetNameUndoAction : IUndoRedoAction
-		{
-			public SetNameUndoAction( ProjectViewModel viewModel, String oldName, String newName )
-			{
-				_viewModel = viewModel;
-				_oldName = oldName;
-				_newName = newName;
-			}
-
-			public void Undo()
-			{
-				_viewModel._project.SetName( _oldName );
-				_viewModel.InvokeNameChanged();
-			}
-
-			public void Redo()
-			{
-				_viewModel._project.SetName( _newName );
-				_viewModel.InvokeNameChanged();
-			}
-
-			readonly ProjectViewModel _viewModel;
-			readonly String _oldName;
-			readonly String _newName;
-		}
-
-		#endregion
 	}
 }

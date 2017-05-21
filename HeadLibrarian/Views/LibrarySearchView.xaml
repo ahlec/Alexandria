@@ -5,6 +5,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:viewModels="clr-namespace:HeadLibrarian.ViewModels"
 			 xmlns:controls="clr-namespace:HeadLibrarian.Controls"
+			 xmlns:model="clr-namespace:Alexandria.Model;assembly=Alexandria"
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance viewModels:LibrarySearchViewModel}">
 	<StackPanel>
@@ -44,8 +45,29 @@
 
 		<controls:ProjectViewRow FieldName="Language:"
 								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+			<controls:ProjectViewRow.Resources>
+				<controls:ValueNullTemplateSelector x:Key="LanguageTemplateSelector">
+					<controls:ValueNullTemplateSelector.NullTemplate>
+						<DataTemplate DataType="model:ILanguageInfo">
+							<TextBlock>[NONE]</TextBlock>
+						</DataTemplate>
+					</controls:ValueNullTemplateSelector.NullTemplate>
+					<controls:ValueNullTemplateSelector.NotNullTemplate>
+						<DataTemplate DataType="model:ILanguageInfo">
+							<TextBlock>
+								<Run Text="{Binding NativeName, Mode=OneWay}" />
+								<Run>(</Run>
+								<Run Text="{Binding DisplayName, Mode=OneWay}" />
+								<Run>)</Run>
+							</TextBlock>
+						</DataTemplate>
+					</controls:ValueNullTemplateSelector.NotNullTemplate>
+				</controls:ValueNullTemplateSelector>
+			</controls:ProjectViewRow.Resources>
+
 			<ComboBox ItemsSource="{Binding AllLanguages}"
-					  SelectedItem="{Binding Language, UpdateSourceTrigger=PropertyChanged}" />
+					  SelectedItem="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
+					  ItemTemplateSelector="{StaticResource LanguageTemplateSelector}" />
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Fandoms:"

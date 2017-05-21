@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Alexandria.Model;
 using Alexandria.Searching;
+using Alexandria.Utils;
 
 namespace HeadLibrarian.ViewModels
 {
@@ -119,21 +120,21 @@ namespace HeadLibrarian.ViewModels
 
 		public NumberSearchCriteriaViewModel WordCount { get; }
 
-		public IEnumerable<Language?> AllLanguages { get; } = GetAllNullableEnumValues<Language>();
+		public static IEnumerable<ILanguageInfo> AllLanguages { get; } = GetAllLanguageOptions();
 
-		public Language? Language
+		public ILanguageInfo Language
 		{
-			get => _search.Language;
+			get => ( _search.Language.HasValue ? LanguageUtils.GetInfo( _search.Language.Value ) : null );
 			set
 			{
-				Language? oldLanguage = Language;
-				if ( oldLanguage == value )
+				ILanguageInfo oldLanguage = Language;
+				if ( oldLanguage?.Language == value?.Language )
 				{
 					return;
 				}
 
-				_search.Language = value;
-				_projectViewModel.UndoStack.Push( new SetLanguageUndoAction( this, oldLanguage, value ) );
+				_search.Language = value?.Language;
+				_projectViewModel.UndoStack.Push( new SetLanguageUndoAction( this, oldLanguage?.Language, value?.Language ) );
 				InvokeLanguageChanged();
 			}
 		}
@@ -144,7 +145,7 @@ namespace HeadLibrarian.ViewModels
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
-		public IEnumerable<MaturityRating?> AllMaturityRatings { get; } = GetAllNullableEnumValues<MaturityRating>();
+		public static IEnumerable<MaturityRating?> AllMaturityRatings { get; } = GetAllNullableEnumValues<MaturityRating>();
 
 		public StringListViewModel Fandoms { get; }
 
@@ -189,6 +190,15 @@ namespace HeadLibrarian.ViewModels
 			foreach ( T enumValue in Enum.GetValues( typeof( T ) ) )
 			{
 				yield return enumValue;
+			}
+		}
+
+		static IEnumerable<ILanguageInfo> GetAllLanguageOptions()
+		{
+			yield return null;
+			foreach ( Language language in Enum.GetValues( typeof( Language ) ) )
+			{
+				yield return LanguageUtils.GetInfo( language );
 			}
 		}
 

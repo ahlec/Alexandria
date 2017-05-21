@@ -10,6 +10,7 @@ namespace Bibliothecary.Data
 	{
 		const String DefaultProjectName = "Untitled";
 		const Int32 DefaultUpdateFrequencyMinutes = 24 * 60; // 1 day
+		const Int32 DefaultSearchAO3 = 1; // true, in SQLite
 		public const Int32 MinimumUpdateFrequencyMinutes = 1; // I mean, really??
 
 		Project( Database database, Int32 projectId )
@@ -49,6 +50,8 @@ namespace Bibliothecary.Data
 
 		public TimeSpan UpdateFrequency { get; private set; }
 
+		public Boolean SearchAO3 { get; private set; }
+
 		public LibrarySearch SearchQuery { get; private set; }
 
 		#endregion
@@ -77,6 +80,17 @@ namespace Bibliothecary.Data
 			}
 
 			UpdateFrequency = TimeSpan.FromMinutes( minutes );
+			return true;
+		}
+
+		public Boolean SetSearchAO3( Boolean value )
+		{
+			if ( value == SearchAO3 )
+			{
+				return false;
+			}
+
+			SearchAO3 = value;
 			return true;
 		}
 
@@ -110,9 +124,10 @@ namespace Bibliothecary.Data
 				{
 					using ( SQLiteCommand insertCommand = new SQLiteCommand( database.Connection ) )
 					{
-						insertCommand.CommandText = "INSERT INTO projects( project_name, update_frequency_minutes ) VALUES( @name, @frequency )";
+						insertCommand.CommandText = "INSERT INTO projects( project_name, update_frequency_minutes, search_ao3 ) VALUES( @name, @frequency, @searchAO3 )";
 						insertCommand.Parameters.AddWithValue( "@name", DefaultProjectName );
 						insertCommand.Parameters.AddWithValue( "@frequency", DefaultUpdateFrequencyMinutes );
+						insertCommand.Parameters.AddWithValue( "@searchAO3", DefaultSearchAO3 );
 						Int32 numberRowsAffected = insertCommand.ExecuteNonQuery();
 						if ( numberRowsAffected != 1 )
 						{
@@ -134,6 +149,7 @@ namespace Bibliothecary.Data
 							{
 								Name = DefaultProjectName,
 								UpdateFrequency = TimeSpan.FromMinutes( DefaultUpdateFrequencyMinutes ),
+								SearchAO3 = ( DefaultSearchAO3 != 0 ),
 								SearchQuery = new LibrarySearch()
 							};
 						}
@@ -162,7 +178,7 @@ namespace Bibliothecary.Data
 			SQLiteUtils.ValidateConnection( database.Connection );
 
 			Project parsed = new Project( database, projectId );
-			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( "SELECT project_name, update_frequency_minutes FROM projects WHERE project_id = @projectId", database.Connection ) )
+			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( "SELECT project_name, update_frequency_minutes, search_ao3 FROM projects WHERE project_id = @projectId", database.Connection ) )
 			{
 				selectBasicDataCommand.Parameters.AddWithValue( "@projectId", projectId );
 				using ( SQLiteDataReader reader = selectBasicDataCommand.ExecuteReader() )
@@ -175,6 +191,7 @@ namespace Bibliothecary.Data
 					parsed.Name = reader.GetString( 0 );
 					Int32 updateFrequencyMinutes = Math.Max( MinimumUpdateFrequencyMinutes, reader.GetInt32( 1 ) );
 					parsed.UpdateFrequency = TimeSpan.FromMinutes( updateFrequencyMinutes );
+					parsed.SearchAO3 = ( reader.GetInt32( 2 ) != 0 );
 				}
 			}
 			parsed.SearchQuery = LibrarySearchUtils.ReadFromDatabase( database.Connection, projectId );
@@ -192,10 +209,11 @@ namespace Bibliothecary.Data
 				{
 					using ( SQLiteCommand updateProjectCommand = new SQLiteCommand( _database.Connection ) )
 					{
-						updateProjectCommand.CommandText = "UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency WHERE project_id = @projectId";
+						updateProjectCommand.CommandText = "UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency, search_ao3 = @searchAO3 WHERE project_id = @projectId";
 						updateProjectCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 						updateProjectCommand.Parameters.AddWithValue( "@name", Name );
 						updateProjectCommand.Parameters.AddWithValue( "@frequency", UpdateFrequency.TotalMinutes );
+						updateProjectCommand.Parameters.AddWithValue( "@searchAO3", ( SearchAO3 ? 1 : 0 ) );
 						Int32 numberRowsAffected = updateProjectCommand.ExecuteNonQuery();
 						if ( numberRowsAffected != 1 )
 						{

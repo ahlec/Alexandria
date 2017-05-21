@@ -12,7 +12,8 @@ namespace Bibliothecary.Data.Schema
 		protected override Boolean PerformUpdate( SQLiteConnection connection )
 		{
 			SQLiteCommand createProjects = new SQLiteCommand( @"CREATE TABLE projects ( project_id INTEGER PRIMARY KEY,
-					project_name VARCHAR NOT NULL, update_frequency_minutes INT NOT NULL CHECK (update_frequency_minutes > 0) );", connection );
+					project_name VARCHAR NOT NULL, update_frequency_minutes INT NOT NULL CHECK (update_frequency_minutes > 0),
+					search_ao3 INT NOT NULL DEFAULT (0) );", connection );
 			createProjects.ExecuteNonQuery();
 
 			SQLiteCommand createProjectSearchFields = new SQLiteCommand( @"CREATE TABLE project_search_fields (
