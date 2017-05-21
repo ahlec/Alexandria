@@ -9,9 +9,6 @@
 			 x:Name="NumberSearchCriteriaEditorControl"
 			 d:DataContext="{d:DesignInstance viewModels:NumberSearchCriteriaViewModel}">
 	<UserControl.Resources>
-		<DataTemplate x:Key="NoneTemplate">
-		</DataTemplate>
-
 		<DataTemplate x:Key="OneNumberTemplate">
 			<TextBox Text="{Binding DataContext.Number1, ElementName=NumberSearchCriteriaEditorControl, UpdateSourceTrigger=PropertyChanged}" />
 		</DataTemplate>
@@ -36,13 +33,10 @@
 			</Grid>
 		</DataTemplate>
 
-		<local:SearchCriteriaTemplateSelector x:Key="EditorSelector"
-											  NoneTemplate="{StaticResource NoneTemplate}"
+		<local:NumberSearchCriteriaTemplateSelector x:Key="EditorSelector"
 											  ExactDataTemplate="{StaticResource OneNumberTemplate}"
 											  LessThanDataTemplate="{StaticResource OneNumberTemplate}"
-											  LessThanOrEqualDataTemplate="{StaticResource OneNumberTemplate}"
 											  GreaterThanDataTemplate="{StaticResource OneNumberTemplate}"
-											  GreaterThanOrEqualDataTemplate="{StaticResource OneNumberTemplate}"
 											  RangeDataTemplate="{StaticResource TwoNumberTemplate}" />
 	</UserControl.Resources>
 
@@ -53,7 +47,7 @@
 		</Grid.ColumnDefinitions>
 
 		<ComboBox Grid.Column="0"
-				  ItemsSource="{x:Static viewModels:SearchCriteriaViewModelTypeUtils.AllValidNumberTypes}"
+				  ItemsSource="{Binding AllValidNumberTypes}"
 				  SelectedItem="{Binding Type, Mode=TwoWay}"
 				  Margin="0,0,6,0" />
 

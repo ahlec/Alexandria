@@ -17,13 +17,13 @@ namespace HeadLibrarian.ViewModels
 			public void Undo()
 			{
 				_viewModel.ActualObject = _oldObject;
-				_viewModel.InvokeActualObjectChanged();
+				_viewModel.InvokeAllPropertiesChanged();
 			}
 
 			public void Redo()
 			{
 				_viewModel.ActualObject = _newObject;
-				_viewModel.InvokeActualObjectChanged();
+				_viewModel.InvokeAllPropertiesChanged();
 			}
 
 			readonly NumberSearchCriteriaViewModel _viewModel;

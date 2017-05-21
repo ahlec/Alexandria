@@ -10,17 +10,20 @@
 			 d:DataContext="{d:DesignInstance viewModels:LibrarySearchViewModel}">
 	<StackPanel>
 		<controls:ProjectViewRow FieldName="Title:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding IsTitleEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Author:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding IsAuthorEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<TextBox Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
 		</controls:ProjectViewRow>
-		
+
 		<controls:ProjectViewRow FieldName="Date:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding IsDateEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:DateSearchCriteriaEditor DataContext="{Binding Date}" />
 		</controls:ProjectViewRow>
 
@@ -39,48 +42,42 @@
 		</StackPanel>
 
 		<controls:ProjectViewRow FieldName="Word Count:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding IsWordCountEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:NumberSearchCriteriaEditor DataContext="{Binding WordCount}" />
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Language:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
-			<controls:ProjectViewRow.Resources>
-				<controls:ValueNullTemplateSelector x:Key="LanguageTemplateSelector">
-					<controls:ValueNullTemplateSelector.NullTemplate>
-						<DataTemplate DataType="model:ILanguageInfo">
-							<TextBlock>[NONE]</TextBlock>
-						</DataTemplate>
-					</controls:ValueNullTemplateSelector.NullTemplate>
-					<controls:ValueNullTemplateSelector.NotNullTemplate>
-						<DataTemplate DataType="model:ILanguageInfo">
-							<TextBlock>
-								<Run Text="{Binding NativeName, Mode=OneWay}" />
-								<Run>(</Run>
-								<Run Text="{Binding DisplayName, Mode=OneWay}" />
-								<Run>)</Run>
-							</TextBlock>
-						</DataTemplate>
-					</controls:ValueNullTemplateSelector.NotNullTemplate>
-				</controls:ValueNullTemplateSelector>
-			</controls:ProjectViewRow.Resources>
-
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding IsLanguageEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<ComboBox ItemsSource="{Binding AllLanguages}"
-					  SelectedItem="{Binding Language, UpdateSourceTrigger=PropertyChanged}"
-					  ItemTemplateSelector="{StaticResource LanguageTemplateSelector}" />
+					  SelectedItem="{Binding Language, UpdateSourceTrigger=PropertyChanged}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate DataType="model:ILanguageInfo">
+						<TextBlock>
+							<Run Text="{Binding NativeName, Mode=OneWay}" />
+							<Run>(</Run>
+							<Run Text="{Binding DisplayName, Mode=OneWay}" />
+							<Run>)</Run>
+						</TextBlock>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Fandoms:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding AreFandomsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:StringListEditor DataContext="{Binding Fandoms}" />
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Maturity Rating:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding IsMaturityRatingEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<ComboBox ItemsSource="{Binding AllMaturityRatings}"
 					  SelectedItem="{Binding MaturityRating, UpdateSourceTrigger=PropertyChanged}" />
 		</controls:ProjectViewRow>
-		
+
 		<controls:ProjectViewRow FieldName="Content Warnings:"
 								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
 			<WrapPanel Orientation="Horizontal">
@@ -93,27 +90,32 @@
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Characters:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding AreCharacterNamesEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:StringListEditor DataContext="{Binding CharacterNames}" />
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Ships:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding AreShipsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:StringListEditor DataContext="{Binding Ships}" />
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Tags:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding AreTagsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:StringListEditor DataContext="{Binding Tags}" />
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Number Likes:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding IsNumberLikesEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:NumberSearchCriteriaEditor DataContext="{Binding NumberLikes}" />
 		</controls:ProjectViewRow>
 
 		<controls:ProjectViewRow FieldName="Number Comments:"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 IsFieldEnabled="{Binding IsNumberCommentsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:NumberSearchCriteriaEditor DataContext="{Binding NumberComments}" />
 		</controls:ProjectViewRow>
 	</StackPanel>

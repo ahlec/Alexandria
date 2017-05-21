@@ -63,20 +63,10 @@ namespace Alexandria.Searching
 
 			NumberSearchCriteria parsed = new NumberSearchCriteria();
 
-			if ( text.StartsWith( "<=", StringComparison.InvariantCultureIgnoreCase ) )
-			{
-				parsed.Type = NumberSearchCriteriaType.LessThanOrEqual;
-				parsed.Number1 = parsed.ValidateNumber( Int32.Parse( text.Substring( 2 ) ) );
-			}
-			else if ( text.StartsWith( "<", StringComparison.InvariantCultureIgnoreCase ) )
+			if ( text.StartsWith( "<", StringComparison.InvariantCultureIgnoreCase ) )
 			{
 				parsed.Type = NumberSearchCriteriaType.LessThan;
 				parsed.Number1 = parsed.ValidateNumber( Int32.Parse( text.Substring( 1 ) ) );
-			}
-			else if ( text.StartsWith( ">=", StringComparison.InvariantCultureIgnoreCase ) )
-			{
-				parsed.Type = NumberSearchCriteriaType.GreaterThanOrEqual;
-				parsed.Number1 = parsed.ValidateNumber( Int32.Parse( text.Substring( 2 ) ) );
 			}
 			else if ( text.StartsWith( ">", StringComparison.InvariantCultureIgnoreCase ) )
 			{
@@ -112,12 +102,8 @@ namespace Alexandria.Searching
 					return Number1.ToString();
 				case NumberSearchCriteriaType.LessThan:
 					return String.Concat( "<", Number1 );
-				case NumberSearchCriteriaType.LessThanOrEqual:
-					return String.Concat( "<=", Number1 );
 				case NumberSearchCriteriaType.GreaterThan:
 					return String.Concat( ">", Number1 );
-				case NumberSearchCriteriaType.GreaterThanOrEqual:
-					return String.Concat( ">=", Number1 );
 				case NumberSearchCriteriaType.Range:
 					return String.Concat( Number1, "-", Number2 );
 				default:

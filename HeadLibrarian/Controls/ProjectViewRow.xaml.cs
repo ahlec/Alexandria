@@ -18,6 +18,12 @@ namespace HeadLibrarian.Controls
 			set => SetValue( FieldNameProperty, value );
 		}
 
+		public Boolean IsFieldEnabled
+		{
+			get => (Boolean) GetValue( IsFieldEnabledProperty );
+			set => SetValue( IsFieldEnabledProperty, value );
+		}
+
 		public FrameworkElement FieldEditor
 		{
 			get => GetValue( FieldEditorProperty ) as FrameworkElement;
@@ -25,6 +31,7 @@ namespace HeadLibrarian.Controls
 		}
 
 		public static readonly DependencyProperty FieldNameProperty = DependencyProperty.Register( "FieldName", typeof( String ), typeof( ProjectViewRow ) );
+		public static readonly DependencyProperty IsFieldEnabledProperty = DependencyProperty.Register( "IsFieldEnabled", typeof( Boolean ), typeof( ProjectViewRow ) );
 		public static readonly DependencyProperty FieldEditorProperty = DependencyProperty.Register( "FieldEditor", typeof( FrameworkElement ), typeof( ProjectViewRow ) );
 	}
 }

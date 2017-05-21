@@ -11,62 +11,38 @@ namespace HeadLibrarian.ViewModels
 			Search = search;
 		}
 
-		public SearchCriteriaViewModelType Type
+		public DateSearchCriteriaType Type
 		{
-			get
-			{
-				if ( Search.Date == null )
-				{
-					return SearchCriteriaViewModelType.None;
-				}
-
-				return SearchCriteriaViewModelTypeUtils.FromAlexandriaDateType( Search.Date.Type );
-			}
+			get => Search.Date?.Type ?? DateSearchCriteriaType.Exactly;
 			set
 			{
-				SearchCriteriaViewModelType oldType = Type;
-				if ( oldType == value )
+				DateSearchCriteriaType oldType = Type;
+				if ( Search.Date != null && oldType == value )
 				{
 					return;
 				}
 
-				// Handle nulls
-				if ( value == SearchCriteriaViewModelType.None )
-				{
-					DateSearchCriteria oldActualObject = Search.Date;
-					Search.Date = null;
-					_projectViewModel.UndoStack.Push( new SetActualObjectUndoAction( this, oldActualObject, null ) );
-					InvokeActualObjectChanged();
-					return;
-				}
-
-				DateSearchCriteriaType newType = SearchCriteriaViewModelTypeUtils.ToAlexandriaDateType( value );
-
-				if ( oldType == SearchCriteriaViewModelType.None )
+				if ( Search.Date == null )
 				{
 					Search.Date = new DateSearchCriteria
 					{
-						Type = newType
+						Type = value
 					};
 					_projectViewModel.UndoStack.Push( new SetActualObjectUndoAction( this, null, Search.Date ) );
-					InvokeActualObjectChanged();
+					InvokeAllPropertiesChanged();
 					return;
 				}
 
 				// Otherwise
-				DateSearchCriteriaType oldActualType = Search.Date.Type;
-				Search.Date.Type = newType;
-				_projectViewModel.UndoStack.Push( new SetTypeUndoAction( this, oldActualType, newType ) );
+				Search.Date.Type = value;
+				_projectViewModel.UndoStack.Push( new SetTypeUndoAction( this, oldType, value ) );
 				InvokeTypeChanged();
 			}
 		}
 
-		public Boolean HasType => ( Type != SearchCriteriaViewModelType.None );
-
-		void InvokeActualObjectChanged()
+		internal void InvokeAllPropertiesChanged()
 		{
 			OnPropertyChanged( nameof( Type ) );
-			OnPropertyChanged( nameof( HasType ) );
 			OnPropertyChanged( nameof( DateUnit ) );
 			OnPropertyChanged( nameof( Number1 ) );
 			OnPropertyChanged( nameof( Number2 ) );
@@ -76,7 +52,6 @@ namespace HeadLibrarian.ViewModels
 		void InvokeTypeChanged()
 		{
 			OnPropertyChanged( nameof( Type ) );
-			OnPropertyChanged( nameof( HasType ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
@@ -163,6 +138,14 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( Number2 ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
+
+		public DateSearchCriteriaType[] AllValidDateTypes { get; } =
+		{
+			DateSearchCriteriaType.Exactly,
+			DateSearchCriteriaType.Before,
+			DateSearchCriteriaType.After,
+			DateSearchCriteriaType.Between
+		};
 
 		protected readonly LibrarySearch Search;
 		readonly ProjectViewModel _projectViewModel;

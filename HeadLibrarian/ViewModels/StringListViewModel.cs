@@ -32,6 +32,15 @@ namespace HeadLibrarian.ViewModels
 			return _list.GetEnumerator();
 		}
 
+		internal void InvokeItemsReplaced()
+		{
+			CollectionChanged?.Invoke( this, new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Reset ) );
+			if ( _list.Count > 0 )
+			{
+				CollectionChanged?.Invoke( this, new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, _list, 0 ) );
+			}
+		}
+
 		void InvokeItemAdded( String item, Int32 index )
 		{
 			CollectionChanged?.Invoke( this, new NotifyCollectionChangedEventArgs( NotifyCollectionChangedAction.Add, item, index ) );

@@ -6,6 +6,7 @@
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="{StaticResource FieldNameWidth}" />
 			<ColumnDefinition Width="{StaticResource FieldSeparatorWidth}" />
+			<ColumnDefinition Width="Auto" />
 			<ColumnDefinition Width="{StaticResource FieldEditorWidth}" />
 		</Grid.ColumnDefinitions>
 
@@ -14,8 +15,13 @@
 				   Text="{Binding FieldName, ElementName=LibrarySearchViewRowControl}"
 				   HorizontalAlignment="Right" />
 
-		<StackPanel Grid.Column="2">
-			<ContentPresenter Content="{Binding FieldEditor, ElementName=LibrarySearchViewRowControl}" />
+		<CheckBox Grid.Column="2"
+				  IsChecked="{Binding IsFieldEnabled, ElementName=LibrarySearchViewRowControl, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+				  VerticalAlignment="Center" />
+
+		<StackPanel Grid.Column="3">
+			<ContentPresenter Content="{Binding FieldEditor, ElementName=LibrarySearchViewRowControl}"
+							  IsEnabled="{Binding IsFieldEnabled, ElementName=LibrarySearchViewRowControl}" />
 		</StackPanel>
 	</Grid>
 </UserControl>

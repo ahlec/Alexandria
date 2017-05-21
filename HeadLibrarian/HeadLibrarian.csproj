@@ -71,17 +71,17 @@
     <Compile Include="Controls\DateSearchCriteriaEditor.xaml.cs">
       <DependentUpon>DateSearchCriteriaEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\DateSearchCriteriaTemplateSelector.cs" />
     <Compile Include="Controls\NumberSearchCriteriaEditor.xaml.cs">
       <DependentUpon>NumberSearchCriteriaEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ProjectViewRow.xaml.cs">
       <DependentUpon>ProjectViewRow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SearchCriteriaTemplateSelector.cs" />
+    <Compile Include="Controls\NumberSearchCriteriaTemplateSelector.cs" />
     <Compile Include="Controls\StringListEditor.xaml.cs">
       <DependentUpon>StringListEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ValueNullTemplateSelector.cs" />
     <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
@@ -107,7 +107,6 @@
     <Compile Include="ViewModels\NumberSearchCriteriaViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\ProjectViewModel.cs" />
     <Compile Include="ViewModels\ProjectViewModel.UndoCommands.cs" />
-    <Compile Include="ViewModels\SearchCriteriaViewModelType.cs" />
     <Compile Include="ViewModels\StringListViewModel.cs" />
     <Compile Include="ViewModels\StringListViewModel.UndoCommands.cs" />
     <Compile Include="Views\LibrarySearchView.xaml.cs">

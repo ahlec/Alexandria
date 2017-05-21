@@ -11,57 +11,37 @@ namespace HeadLibrarian.ViewModels
 			Search = search;
 		}
 
-		public SearchCriteriaViewModelType Type
+		public NumberSearchCriteriaType Type
 		{
-			get
-			{
-				if ( ActualObject == null )
-				{
-					return SearchCriteriaViewModelType.None;
-				}
-
-				return SearchCriteriaViewModelTypeUtils.FromAlexandriaNumberType( ActualObject.Type );
-			}
+			get => ActualObject?.Type ?? NumberSearchCriteriaType.ExactMatch;
 			set
 			{
-				SearchCriteriaViewModelType oldType = Type;
-				if ( oldType == value )
+				NumberSearchCriteriaType oldType = Type;
+				if ( ActualObject != null && oldType == value )
 				{
 					return;
 				}
 
-				// Handle nulls
-				if ( value == SearchCriteriaViewModelType.None )
-				{
-					NumberSearchCriteria oldActualObject = ActualObject;
-					ActualObject = null;
-					_projectViewModel.UndoStack.Push( new SetActualObjectUndoAction( this, oldActualObject, null ) );
-					InvokeActualObjectChanged();
-					return;
-				}
-
-				NumberSearchCriteriaType newType = SearchCriteriaViewModelTypeUtils.ToAlexandriaNumberType( value );
-
-				if ( oldType == SearchCriteriaViewModelType.None )
+				if ( ActualObject == null )
 				{
 					ActualObject = new NumberSearchCriteria
 					{
-						Type = newType
+						Type = value
 					};
 					_projectViewModel.UndoStack.Push( new SetActualObjectUndoAction( this, null, ActualObject ) );
-					InvokeActualObjectChanged();
+					InvokeAllPropertiesChanged();
 					return;
 				}
 
 				// Otherwise
 				NumberSearchCriteriaType oldActualType = ActualObject.Type;
-				ActualObject.Type = newType;
-				_projectViewModel.UndoStack.Push( new SetTypeUndoAction( this, oldActualType, newType ) );
+				ActualObject.Type = value;
+				_projectViewModel.UndoStack.Push( new SetTypeUndoAction( this, oldActualType, value ) );
 				InvokeTypeChanged();
 			}
 		}
 
-		void InvokeActualObjectChanged()
+		internal void InvokeAllPropertiesChanged()
 		{
 			OnPropertyChanged( nameof( Type ) );
 			OnPropertyChanged( nameof( Number1 ) );
@@ -132,6 +112,14 @@ namespace HeadLibrarian.ViewModels
 		}
 
 		protected abstract NumberSearchCriteria ActualObject { get; set; }
+
+		public NumberSearchCriteriaType[] AllValidNumberTypes { get; } =
+		{
+			NumberSearchCriteriaType.ExactMatch,
+			NumberSearchCriteriaType.LessThan,
+			NumberSearchCriteriaType.GreaterThan,
+			NumberSearchCriteriaType.Range
+		};
 
 		protected readonly LibrarySearch Search;
 		readonly ProjectViewModel _projectViewModel;

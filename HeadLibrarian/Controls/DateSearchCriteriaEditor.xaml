@@ -9,9 +9,6 @@
 			 x:Name="DateSearchCriteriaEditorControl"
 			 d:DataContext="{d:DesignInstance viewModels:DateSearchCriteriaViewModel}">
 	<UserControl.Resources>
-		<DataTemplate x:Key="NoneTemplate">
-		</DataTemplate>
-
 		<DataTemplate x:Key="OneNumberTemplate">
 			<TextBox Text="{Binding DataContext.Number1, ElementName=DateSearchCriteriaEditorControl, UpdateSourceTrigger=PropertyChanged}" />
 		</DataTemplate>
@@ -36,14 +33,11 @@
 			</Grid>
 		</DataTemplate>
 
-		<local:SearchCriteriaTemplateSelector x:Key="EditorSelector"
-											  NoneTemplate="{StaticResource NoneTemplate}"
-											  ExactDataTemplate="{StaticResource OneNumberTemplate}"
-											  LessThanDataTemplate="{StaticResource OneNumberTemplate}"
-											  GreaterThanDataTemplate="{StaticResource OneNumberTemplate}"
-											  RangeDataTemplate="{StaticResource TwoNumberTemplate}" />
-
-		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+		<local:DateSearchCriteriaTemplateSelector x:Key="EditorSelector"
+												  ExactlyDataTemplate="{StaticResource OneNumberTemplate}"
+												  BeforeDataTemplate="{StaticResource OneNumberTemplate}"
+												  AfterDataTemplate="{StaticResource OneNumberTemplate}"
+												  BetweenDataTemplate="{StaticResource TwoNumberTemplate}" />
 	</UserControl.Resources>
 
 	<Grid>
@@ -55,7 +49,7 @@
 		</Grid.ColumnDefinitions>
 
 		<ComboBox Grid.Column="0"
-				  ItemsSource="{x:Static viewModels:SearchCriteriaViewModelTypeUtils.AllValidDateTypes}"
+				  ItemsSource="{Binding AllValidDateTypes}"
 				  SelectedItem="{Binding Type, Mode=TwoWay}"
 				  Margin="0,0,6,0" />
 
@@ -66,10 +60,8 @@
 		<ComboBox Grid.Column="2"
 				  ItemsSource="{Binding AllDateFields, ElementName=DateSearchCriteriaEditorControl}"
 				  SelectedItem="{Binding DateUnit, Mode=TwoWay}"
-				  Visibility="{Binding HasType, Converter={StaticResource BooleanToVisibilityConverter}}"
 				  Margin="6,0,6,0" />
-		
-		<TextBlock Grid.Column="3"
-				   Visibility="{Binding HasType, Converter={StaticResource BooleanToVisibilityConverter}}">ago</TextBlock>
+
+		<TextBlock Grid.Column="3">ago</TextBlock>
 	</Grid>
 </UserControl>

@@ -17,13 +17,13 @@ namespace HeadLibrarian.ViewModels
 			public void Undo()
 			{
 				_viewModel.Search.Date = _oldObject;
-				_viewModel.InvokeActualObjectChanged();
+				_viewModel.InvokeAllPropertiesChanged();
 			}
 
 			public void Redo()
 			{
 				_viewModel.Search.Date = _newObject;
-				_viewModel.InvokeActualObjectChanged();
+				_viewModel.InvokeAllPropertiesChanged();
 			}
 
 			readonly DateSearchCriteriaViewModel _viewModel;
