@@ -48,6 +48,8 @@
   <ItemGroup>
     <Compile Include="Bibliothecary.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="Extensions\EventLogExtensions.cs" />
+    <Compile Include="LiveProject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
