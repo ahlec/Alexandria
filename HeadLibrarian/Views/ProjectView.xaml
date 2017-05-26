@@ -5,6 +5,8 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:viewModels="clr-namespace:HeadLibrarian.ViewModels"
 			 xmlns:views="clr-namespace:HeadLibrarian.Views"
+			 xmlns:controls="clr-namespace:HeadLibrarian.Controls"
+			 xmlns:system="clr-namespace:System;assembly=mscorlib"
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance viewModels:ProjectViewModel}">
 	<UserControl.Resources>
@@ -19,6 +21,7 @@
 
 	<Grid>
 		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -62,22 +65,34 @@
 		<TextBlock Grid.Row="3"
 				   Grid.Column="1"
 				   Style="{StaticResource FieldNameLabel}"
+				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Max Results Per Search:</TextBlock>
+
+		<controls:NumericUpDown Grid.Row="3"
+								Grid.Column="3"
+								Value="{Binding MaxResultsPerSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+								MinValue="1"
+								MaxValue="{x:Static system:Int32.MaxValue}"
+								Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
+
+		<TextBlock Grid.Row="4"
+				   Grid.Column="1"
+				   Style="{StaticResource FieldNameLabel}"
 				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Sources:</TextBlock>
 
-		<WrapPanel Grid.Row="3"
+		<WrapPanel Grid.Row="4"
 				   Grid.Column="3"
 				   Orientation="Horizontal"
 				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
 			<CheckBox IsChecked="{Binding SearchAO3, UpdateSourceTrigger=PropertyChanged}">Archive of Our Own</CheckBox>
 		</WrapPanel>
 
-		<TextBlock Grid.Row="4"
+		<TextBlock Grid.Row="5"
 				   Grid.Column="0"
 				   Grid.ColumnSpan="4"
 				   Style="{StaticResource SectionHeader}"
 				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Search Query</TextBlock>
 
-		<views:LibrarySearchView Grid.Row="5"
+		<views:LibrarySearchView Grid.Row="6"
 								 Grid.Column="1"
 								 Grid.ColumnSpan="3"
 								 DataContext="{Binding SearchQuery}" />

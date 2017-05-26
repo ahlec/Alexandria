@@ -97,6 +97,26 @@ namespace HeadLibrarian.ViewModels
 			}
 		}
 
+		public Int32 MaxResultsPerSearch
+		{
+			get => _project.MaxResultsPerSearch;
+			set
+			{
+				Int32 oldValue = MaxResultsPerSearch;
+				if ( _project.SetMaxResultsPerSearch( value ) )
+				{
+					UndoStack.Push( new SetMaxResultsPerSearchUndoAction( this, oldValue, value ) );
+					InvokeMaxResultsPerSearchChanged();
+				}
+			}
+		}
+
+		void InvokeMaxResultsPerSearchChanged()
+		{
+			OnPropertyChanged( nameof( MaxResultsPerSearch ) );
+			OnPropertyChanged( nameof( HasUnsavedChanges ) );
+		}
+
 		public Boolean SearchAO3
 		{
 			get => _project.SearchAO3;
@@ -113,7 +133,7 @@ namespace HeadLibrarian.ViewModels
 
 		void InvokeSearchAO3Changed()
 		{
-			OnPropertyChanged( nameof( Name ) );
+			OnPropertyChanged( nameof( SearchAO3 ) );
 			OnPropertyChanged( nameof( HasUnsavedChanges ) );
 		}
 

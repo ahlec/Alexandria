@@ -2,8 +2,13 @@
 
 namespace Alexandria.Searching
 {
-	public sealed class DateSearchCriteria
+	public sealed class DateSearchCriteria : IEquatable<DateSearchCriteria>
 	{
+		public DateSearchCriteria()
+		{
+			_internalId = _nextInternalId++;
+		}
+
 		public DateSearchCriteriaType Type { get; set; }
 
 		public DateField DateUnit { get; set; }
@@ -99,6 +104,21 @@ namespace Alexandria.Searching
 			return parsed;
 		}
 
+		public Boolean Equals( DateSearchCriteria other )
+		{
+			if ( Type != other?.Type || DateUnit != other.DateUnit || Number1 != other.Number1 )
+			{
+				return false;
+			}
+
+			if ( Type == DateSearchCriteriaType.Between && Number2 != other.Number2 )
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		/// <inheritdoc />
 		public override String ToString()
 		{
@@ -117,6 +137,30 @@ namespace Alexandria.Searching
 			}
 		}
 
+		public override Boolean Equals( Object obj )
+		{
+			if ( ReferenceEquals( obj, null ) )
+			{
+				return false;
+			}
+
+			if ( ReferenceEquals( obj, this ) )
+			{
+				return true;
+			}
+
+			DateSearchCriteria other = obj as DateSearchCriteria;
+			return Equals( other );
+		}
+
+		/// <inheritdoc />
+		public override Int32 GetHashCode()
+		{
+			return _internalId.GetHashCode();
+		}
+
+		static UInt32 _nextInternalId = 1;
+		readonly UInt32 _internalId;
 		Int32 _number1;
 		Int32 _number2;
 	}

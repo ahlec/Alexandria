@@ -2,9 +2,14 @@
 
 namespace Alexandria.Searching
 {
-	public sealed class NumberSearchCriteria
+	public sealed class NumberSearchCriteria : IEquatable<NumberSearchCriteria>
 	{
 		public const Int32 MaximumNumberValue = 9999999;
+
+		public NumberSearchCriteria()
+		{
+			_internalId = _nextInternalId++;
+		}
 
 		public NumberSearchCriteriaType Type { get; set; }
 
@@ -51,6 +56,11 @@ namespace Alexandria.Searching
 				throw new ArgumentOutOfRangeException( nameof( number ), "The number must be zero or positive." );
 			}
 
+			if ( number > MaximumNumberValue )
+			{
+				throw new ArgumentOutOfRangeException( nameof( number ), $"The number must be less than or equal to {MaximumNumberValue}." );
+			}
+
 			return number;
 		}
 
@@ -93,6 +103,21 @@ namespace Alexandria.Searching
 			return parsed;
 		}
 
+		public Boolean Equals( NumberSearchCriteria other )
+		{
+			if ( Type != other?.Type || Number1 != other.Number1 )
+			{
+				return false;
+			}
+
+			if ( Type == NumberSearchCriteriaType.Range && Number2 != other.Number2 )
+			{
+				return false;
+			}
+
+			return true;
+		}
+
 		/// <inheritdoc />
 		public override String ToString()
 		{
@@ -111,6 +136,30 @@ namespace Alexandria.Searching
 			}
 		}
 
+		public override Boolean Equals( Object obj )
+		{
+			if ( ReferenceEquals( obj, null ) )
+			{
+				return false;
+			}
+
+			if ( ReferenceEquals( obj, this ) )
+			{
+				return true;
+			}
+
+			NumberSearchCriteria other = obj as NumberSearchCriteria;
+			return Equals( other );
+		}
+
+		/// <inheritdoc />
+		public override Int32 GetHashCode()
+		{
+			return _internalId.GetHashCode();
+		}
+
+		static UInt32 _nextInternalId = 1;
+		readonly UInt32 _internalId;
 		Int32 _number1;
 		Int32 _number2;
 	}

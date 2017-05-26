@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Text;
+using Alexandria.RequestHandles;
 using Alexandria.Searching;
 using Bibliothecary.Data.Utils;
 
@@ -11,6 +13,7 @@ namespace Bibliothecary.Data
 		const String DefaultProjectName = "Untitled";
 		const Int32 DefaultUpdateFrequencyMinutes = 24 * 60; // 1 day
 		const Int32 DefaultSearchAO3 = 1; // true, in SQLite
+		const Int32 DefaultMaxResultsPerSearch = 10;
 		public const Int32 MinimumUpdateFrequencyMinutes = 1; // I mean, really??
 
 		Project( Database database, Int32 projectId )
@@ -33,6 +36,16 @@ namespace Bibliothecary.Data
 					return true;
 				}
 
+				if ( _lastSavedMaxResultsPerSearch != MaxResultsPerSearch )
+				{
+					return true;
+				}
+
+				if ( _lastSavedSearchAO3 != SearchAO3 )
+				{
+					return true;
+				}
+
 				if ( !_lastSavedSearchQuery.Equals( SearchQuery ) )
 				{
 					return true;
@@ -49,6 +62,8 @@ namespace Bibliothecary.Data
 		public String Name { get; private set; }
 
 		public TimeSpan UpdateFrequency { get; private set; }
+
+		public Int32 MaxResultsPerSearch { get; private set; }
 
 		public Boolean SearchAO3 { get; private set; }
 
@@ -80,6 +95,22 @@ namespace Bibliothecary.Data
 			}
 
 			UpdateFrequency = TimeSpan.FromMinutes( minutes );
+			return true;
+		}
+
+		public Boolean SetMaxResultsPerSearch( Int32 numberResults )
+		{
+			if ( numberResults <= 0 )
+			{
+				throw new ArgumentOutOfRangeException( nameof( numberResults ) );
+			}
+
+			if ( numberResults == MaxResultsPerSearch )
+			{
+				return false;
+			}
+
+			MaxResultsPerSearch = numberResults;
 			return true;
 		}
 
@@ -124,9 +155,10 @@ namespace Bibliothecary.Data
 				{
 					using ( SQLiteCommand insertCommand = new SQLiteCommand( database.Connection ) )
 					{
-						insertCommand.CommandText = "INSERT INTO projects( project_name, update_frequency_minutes, search_ao3 ) VALUES( @name, @frequency, @searchAO3 )";
+						insertCommand.CommandText = "INSERT INTO projects( project_name, update_frequency_minutes, max_results_per_search, search_ao3 ) VALUES( @name, @frequency, @maxResultsPerSearch, @searchAO3 )";
 						insertCommand.Parameters.AddWithValue( "@name", DefaultProjectName );
 						insertCommand.Parameters.AddWithValue( "@frequency", DefaultUpdateFrequencyMinutes );
+						insertCommand.Parameters.AddWithValue( "@maxResultsPerSearch", DefaultMaxResultsPerSearch );
 						insertCommand.Parameters.AddWithValue( "@searchAO3", DefaultSearchAO3 );
 						Int32 numberRowsAffected = insertCommand.ExecuteNonQuery();
 						if ( numberRowsAffected != 1 )
@@ -149,6 +181,7 @@ namespace Bibliothecary.Data
 							{
 								Name = DefaultProjectName,
 								UpdateFrequency = TimeSpan.FromMinutes( DefaultUpdateFrequencyMinutes ),
+								MaxResultsPerSearch = DefaultMaxResultsPerSearch,
 								SearchAO3 = ( DefaultSearchAO3 != 0 ),
 								SearchQuery = new LibrarySearch()
 							};
@@ -178,7 +211,7 @@ namespace Bibliothecary.Data
 			SQLiteUtils.ValidateConnection( database.Connection );
 
 			Project parsed = new Project( database, projectId );
-			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( "SELECT project_name, update_frequency_minutes, search_ao3 FROM projects WHERE project_id = @projectId", database.Connection ) )
+			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( "SELECT project_name, update_frequency_minutes, max_results_per_search, search_ao3 FROM projects WHERE project_id = @projectId", database.Connection ) )
 			{
 				selectBasicDataCommand.Parameters.AddWithValue( "@projectId", projectId );
 				using ( SQLiteDataReader reader = selectBasicDataCommand.ExecuteReader() )
@@ -191,7 +224,8 @@ namespace Bibliothecary.Data
 					parsed.Name = reader.GetString( 0 );
 					Int32 updateFrequencyMinutes = Math.Max( MinimumUpdateFrequencyMinutes, reader.GetInt32( 1 ) );
 					parsed.UpdateFrequency = TimeSpan.FromMinutes( updateFrequencyMinutes );
-					parsed.SearchAO3 = ( reader.GetInt32( 2 ) != 0 );
+					parsed.MaxResultsPerSearch = reader.GetInt32( 2 );
+					parsed.SearchAO3 = ( reader.GetInt32( 3 ) != 0 );
 				}
 			}
 			parsed.SearchQuery = LibrarySearchUtils.ReadFromDatabase( database.Connection, projectId );
@@ -209,10 +243,11 @@ namespace Bibliothecary.Data
 				{
 					using ( SQLiteCommand updateProjectCommand = new SQLiteCommand( _database.Connection ) )
 					{
-						updateProjectCommand.CommandText = "UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency, search_ao3 = @searchAO3 WHERE project_id = @projectId";
+						updateProjectCommand.CommandText = "UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency, max_results_per_search = @maxResultsPerSearch, search_ao3 = @searchAO3 WHERE project_id = @projectId";
 						updateProjectCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 						updateProjectCommand.Parameters.AddWithValue( "@name", Name );
 						updateProjectCommand.Parameters.AddWithValue( "@frequency", UpdateFrequency.TotalMinutes );
+						updateProjectCommand.Parameters.AddWithValue( "@maxResultsPerSearch", MaxResultsPerSearch );
 						updateProjectCommand.Parameters.AddWithValue( "@searchAO3", ( SearchAO3 ? 1 : 0 ) );
 						Int32 numberRowsAffected = updateProjectCommand.ExecuteNonQuery();
 						if ( numberRowsAffected != 1 )
@@ -307,16 +342,66 @@ namespace Bibliothecary.Data
 			}
 		}
 
+		/// <summary>
+		/// Filters through <paramref name="fanfics"/> and returns only the fanfics which have not previously been marked as reported
+		/// through this project.
+		/// </summary>
+		/// <param name="fanfics">An enumeration of fanfic handles</param>
+		/// <param name="source">A string constant representation that identifies which source (which website) these fanfics are from.</param>
+		public IEnumerable<IFanficRequestHandle> FilterUnreportedQueryResults( IEnumerable<IFanficRequestHandle> fanfics, String source )
+		{
+			StringBuilder valuesList = new StringBuilder();
+			Boolean isFirstFanfic = true;
+			Dictionary<String, IFanficRequestHandle> fanficsLookup = new Dictionary<String, IFanficRequestHandle>();
+			foreach ( IFanficRequestHandle fanfic in fanfics )
+			{
+				if ( isFirstFanfic )
+				{
+					isFirstFanfic = false;
+				}
+				else
+				{
+					valuesList.Append( ", " );
+				}
+				valuesList.Append( "( '" );
+				valuesList.Append( fanfic.Handle );
+				valuesList.Append( "' )" );
+
+				fanficsLookup.Add( fanfic.Handle, fanfic );
+			}
+
+			using ( SQLiteCommand selectUnreportedCommand = new SQLiteCommand( _database.Connection ) )
+			{
+				selectUnreportedCommand.CommandText = String.Concat( "SELECT * FROM ( VALUES ", valuesList,
+					" ) EXCEPT SELECT fanfic_handle FROM project_reported_query_results WHERE project_id = @projectId AND source = @source;" );
+				selectUnreportedCommand.Parameters.AddWithValue( "@projectId", ProjectId );
+				selectUnreportedCommand.Parameters.AddWithValue( "@source", source );
+
+				using ( SQLiteDataReader reader = selectUnreportedCommand.ExecuteReader() )
+				{
+					while ( reader.Read() )
+					{
+						String fanficHandle = reader.GetString( 0 );
+						yield return fanficsLookup[fanficHandle];
+					}
+				}
+			}
+		}
+
 		void MarkLastSavedData()
 		{
 			_lastSavedName = Name;
 			_lastSavedUpdateFrequency = UpdateFrequency;
+			_lastSavedMaxResultsPerSearch = MaxResultsPerSearch;
+			_lastSavedSearchAO3 = SearchAO3;
 			_lastSavedSearchQuery = SearchQuery.Clone();
 		}
 
 		readonly Database _database;
 		String _lastSavedName;
 		TimeSpan _lastSavedUpdateFrequency;
+		Int32 _lastSavedMaxResultsPerSearch;
+		Boolean _lastSavedSearchAO3;
 		LibrarySearch _lastSavedSearchQuery;
 	}
 }

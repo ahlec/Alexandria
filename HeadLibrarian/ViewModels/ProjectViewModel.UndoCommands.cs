@@ -30,6 +30,32 @@ namespace HeadLibrarian.ViewModels
 			readonly String _newName;
 		}
 
+		class SetMaxResultsPerSearchUndoAction : IUndoRedoAction
+		{
+			public SetMaxResultsPerSearchUndoAction( ProjectViewModel viewModel, Int32 oldValue, Int32 newValue )
+			{
+				_viewModel = viewModel;
+				_oldValue = oldValue;
+				_newValue = newValue;
+			}
+
+			public void Undo()
+			{
+				_viewModel._project.SetMaxResultsPerSearch( _oldValue );
+				_viewModel.InvokeMaxResultsPerSearchChanged();
+			}
+
+			public void Redo()
+			{
+				_viewModel._project.SetMaxResultsPerSearch( _newValue );
+				_viewModel.InvokeMaxResultsPerSearchChanged();
+			}
+
+			readonly ProjectViewModel _viewModel;
+			readonly Int32 _oldValue;
+			readonly Int32 _newValue;
+		}
+
 		class SetSearchAO3UndoAction : IUndoRedoAction
 		{
 			public SetSearchAO3UndoAction( ProjectViewModel viewModel, Boolean oldValue, Boolean newValue )

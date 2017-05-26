@@ -6,6 +6,10 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Timers;
+using Alexandria;
+using Alexandria.AO3;
+using Alexandria.Model;
+using Alexandria.RequestHandles;
 using Bibliothecary.Data;
 using Bibliothecary.Extensions;
 
@@ -101,7 +105,7 @@ namespace Bibliothecary
 				project.Update( _pollingTime );
 				if ( project.IsTimeToSearch )
 				{
-					ProcessProject( project );
+					ProcessProject( project.Project );
 					project.ResetCountdown();
 				}
 				else
@@ -123,9 +127,20 @@ namespace Bibliothecary
 			}
 		}
 
-		void ProcessProject( LiveProject project )
+		void ProcessProject( Project project )
 		{
+			foreach ( BibliothecarySource source in GetLibrarySources( project ) )
+			{
+				source.ProcessProject( project, _database );
+			}
+		}
 
+		IEnumerable<BibliothecarySource> GetLibrarySources( Project project )
+		{
+			if ( project.SearchAO3 )
+			{
+				yield return _ao3;
+			}
 		}
 
 		static readonly TimeSpan _pollingTime = TimeSpan.FromMilliseconds( PollingTimeMilliseconds );
@@ -133,6 +148,7 @@ namespace Bibliothecary
 		readonly Timer _timer;
 		readonly Object _projectsLock = new Object();
 		readonly List<LiveProject> _projects = new List<LiveProject>();
+		readonly BibliothecarySource _ao3 = new BibliothecarySource( new AO3Source( LibrarySourceConfig.Default ), "ao3" );
 		Database _database;
 	}
 }
