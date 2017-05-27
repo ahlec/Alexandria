@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Alexandria.Base", "Alexandria\Alexandria.Base.csproj", "{25A32DE3-CE8F-4F48-A111-BEDB2A2594D3}"
 EndProject
@@ -22,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bibliothecary.Data", "Bibliothecary.Data\Bibliothecary.Data.csproj", "{4727DE96-8497-48D6-A8F3-54AB7D2D1C0A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadLibrarian", "HeadLibrarian\HeadLibrarian.csproj", "{59B34B81-3BF9-4236-9CA8-6F7E21B87E78}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bibliothecary.Publishing", "Bibliothecary.Publishing\Bibliothecary.Publishing.csproj", "{B2DC1F8E-DB22-4DF5-9568-72B6F29182CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{59B34B81-3BF9-4236-9CA8-6F7E21B87E78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59B34B81-3BF9-4236-9CA8-6F7E21B87E78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59B34B81-3BF9-4236-9CA8-6F7E21B87E78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2DC1F8E-DB22-4DF5-9568-72B6F29182CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2DC1F8E-DB22-4DF5-9568-72B6F29182CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2DC1F8E-DB22-4DF5-9568-72B6F29182CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2DC1F8E-DB22-4DF5-9568-72B6F29182CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,5 +75,6 @@ Global
 		{5D84CF82-6E06-44AF-B762-B6261C7F3473} = {6D0F4000-611A-443E-9A14-CF63F1DF4876}
 		{4727DE96-8497-48D6-A8F3-54AB7D2D1C0A} = {574637F0-D514-46B2-A844-3358320ADCBB}
 		{59B34B81-3BF9-4236-9CA8-6F7E21B87E78} = {6D0F4000-611A-443E-9A14-CF63F1DF4876}
+		{B2DC1F8E-DB22-4DF5-9568-72B6F29182CF} = {574637F0-D514-46B2-A844-3358320ADCBB}
 	EndGlobalSection
 EndGlobal

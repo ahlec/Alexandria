@@ -73,6 +73,10 @@
       <Name>Bibliothecary.Data</Name>
       <Private>False</Private>
     </ProjectReference>
+    <ProjectReference Include="..\Bibliothecary.Publishing\Bibliothecary.Publishing.csproj">
+      <Project>{b2dc1f8e-db22-4df5-9568-72b6f29182cf}</Project>
+      <Name>Bibliothecary.Publishing</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

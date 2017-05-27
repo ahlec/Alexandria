@@ -7,6 +7,11 @@ namespace Alexandria.Searching
 {
 	public sealed class LibrarySearch : IEquatable<LibrarySearch>
 	{
+		public LibrarySearch()
+		{
+			_internalId = _nextInternalId++;
+		}
+
 		public String Title { get; set; }
 
 		public String Author { get; set; }
@@ -176,5 +181,14 @@ namespace Alexandria.Searching
 			LibrarySearch other = obj as LibrarySearch;
 			return Equals( other );
 		}
+
+		/// <inheritdoc />
+		public override Int32 GetHashCode()
+		{
+			return _internalId.GetHashCode();
+		}
+
+		static UInt32 _nextInternalId = 1;
+		readonly UInt32 _internalId;
 	}
 }
