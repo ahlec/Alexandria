@@ -50,6 +50,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.105.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,10 +64,12 @@
     <Compile Include="DatabaseFunctions\GeneralDatabaseFunctions.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PublishingInfo.cs" />
     <Compile Include="Schema\SchemaUpdater.cs" />
     <Compile Include="Schema\SchemaVersion.cs" />
     <Compile Include="Schema\Version0.cs" />
     <Compile Include="Schema\Version1.cs" />
+    <Compile Include="Utils\CryptographyUtils.cs" />
     <Compile Include="Utils\LibrarySearchUtils.cs" />
     <Compile Include="Utils\SQLiteUtils.cs" />
   </ItemGroup>

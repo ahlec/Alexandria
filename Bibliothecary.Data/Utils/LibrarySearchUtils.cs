@@ -8,7 +8,7 @@ namespace Bibliothecary.Data.Utils
 {
 	// NOTE!! Don't use nameof() or default() here, in case any of those fields change! We don't want to break serialization to an external database!!
 
-	public static class LibrarySearchUtils
+	internal static class LibrarySearchUtils
 	{
 		public static IEnumerable<KeyValuePair<String, String>> GetProjectSearchFields( LibrarySearch search )
 		{

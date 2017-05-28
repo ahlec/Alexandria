@@ -51,6 +51,11 @@ namespace Bibliothecary.Data
 					return true;
 				}
 
+				if ( !_lastSavedPublishingInfo.Equals( PublishingInfo ) )
+				{
+					return true;
+				}
+
 				return false;
 			}
 		}
@@ -68,6 +73,8 @@ namespace Bibliothecary.Data
 		public Boolean SearchAO3 { get; private set; }
 
 		public LibrarySearch SearchQuery { get; private set; }
+
+		public PublishingInfo PublishingInfo { get; private set; }
 
 		#endregion
 
@@ -183,7 +190,8 @@ namespace Bibliothecary.Data
 								UpdateFrequency = TimeSpan.FromMinutes( DefaultUpdateFrequencyMinutes ),
 								MaxResultsPerSearch = DefaultMaxResultsPerSearch,
 								SearchAO3 = ( DefaultSearchAO3 != 0 ),
-								SearchQuery = new LibrarySearch()
+								SearchQuery = new LibrarySearch(),
+								PublishingInfo = new PublishingInfo( projectId )
 							};
 						}
 					}
@@ -211,7 +219,10 @@ namespace Bibliothecary.Data
 			SQLiteUtils.ValidateConnection( database.Connection );
 
 			Project parsed = new Project( database, projectId );
-			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( "SELECT project_name, update_frequency_minutes, max_results_per_search, search_ao3 FROM projects WHERE project_id = @projectId", database.Connection ) )
+			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( @"SELECT project_name, update_frequency_minutes,
+				max_results_per_search, search_ao3, publishes_email, email_sender, email_sender_host, email_sender_port,
+				email_sender_uses_credentials, email_sender_username, email_sender_password, email_recipient FROM projects
+				WHERE project_id = @projectId", database.Connection ) )
 			{
 				selectBasicDataCommand.Parameters.AddWithValue( "@projectId", projectId );
 				using ( SQLiteDataReader reader = selectBasicDataCommand.ExecuteReader() )
@@ -226,6 +237,24 @@ namespace Bibliothecary.Data
 					parsed.UpdateFrequency = TimeSpan.FromMinutes( updateFrequencyMinutes );
 					parsed.MaxResultsPerSearch = reader.GetInt32( 2 );
 					parsed.SearchAO3 = ( reader.GetInt32( 3 ) != 0 );
+
+					parsed.PublishingInfo = new PublishingInfo( projectId )
+					{
+						UsesEmail = ( reader.GetInt32( 4 ) != 0 )
+					};
+					if ( parsed.PublishingInfo.UsesEmail )
+					{
+						parsed.PublishingInfo.SenderEmail = reader.GetString( 5 );
+						parsed.PublishingInfo.SenderHost = reader.GetString( 6 );
+						parsed.PublishingInfo.SenderPort = reader.GetInt32( 7 );
+						parsed.PublishingInfo.DoesSenderRequireCredentials = ( reader.GetInt32( 8 ) != 0 );
+						if ( parsed.PublishingInfo.DoesSenderRequireCredentials )
+						{
+							parsed.PublishingInfo.SenderUsername = CryptographyUtils.Decrypt( reader.GetString( 9 ) );
+							parsed.PublishingInfo.SenderPassword = CryptographyUtils.Decrypt( reader.GetString( 10 ) );
+						}
+						parsed.PublishingInfo.RecipientEmail = reader.GetString( 11 );
+					}
 				}
 			}
 			parsed.SearchQuery = LibrarySearchUtils.ReadFromDatabase( database.Connection, projectId );
@@ -243,12 +272,48 @@ namespace Bibliothecary.Data
 				{
 					using ( SQLiteCommand updateProjectCommand = new SQLiteCommand( _database.Connection ) )
 					{
-						updateProjectCommand.CommandText = "UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency, max_results_per_search = @maxResultsPerSearch, search_ao3 = @searchAO3 WHERE project_id = @projectId";
+						updateProjectCommand.CommandText = @"UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency,
+								max_results_per_search = @maxResultsPerSearch, search_ao3 = @searchAO3,
+								publishes_email = @publishesEmail, email_sender = @emailSender, email_sender_host = @emailSenderHost,
+								email_sender_port = @emailSenderPort, email_sender_uses_credentials = @emailSenderUsesCredentials,
+								email_sender_username = @emailSenderUsername, email_sender_password = @emailSenderPassword,
+								email_recipient = @emailRecipient WHERE project_id = @projectId";
 						updateProjectCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 						updateProjectCommand.Parameters.AddWithValue( "@name", Name );
 						updateProjectCommand.Parameters.AddWithValue( "@frequency", UpdateFrequency.TotalMinutes );
 						updateProjectCommand.Parameters.AddWithValue( "@maxResultsPerSearch", MaxResultsPerSearch );
 						updateProjectCommand.Parameters.AddWithValue( "@searchAO3", ( SearchAO3 ? 1 : 0 ) );
+						updateProjectCommand.Parameters.AddWithValue( "@publishesEmail", ( PublishingInfo.UsesEmail ? 1 : 0 ) );
+
+						String emailSender = null;
+						String emailSenderHost = null;
+						Int32 emailSenderPort = 0;
+						Int32 emailSenderUsesCredentials = 0;
+						String emailSenderUsernameEncrypted = null;
+						String emailSenderPasswordEncrpyted = null;
+						String emailRecipient = null;
+						if ( PublishingInfo.UsesEmail )
+						{
+							emailSender = PublishingInfo.SenderEmail;
+							emailSenderHost = PublishingInfo.SenderHost;
+							emailSenderPort = PublishingInfo.SenderPort;
+							emailSenderUsesCredentials = ( PublishingInfo.DoesSenderRequireCredentials ? 1 : 0 );
+							if ( PublishingInfo.DoesSenderRequireCredentials )
+							{
+								emailSenderUsernameEncrypted = CryptographyUtils.Encrypt( PublishingInfo.SenderUsername );
+								emailSenderPasswordEncrpyted = CryptographyUtils.Encrypt( PublishingInfo.SenderPassword );
+							}
+							emailRecipient = PublishingInfo.RecipientEmail;
+						}
+
+						updateProjectCommand.Parameters.AddWithValue( "@emailSender", emailSender );
+						updateProjectCommand.Parameters.AddWithValue( "@emailSenderHost", emailSenderHost );
+						updateProjectCommand.Parameters.AddWithValue( "@emailSenderPort", emailSenderPort );
+						updateProjectCommand.Parameters.AddWithValue( "@emailSenderUsesCredentials", emailSenderUsesCredentials );
+						updateProjectCommand.Parameters.AddWithValue( "@emailSenderUsername", emailSenderUsernameEncrypted );
+						updateProjectCommand.Parameters.AddWithValue( "@emailSenderPassword", emailSenderPasswordEncrpyted );
+						updateProjectCommand.Parameters.AddWithValue( "@emailRecipient", emailRecipient );
+
 						Int32 numberRowsAffected = updateProjectCommand.ExecuteNonQuery();
 						if ( numberRowsAffected != 1 )
 						{
@@ -395,6 +460,7 @@ namespace Bibliothecary.Data
 			_lastSavedMaxResultsPerSearch = MaxResultsPerSearch;
 			_lastSavedSearchAO3 = SearchAO3;
 			_lastSavedSearchQuery = SearchQuery.Clone();
+			_lastSavedPublishingInfo = PublishingInfo.Clone();
 		}
 
 		readonly Database _database;
@@ -403,5 +469,6 @@ namespace Bibliothecary.Data
 		Int32 _lastSavedMaxResultsPerSearch;
 		Boolean _lastSavedSearchAO3;
 		LibrarySearch _lastSavedSearchQuery;
+		PublishingInfo _lastSavedPublishingInfo;
 	}
 }
