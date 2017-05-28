@@ -5,7 +5,7 @@ namespace Alexandria.Base.Tests
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.UtilTestsCategory )]
-	public class FlagUtilsTests
+	public class Test_FlagUtils
 	{
 		[TestMethod]
 		public void FlagUtils_DetectsMultipleFlags()

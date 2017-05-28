@@ -110,6 +110,8 @@
     <Compile Include="ViewModels\NumberSearchCriteriaViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\ProjectViewModel.cs" />
     <Compile Include="ViewModels\ProjectViewModel.UndoCommands.cs" />
+    <Compile Include="ViewModels\PublishingInfoViewModel.cs" />
+    <Compile Include="ViewModels\PublishingInfoViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\StringListViewModel.cs" />
     <Compile Include="ViewModels\StringListViewModel.UndoCommands.cs" />
     <Compile Include="Views\LibrarySearchView.xaml.cs">

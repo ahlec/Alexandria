@@ -7,6 +7,21 @@ namespace HeadLibrarian.ViewModels
 {
 	public abstract class BaseViewModel : INotifyPropertyChanged
 	{
+		protected abstract class BaseUndoAction : IUndoRedoAction
+		{
+			public abstract void Undo();
+
+			public abstract void Redo();
+
+			protected void AssertModelSetFunction( Boolean value )
+			{
+				if ( !value )
+				{
+					throw new ApplicationException( "A model .SetXXX function did not return true, which it must inside of UndoActions!" );
+				}
+			}
+		}
+
 		#region INotifyPropertyChanged
 
 		protected Boolean SetProperty<T>( ref T field, T value, [CallerMemberName] String propertyName = null )

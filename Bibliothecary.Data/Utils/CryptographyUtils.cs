@@ -4,21 +4,31 @@ using System.Text;
 
 namespace Bibliothecary.Data.Utils
 {
-	internal static class CryptographyUtils
+	public static class CryptographyUtils
 	{
 		public static String Encrypt( String text )
 		{
-			Byte[] bytes = Encoding.UTF8.GetBytes( text );
-			Byte[] encrypted = ProtectedData.Protect( bytes, _additionalEntropy, DataProtectionScope.CurrentUser );
-			String encryptedStr = Encoding.ASCII.GetString( encrypted );
+			if ( text == null )
+			{
+				throw new ArgumentNullException( nameof( text ) );
+			}
+
+			Byte[] bytes = Encoding.Unicode.GetBytes( text );
+			Byte[] encrypted = ProtectedData.Protect( bytes, _additionalEntropy, DataProtectionScope.LocalMachine );
+			String encryptedStr = Convert.ToBase64String( encrypted );
 			return encryptedStr;
 		}
 
 		public static String Decrypt( String text )
 		{
-			Byte[] encrypted = Encoding.ASCII.GetBytes( text );
-			Byte[] decrypted = ProtectedData.Unprotect( encrypted, _additionalEntropy, DataProtectionScope.CurrentUser );
-			String decryptedStr = Encoding.UTF8.GetString( decrypted );
+			if ( text == null )
+			{
+				throw new ArgumentNullException( nameof( text ) );
+			}
+
+			Byte[] encrypted = Convert.FromBase64String( text );
+			Byte[] decrypted = ProtectedData.Unprotect( encrypted, _additionalEntropy, DataProtectionScope.LocalMachine );
+			String decryptedStr = Encoding.Unicode.GetString( decrypted );
 			return decryptedStr;
 		}
 
