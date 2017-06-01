@@ -68,14 +68,9 @@
       <Name>Alexandria.Base</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Bibliothecary.Data\Bibliothecary.Data.csproj">
+    <ProjectReference Include="..\Bibliothecary.Core\Bibliothecary.Core.csproj">
       <Project>{4727de96-8497-48d6-a8f3-54ab7d2d1c0a}</Project>
-      <Name>Bibliothecary.Data</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\Bibliothecary.Publishing\Bibliothecary.Publishing.csproj">
-      <Project>{b2dc1f8e-db22-4df5-9568-72b6f29182cf}</Project>
-      <Name>Bibliothecary.Publishing</Name>
+      <Name>Bibliothecary.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -15,13 +15,13 @@ namespace HeadLibrarian.ViewModels
 
 			public void Undo()
 			{
-				_viewModel._project.SetName( _oldName );
+				_viewModel.Project.SetName( _oldName );
 				_viewModel.InvokeNameChanged();
 			}
 
 			public void Redo()
 			{
-				_viewModel._project.SetName( _newName );
+				_viewModel.Project.SetName( _newName );
 				_viewModel.InvokeNameChanged();
 			}
 
@@ -41,13 +41,13 @@ namespace HeadLibrarian.ViewModels
 
 			public void Undo()
 			{
-				_viewModel._project.SetMaxResultsPerSearch( _oldValue );
+				_viewModel.Project.SetMaxResultsPerSearch( _oldValue );
 				_viewModel.InvokeMaxResultsPerSearchChanged();
 			}
 
 			public void Redo()
 			{
-				_viewModel._project.SetMaxResultsPerSearch( _newValue );
+				_viewModel.Project.SetMaxResultsPerSearch( _newValue );
 				_viewModel.InvokeMaxResultsPerSearchChanged();
 			}
 
@@ -67,13 +67,13 @@ namespace HeadLibrarian.ViewModels
 
 			public void Undo()
 			{
-				_viewModel._project.SetSearchAO3( _oldValue );
+				_viewModel.Project.SetSearchAO3( _oldValue );
 				_viewModel.InvokeSearchAO3Changed();
 			}
 
 			public void Redo()
 			{
-				_viewModel._project.SetSearchAO3( _newValue );
+				_viewModel.Project.SetSearchAO3( _newValue );
 				_viewModel.InvokeSearchAO3Changed();
 			}
 

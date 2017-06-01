@@ -28,6 +28,8 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
 		<Grid.ColumnDefinitions>
@@ -96,5 +98,16 @@
 								 Grid.Column="1"
 								 Grid.ColumnSpan="3"
 								 DataContext="{Binding SearchQuery}" />
+
+		<TextBlock Grid.Row="7"
+				   Grid.Column="0"
+				   Grid.ColumnSpan="4"
+				   Style="{StaticResource SectionHeader}"
+				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Publishing</TextBlock>
+		
+		<views:PublishingInfoView Grid.Row="8"
+								  Grid.Column="1"
+								  Grid.ColumnSpan="3"
+								  DataContext="{Binding PublishingInfo}" />
 	</Grid>
 </UserControl>

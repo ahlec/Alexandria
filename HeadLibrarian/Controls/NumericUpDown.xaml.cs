@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using HeadLibrarian.WPF;
 
@@ -106,6 +107,50 @@ namespace HeadLibrarian.Controls
 			e.CancelCommand();
 		}
 
+		void OnPreviewTextBoxKeyDown( Object sender, KeyEventArgs e )
+		{
+			if ( e.Key == Key.Up )
+			{
+				if ( CanIncrease )
+				{
+					CommandIncrease( null );
+				}
+			}
+			else if ( e.Key == Key.Down )
+			{
+				if ( CanDecrease )
+				{
+					CommandDecrease( null );
+				}
+			}
+		}
+
+		void OnPreviewMouseWheel( Object sender, MouseWheelEventArgs e )
+		{
+			TextBox textBox = (TextBox) sender;
+			if ( !textBox.IsFocused )
+			{
+				return;
+			}
+
+			if ( e.Delta > 0 )
+			{
+				if ( CanIncrease )
+				{
+					CommandIncrease( null );
+					e.Handled = true;
+				}
+			}
+			else if ( e.Delta < 0 )
+			{
+				if ( CanDecrease )
+				{
+					CommandDecrease( null );
+					e.Handled = true;
+				}
+			}
+		}
+
 		void SetProperty<T>( ref T field, T value, [CallerMemberName] String propertyName = null )
 		{
 			if ( EqualityComparer<T>.Default.Equals( field, value ) )
@@ -149,6 +194,12 @@ namespace HeadLibrarian.Controls
 			}
 
 			return value;
+		}
+
+		static void OnValueChanged( DependencyObject o, DependencyPropertyChangedEventArgs e )
+		{
+			NumericUpDown numericUpDown = (NumericUpDown) o;
+			numericUpDown.RefreshDecreaseIncrease();
 		}
 
 		static void OnMinValueChanged( DependencyObject o, DependencyPropertyChangedEventArgs e )
@@ -198,7 +249,7 @@ namespace HeadLibrarian.Controls
 		}
 
 		public static readonly DependencyProperty ValueProperty = DependencyProperty.Register( "Value", typeof( Int32 ), typeof( NumericUpDown ),
-			new PropertyMetadata( 0, null, CoerceValue ) );
+			new PropertyMetadata( 0, OnValueChanged, CoerceValue ) );
 		public static readonly DependencyProperty MinValueProperty = DependencyProperty.Register( "MinValue", typeof( Int32 ), typeof( NumericUpDown ),
 			new PropertyMetadata( Int32.MinValue, OnMinValueChanged ) );
 		public static readonly DependencyProperty MaxValueProperty = DependencyProperty.Register( "MaxValue", typeof( Int32 ), typeof( NumericUpDown ),

@@ -1,8 +1,8 @@
 ﻿namespace HeadLibrarian.Views
 {
-	public partial class LibrarySearchView
+	public partial class PublishingInfoView
 	{
-		public LibrarySearchView()
+		public PublishingInfoView()
 		{
 			InitializeComponent();
 		}

@@ -72,18 +72,24 @@
       <DependentUpon>DateSearchCriteriaEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\DateSearchCriteriaTemplateSelector.cs" />
+    <Compile Include="Controls\GeneralViewRow.xaml.cs">
+      <DependentUpon>GeneralViewRow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NumberSearchCriteriaEditor.xaml.cs">
       <DependentUpon>NumberSearchCriteriaEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NumericUpDown.xaml.cs">
       <DependentUpon>NumericUpDown.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ProjectViewRow.xaml.cs">
-      <DependentUpon>ProjectViewRow.xaml</DependentUpon>
+    <Compile Include="Controls\LibrarySearchViewRow.xaml.cs">
+      <DependentUpon>LibrarySearchViewRow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\NumberSearchCriteriaTemplateSelector.cs" />
     <Compile Include="Controls\StringListEditor.xaml.cs">
       <DependentUpon>StringListEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ToggleSectionContainer.xaml.cs">
+      <DependentUpon>ToggleSectionContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
@@ -120,8 +126,15 @@
     <Compile Include="Views\ProjectView.xaml.cs">
       <DependentUpon>ProjectView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\PublishingInfoView.xaml.cs">
+      <DependentUpon>PublishingInfoView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WPF\Command.cs" />
     <Page Include="Controls\DateSearchCriteriaEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\GeneralViewRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -133,11 +146,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ProjectViewRow.xaml">
+    <Page Include="Controls\LibrarySearchViewRow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\StringListEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ToggleSectionContainer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -162,6 +179,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\ProjectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PublishingInfoView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,10 +220,9 @@
       <Name>Alexandria.Base</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\Bibliothecary.Data\Bibliothecary.Data.csproj">
+    <ProjectReference Include="..\Bibliothecary.Core\Bibliothecary.Core.csproj">
       <Project>{4727de96-8497-48d6-a8f3-54ab7d2d1c0a}</Project>
-      <Name>Bibliothecary.Data</Name>
-      <Private>False</Private>
+      <Name>Bibliothecary.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

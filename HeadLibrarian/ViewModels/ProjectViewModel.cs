@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
-using Bibliothecary.Data;
+using Bibliothecary.Core;
 using HeadLibrarian.WPF;
 
 namespace HeadLibrarian.ViewModels
@@ -15,9 +15,9 @@ namespace HeadLibrarian.ViewModels
 			UndoCommand = new Command( null, CommandUndo );
 			RedoCommand = new Command( null, CommandRedo );
 
-			_database = database;
-			_project = project;
+			Project = project;
 			SearchQuery = new LibrarySearchViewModel( this, project.SearchQuery );
+			PublishingInfo = new PublishingInfoViewModel( this, project.PublishingInfo );
 
 			SaveCommand = new Command( null, CommandSave );
 		}
@@ -60,17 +60,19 @@ namespace HeadLibrarian.ViewModels
 
 		#endregion
 
-		public Int32 ProjectId => _project.ProjectId;
+		public Project Project { get; }
 
-		public Boolean HasUnsavedChanges => _project.HasUnsavedChanges;
+		public Int32 ProjectId => Project.ProjectId;
+
+		public Boolean HasUnsavedChanges => Project.HasUnsavedChanges;
 
 		public String Name
 		{
-			get => _project.Name;
+			get => Project.Name;
 			set
 			{
 				String oldName = Name;
-				if ( _project.SetName( value ) )
+				if ( Project.SetName( value ) )
 				{
 					UndoStack.Push( new SetNameUndoAction( this, oldName, Name ) );
 					InvokeNameChanged();
@@ -86,10 +88,10 @@ namespace HeadLibrarian.ViewModels
 
 		public TimeSpan UpdateFrequency
 		{
-			get => _project.UpdateFrequency;
+			get => Project.UpdateFrequency;
 			set
 			{
-				if ( _project.SetUpdateFrequency( (Int32) value.TotalMinutes ) )
+				if ( Project.SetUpdateFrequency( (Int32) value.TotalMinutes ) )
 				{
 					OnPropertyChanged( nameof( UpdateFrequency ) );
 					OnPropertyChanged( nameof( HasUnsavedChanges ) );
@@ -99,11 +101,11 @@ namespace HeadLibrarian.ViewModels
 
 		public Int32 MaxResultsPerSearch
 		{
-			get => _project.MaxResultsPerSearch;
+			get => Project.MaxResultsPerSearch;
 			set
 			{
 				Int32 oldValue = MaxResultsPerSearch;
-				if ( _project.SetMaxResultsPerSearch( value ) )
+				if ( Project.SetMaxResultsPerSearch( value ) )
 				{
 					UndoStack.Push( new SetMaxResultsPerSearchUndoAction( this, oldValue, value ) );
 					InvokeMaxResultsPerSearchChanged();
@@ -119,11 +121,11 @@ namespace HeadLibrarian.ViewModels
 
 		public Boolean SearchAO3
 		{
-			get => _project.SearchAO3;
+			get => Project.SearchAO3;
 			set
 			{
 				Boolean oldValue = SearchAO3;
-				if ( _project.SetSearchAO3( value ) )
+				if ( Project.SetSearchAO3( value ) )
 				{
 					UndoStack.Push( new SetSearchAO3UndoAction( this, oldValue, value ) );
 					InvokeSearchAO3Changed();
@@ -139,11 +141,13 @@ namespace HeadLibrarian.ViewModels
 
 		public LibrarySearchViewModel SearchQuery { get; }
 
+		public PublishingInfoViewModel PublishingInfo { get; }
+
 		public ICommand SaveCommand { get; }
 
 		void CommandSave( Object o )
 		{
-			_project.Save();
+			Project.Save();
 			OnPropertyChanged( nameof( HasUnsavedChanges ) );
 		}
 
@@ -154,11 +158,9 @@ namespace HeadLibrarian.ViewModels
 
 		public Boolean Delete()
 		{
-			return _project.Delete();
+			return Project.Delete();
 		}
 
-		readonly Database _database;
-		readonly Project _project;
 		Boolean _canUndo;
 		Boolean _canRedo;
 	}

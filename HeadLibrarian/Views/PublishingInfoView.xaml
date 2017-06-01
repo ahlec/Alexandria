@@ -1,0 +1,76 @@
+﻿<UserControl x:Class="HeadLibrarian.Views.PublishingInfoView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:viewModels="clr-namespace:HeadLibrarian.ViewModels"
+			 xmlns:controls="clr-namespace:HeadLibrarian.Controls"
+			 mc:Ignorable="d"
+			 d:DataContext="{d:DesignInstance viewModels:PublishingInfoViewModel}">
+	<StackPanel>
+		<controls:ToggleSectionContainer Header="Email"
+										 IsSectionEnabled="{Binding UsesEmail, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+			<controls:GeneralViewRow FieldName="Sender Email:">
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+
+					<TextBox Grid.Row="0"
+							 Grid.Column="0"
+							 Grid.ColumnSpan="4"
+							 Text="{Binding SenderEmail, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
+					<TextBlock Grid.Row="1"
+							   Grid.Column="0"
+							   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Host:</TextBlock>
+
+					<TextBox Grid.Row="1"
+							 Grid.Column="1"
+							 Text="{Binding SenderHost, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+							 Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
+
+					<TextBlock Grid.Row="1"
+							   Grid.Column="2"
+							   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Port:</TextBlock>
+
+					<controls:NumericUpDown Grid.Row="1"
+											Grid.Column="3"
+											MinValue="1"
+											MaxValue="65535"
+											Value="{Binding SenderPort, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+											Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
+
+					<TextBlock Grid.Row="2"
+							   Grid.Column="0"
+							   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Username:</TextBlock>
+
+					<TextBox Grid.Row="2"
+							 Grid.Column="1"
+							 Text="{Binding SenderUsername, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+							 Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
+
+					<TextBlock Grid.Row="2"
+							   Grid.Column="2"
+							   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Password:</TextBlock>
+				</Grid>
+			</controls:GeneralViewRow>
+
+			<controls:GeneralViewRow FieldName="Recipient Email:">
+				<TextBox Text="{Binding RecipientEmail, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+			</controls:GeneralViewRow>
+
+			<Button HorizontalAlignment="Right"
+					Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+					Command="{Binding SendTestEmailCommand}">Send Test Email</Button>
+		</controls:ToggleSectionContainer>
+	</StackPanel>
+</UserControl>

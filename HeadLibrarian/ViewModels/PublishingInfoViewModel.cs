@@ -1,5 +1,9 @@
 ﻿using System;
-using Bibliothecary.Data;
+using System.Windows;
+using System.Windows.Input;
+using Bibliothecary.Core;
+using Bibliothecary.Core.Publishing;
+using HeadLibrarian.WPF;
 
 namespace HeadLibrarian.ViewModels
 {
@@ -172,6 +176,34 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( RecipientEmail ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
+
+		public ICommand SendTestEmailCommand => ( _sendTestEmailCommand ?? ( _sendTestEmailCommand = new Command( null, CommandSendTestEmail ) ) );
+
+		void CommandSendTestEmail( Object o )
+		{
+			EmailClient emailClient = new EmailClient
+			{
+				Host = SenderHost,
+				Port = SenderPort,
+				FromEmail = SenderEmail,
+				ToEmail = RecipientEmail
+			};
+			if ( DoesSenderRequireCredentials )
+			{
+				emailClient.SetCredentials( SenderUsername, SenderPassword );
+			}
+
+			try
+			{
+				emailClient.SendTestEmail( _projectViewModel.Project );
+			}
+			catch ( Exception ex )
+			{
+				MessageBox.Show( ex.Message, Constants.BibliothecaryName, MessageBoxButton.OK, MessageBoxImage.Error );
+			}
+		}
+
+		ICommand _sendTestEmailCommand;
 
 		readonly ProjectViewModel _projectViewModel;
 		readonly PublishingInfo _info;

@@ -6,7 +6,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
-using Bibliothecary.Data;
+using Bibliothecary.Core;
 using HeadLibrarian.Dialogs;
 using HeadLibrarian.WPF;
 

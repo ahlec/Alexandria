@@ -21,16 +21,20 @@
 				 Text="{Binding Value, ElementName=NumericUpDownControl, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 				 PreviewTextInput="PreviewValueTextInput"
 				 DataObject.Pasting="ValueTextBoxPasting"
-				 BorderThickness="1,1,0,1" />
+				 BorderThickness="1,1,0,1"
+				 PreviewKeyDown="OnPreviewTextBoxKeyDown"
+				 PreviewMouseWheel="OnPreviewMouseWheel" />
 		
 		<Button Grid.Row="0"
 				Grid.Column="1"
 				IsEnabled="{Binding CanIncrease, ElementName=NumericUpDownControl}"
-				Command="{Binding IncreaseCommand, ElementName=NumericUpDownControl}" />
+				Command="{Binding IncreaseCommand, ElementName=NumericUpDownControl}"
+				IsTabStop="False" />
 		
 		<Button Grid.Row="1"
 				Grid.Column="1"
 				IsEnabled="{Binding CanDecrease, ElementName=NumericUpDownControl}"
-				Command="{Binding DecreaseCommand, ElementName=NumericUpDownControl}" />
+				Command="{Binding DecreaseCommand, ElementName=NumericUpDownControl}"
+				IsTabStop="False" />
 	</Grid>
 </UserControl>
