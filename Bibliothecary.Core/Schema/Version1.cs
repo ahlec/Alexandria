@@ -15,8 +15,9 @@ namespace Bibliothecary.Core.Schema
 					project_name VARCHAR NOT NULL, update_frequency_minutes INT NOT NULL CHECK ( update_frequency_minutes > 0 ),
 					max_results_per_search INTEGER CHECK ( max_results_per_search > 0 ) NOT NULL DEFAULT ( 10 ), search_ao3 INT NOT NULL DEFAULT ( 0 ),
 					publishes_email INTEGER NOT NULL DEFAULT ( 0 ), email_sender VARCHAR, email_sender_host,
-					email_sender_port INTEGER CHECK ( email_sender_port >= 0 ), email_sender_uses_credentials INTEGER DEFAULT ( 0 ),
-					email_sender_username VARCHAR, email_sender_password VARCHAR, email_recipient VARCHAR );", connection );
+					email_sender_port INTEGER CHECK ( email_sender_port >= 0 ), email_sender_uses_ssl INTEGER DEFAULT (0),
+					email_sender_uses_credentials INTEGER DEFAULT ( 0 ), email_sender_username VARCHAR, email_sender_password VARCHAR,
+					email_recipient VARCHAR );", connection );
 			createProjects.ExecuteNonQuery();
 
 			SQLiteCommand createProjectSearchFields = new SQLiteCommand( @"CREATE TABLE project_search_fields (

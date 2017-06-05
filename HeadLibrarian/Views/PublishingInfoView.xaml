@@ -7,12 +7,16 @@
 			 xmlns:controls="clr-namespace:HeadLibrarian.Controls"
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance viewModels:PublishingInfoViewModel}">
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+	</UserControl.Resources>
 	<StackPanel>
 		<controls:ToggleSectionContainer Header="Email"
 										 IsSectionEnabled="{Binding UsesEmail, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:GeneralViewRow FieldName="Sender Email:">
 				<Grid>
 					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
 						<RowDefinition Height="Auto" />
 						<RowDefinition Height="Auto" />
 						<RowDefinition Height="Auto" />
@@ -49,18 +53,24 @@
 											Value="{Binding SenderPort, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
 											Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
 
-					<TextBlock Grid.Row="2"
-							   Grid.Column="0"
-							   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Username:</TextBlock>
+					<CheckBox Grid.Row="2"
+							  Grid.Column="0"
+							  Grid.ColumnSpan="2"
+							  Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+							  IsChecked="{Binding DoesSenderUseSsl, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">Use SSL</CheckBox>
 
-					<TextBox Grid.Row="2"
-							 Grid.Column="1"
-							 Text="{Binding SenderUsername, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-							 Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
-
-					<TextBlock Grid.Row="2"
-							   Grid.Column="2"
-							   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Password:</TextBlock>
+					<CheckBox Grid.Row="3"
+							  Grid.Column="0"
+							  Grid.ColumnSpan="2"
+							  Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+							  IsChecked="{Binding DoesSenderRequireCredentials}">Has Login Credentials</CheckBox>
+					
+					<Button Grid.Row="3"
+							Grid.Column="2"
+							Grid.ColumnSpan="2"
+							Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+							Command="{Binding ProvideEmailCredentialsCommand}"
+							Visibility="{Binding DoesSenderRequireCredentials, Converter={StaticResource BooleanToVisibilityConverter}}">Provide Login Credentials</Button>
 				</Grid>
 			</controls:GeneralViewRow>
 

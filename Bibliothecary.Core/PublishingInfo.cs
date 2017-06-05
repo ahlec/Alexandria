@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 
 namespace Bibliothecary.Core
 {
@@ -17,11 +18,13 @@ namespace Bibliothecary.Core
 
 		public Int32 SenderPort { get; internal set; }
 
+		public Boolean DoesSenderUseSsl { get; internal set; }
+
 		public Boolean DoesSenderRequireCredentials { get; internal set; }
 
 		public String SenderUsername { get; internal set; }
 
-		public String SenderPassword { get; internal set; }
+		public SecureString SenderPassword { get; internal set; }
 
 		public String RecipientEmail { get; internal set; }
 
@@ -84,6 +87,22 @@ namespace Bibliothecary.Core
 			return true;
 		}
 
+		public Boolean SetDoesSenderUseSsl( Boolean value )
+		{
+			if ( !UsesEmail )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( DoesSenderUseSsl )} when {nameof( UsesEmail )} is false." );
+			}
+
+			if ( value == DoesSenderUseSsl )
+			{
+				return false;
+			}
+
+			DoesSenderUseSsl = value;
+			return true;
+		}
+
 		public Boolean SetDoesSenderRequireCredentials( Boolean value )
 		{
 			if ( !UsesEmail )
@@ -116,16 +135,11 @@ namespace Bibliothecary.Core
 			return true;
 		}
 
-		public Boolean SetSenderPassword( String password )
+		public Boolean SetSenderPassword( SecureString password )
 		{
 			if ( !UsesEmail )
 			{
 				throw new InvalidOperationException( $"Cannot set {nameof( SenderPassword )} when {nameof( UsesEmail )} is false." );
-			}
-
-			if ( String.Equals( SenderPassword, password, StringComparison.InvariantCulture ) )
-			{
-				return false;
 			}
 
 			SenderPassword = password;
@@ -156,6 +170,7 @@ namespace Bibliothecary.Core
 				SenderEmail = SenderEmail,
 				SenderHost = SenderHost,
 				SenderPort = SenderPort,
+				DoesSenderUseSsl = DoesSenderUseSsl,
 				DoesSenderRequireCredentials = DoesSenderRequireCredentials,
 				SenderUsername = SenderUsername,
 				SenderPassword = SenderPassword,
@@ -192,6 +207,11 @@ namespace Bibliothecary.Core
 					return false;
 				}
 
+				if ( DoesSenderUseSsl != other.DoesSenderUseSsl )
+				{
+					return false;
+				}
+
 				if ( DoesSenderRequireCredentials != other.DoesSenderRequireCredentials )
 				{
 					return false;
@@ -200,11 +220,6 @@ namespace Bibliothecary.Core
 				if ( DoesSenderRequireCredentials )
 				{
 					if ( !String.Equals( SenderUsername, other.SenderUsername, StringComparison.InvariantCulture ) )
-					{
-						return false;
-					}
-
-					if ( !String.Equals( SenderPassword, other.SenderPassword, StringComparison.InvariantCulture ) )
 					{
 						return false;
 					}

@@ -100,6 +100,9 @@
     <Compile Include="Dialogs\ConfirmProjectDeletionDialog.xaml.cs">
       <DependentUpon>ConfirmProjectDeletionDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ProvideEmailCredentialsDialog.xaml.cs">
+      <DependentUpon>ProvideEmailCredentialsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TriggerActions\SetSelectedItemToEventArgsAction.cs" />
     <Compile Include="IUndoRedoAction.cs" />
     <Compile Include="UndoRedoStack.cs" />
@@ -159,6 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\ConfirmProjectDeletionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ProvideEmailCredentialsDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

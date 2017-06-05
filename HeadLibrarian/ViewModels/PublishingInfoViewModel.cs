@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Security;
 using System.Windows;
 using System.Windows.Input;
 using Bibliothecary.Core;
 using Bibliothecary.Core.Publishing;
+using HeadLibrarian.Dialogs;
 using HeadLibrarian.WPF;
 
 namespace HeadLibrarian.ViewModels
@@ -95,6 +97,26 @@ namespace HeadLibrarian.ViewModels
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
+		public Boolean DoesSenderUseSsl
+		{
+			get => _info.DoesSenderUseSsl;
+			set
+			{
+				Boolean oldValue = DoesSenderUseSsl;
+				if ( _info.SetDoesSenderUseSsl( value ) )
+				{
+					_projectViewModel.UndoStack.Push( new SetDoesSenderUseSslUndoAction( this, oldValue, value ) );
+					InvokeDoesSenderUseSslChanged();
+				}
+			}
+		}
+
+		void InvokeDoesSenderUseSslChanged()
+		{
+			OnPropertyChanged( nameof( DoesSenderUseSsl ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
 		public Boolean DoesSenderRequireCredentials
 		{
 			get => _info.DoesSenderRequireCredentials;
@@ -112,48 +134,6 @@ namespace HeadLibrarian.ViewModels
 		void InvokeDoesSenderRequireCredentialsChanged()
 		{
 			OnPropertyChanged( nameof( DoesSenderRequireCredentials ) );
-			OnPropertyChanged( nameof( SenderUsername ) );
-			OnPropertyChanged( nameof( SenderPassword ) );
-			_projectViewModel.RefreshHasSavedChanged();
-		}
-
-		public String SenderUsername
-		{
-			get => _info.SenderUsername;
-			set
-			{
-				String oldUsername = SenderUsername;
-				if ( _info.SetSenderUsername( value ) )
-				{
-					_projectViewModel.UndoStack.Push( new SetSenderUsernameUndoAction( this, oldUsername, value ) );
-					InvokeSenderUsernameChanged();
-				}
-			}
-		}
-
-		void InvokeSenderUsernameChanged()
-		{
-			OnPropertyChanged( nameof( SenderUsername ) );
-			_projectViewModel.RefreshHasSavedChanged();
-		}
-
-		public String SenderPassword
-		{
-			get => _info.SenderPassword;
-			set
-			{
-				String oldPassword = SenderPassword;
-				if ( _info.SetSenderPassword( value ) )
-				{
-					_projectViewModel.UndoStack.Push( new SetSenderPasswordUndoAction( this, oldPassword, value ) );
-					InvokeSenderPasswordChanged();
-				}
-			}
-		}
-
-		void InvokeSenderPasswordChanged()
-		{
-			OnPropertyChanged( nameof( SenderPassword ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
@@ -177,7 +157,28 @@ namespace HeadLibrarian.ViewModels
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
+		public ICommand ProvideEmailCredentialsCommand => ( _provideEmailCredentialsCommand ?? ( _provideEmailCredentialsCommand = new Command( null, CommandProvideEmailCredentials ) ) );
+
 		public ICommand SendTestEmailCommand => ( _sendTestEmailCommand ?? ( _sendTestEmailCommand = new Command( null, CommandSendTestEmail ) ) );
+
+		void CommandProvideEmailCredentials( Object o )
+		{
+			ProvideEmailCredentialsDialog dialog = new ProvideEmailCredentialsDialog( _info.SenderUsername );
+			dialog.ShowDialog();
+
+			if ( dialog.DialogResult != true )
+			{
+				return;
+			}
+
+			String oldUsername = _info.SenderUsername;
+			SecureString oldPassword = _info.SenderPassword;
+			_info.SetSenderUsername( dialog.Username );
+			_info.SetSenderPassword( dialog.Password );
+			_projectViewModel.UndoStack.Push( new SetSenderLoginCredentialsUndoAction( this, oldUsername, _info.SenderUsername,
+				oldPassword, _info.SenderPassword ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
 
 		void CommandSendTestEmail( Object o )
 		{
@@ -185,12 +186,13 @@ namespace HeadLibrarian.ViewModels
 			{
 				Host = SenderHost,
 				Port = SenderPort,
+				EnableSsl = DoesSenderUseSsl,
 				FromEmail = SenderEmail,
 				ToEmail = RecipientEmail
 			};
 			if ( DoesSenderRequireCredentials )
 			{
-				emailClient.SetCredentials( SenderUsername, SenderPassword );
+				emailClient.SetCredentials( _info.SenderUsername, _info.SenderPassword );
 			}
 
 			try
@@ -203,6 +205,7 @@ namespace HeadLibrarian.ViewModels
 			}
 		}
 
+		ICommand _provideEmailCredentialsCommand;
 		ICommand _sendTestEmailCommand;
 
 		readonly ProjectViewModel _projectViewModel;

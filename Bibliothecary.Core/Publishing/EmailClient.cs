@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
+using System.Security;
 using Alexandria.Model;
 
 namespace Bibliothecary.Core.Publishing
@@ -15,7 +12,8 @@ namespace Bibliothecary.Core.Publishing
 		{
 			_client = new SmtpClient
 			{
-				Port = 25
+				Port = 25,
+				Timeout = 30000
 			};
 		}
 
@@ -25,10 +23,10 @@ namespace Bibliothecary.Core.Publishing
 			set => _client.EnableSsl = value;
 		}
 
-		public void SetCredentials( String username, String password )
+		public void SetCredentials( String username, SecureString password )
 		{
 			_client.UseDefaultCredentials = false;
-			_client.Credentials = new NetworkCredential( username, password );
+			_client.Credentials = new NetworkCredential( username, "ALessSecurePasswordGoesHere166" );// password );
 		}
 
 		public String Host

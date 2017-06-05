@@ -221,8 +221,8 @@ namespace Bibliothecary.Core
 			Project parsed = new Project( database, projectId );
 			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( @"SELECT project_name, update_frequency_minutes,
 				max_results_per_search, search_ao3, publishes_email, email_sender, email_sender_host, email_sender_port,
-				email_sender_uses_credentials, email_sender_username, email_sender_password, email_recipient FROM projects
-				WHERE project_id = @projectId", database.Connection ) )
+				email_sender_uses_ssl, email_sender_uses_credentials, email_sender_username, email_sender_password,
+				email_recipient FROM projects WHERE project_id = @projectId", database.Connection ) )
 			{
 				selectBasicDataCommand.Parameters.AddWithValue( "@projectId", projectId );
 				using ( SQLiteDataReader reader = selectBasicDataCommand.ExecuteReader() )
@@ -247,13 +247,14 @@ namespace Bibliothecary.Core
 						parsed.PublishingInfo.SenderEmail = reader.GetString( 5 );
 						parsed.PublishingInfo.SenderHost = reader.GetString( 6 );
 						parsed.PublishingInfo.SenderPort = reader.GetInt32( 7 );
-						parsed.PublishingInfo.DoesSenderRequireCredentials = ( reader.GetInt32( 8 ) != 0 );
+						parsed.PublishingInfo.DoesSenderUseSsl = ( reader.GetInt32( 8 ) != 0 );
+						parsed.PublishingInfo.DoesSenderRequireCredentials = ( reader.GetInt32( 9 ) != 0 );
 						if ( parsed.PublishingInfo.DoesSenderRequireCredentials )
 						{
-							parsed.PublishingInfo.SenderUsername = CryptographyUtils.Decrypt( reader.GetString( 9 ) );
-							parsed.PublishingInfo.SenderPassword = CryptographyUtils.Decrypt( reader.GetString( 10 ) );
+							parsed.PublishingInfo.SenderUsername = CryptographyUtils.DecryptString( reader.GetString( 10 ) );
+							parsed.PublishingInfo.SenderPassword = CryptographyUtils.DecryptSecureString( reader.GetString( 11 ) );
 						}
-						parsed.PublishingInfo.RecipientEmail = reader.GetString( 11 );
+						parsed.PublishingInfo.RecipientEmail = reader.GetString( 12 );
 					}
 				}
 			}
@@ -275,9 +276,9 @@ namespace Bibliothecary.Core
 						updateProjectCommand.CommandText = @"UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency,
 								max_results_per_search = @maxResultsPerSearch, search_ao3 = @searchAO3,
 								publishes_email = @publishesEmail, email_sender = @emailSender, email_sender_host = @emailSenderHost,
-								email_sender_port = @emailSenderPort, email_sender_uses_credentials = @emailSenderUsesCredentials,
-								email_sender_username = @emailSenderUsername, email_sender_password = @emailSenderPassword,
-								email_recipient = @emailRecipient WHERE project_id = @projectId";
+								email_sender_port = @emailSenderPort, email_sender_uses_ssl = @emailSenderUsesSsl,
+								email_sender_uses_credentials = @emailSenderUsesCredentials, email_sender_username = @emailSenderUsername,
+								email_sender_password = @emailSenderPassword, email_recipient = @emailRecipient WHERE project_id = @projectId";
 						updateProjectCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 						updateProjectCommand.Parameters.AddWithValue( "@name", Name );
 						updateProjectCommand.Parameters.AddWithValue( "@frequency", UpdateFrequency.TotalMinutes );
@@ -288,6 +289,7 @@ namespace Bibliothecary.Core
 						String emailSender = null;
 						String emailSenderHost = null;
 						Int32 emailSenderPort = 0;
+						Int32 emailSenderUsesSsl = 0;
 						Int32 emailSenderUsesCredentials = 0;
 						String emailSenderUsernameEncrypted = null;
 						String emailSenderPasswordEncrpyted = null;
@@ -297,11 +299,12 @@ namespace Bibliothecary.Core
 							emailSender = PublishingInfo.SenderEmail;
 							emailSenderHost = PublishingInfo.SenderHost;
 							emailSenderPort = PublishingInfo.SenderPort;
+							emailSenderUsesSsl = ( PublishingInfo.DoesSenderUseSsl ? 1 : 0 );
 							emailSenderUsesCredentials = ( PublishingInfo.DoesSenderRequireCredentials ? 1 : 0 );
 							if ( PublishingInfo.DoesSenderRequireCredentials )
 							{
-								emailSenderUsernameEncrypted = CryptographyUtils.Encrypt( PublishingInfo.SenderUsername );
-								emailSenderPasswordEncrpyted = CryptographyUtils.Encrypt( PublishingInfo.SenderPassword );
+								emailSenderUsernameEncrypted = CryptographyUtils.EncryptString( PublishingInfo.SenderUsername );
+								emailSenderPasswordEncrpyted = CryptographyUtils.EncryptSecureString( PublishingInfo.SenderPassword );
 							}
 							emailRecipient = PublishingInfo.RecipientEmail;
 						}
@@ -309,6 +312,7 @@ namespace Bibliothecary.Core
 						updateProjectCommand.Parameters.AddWithValue( "@emailSender", emailSender );
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderHost", emailSenderHost );
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderPort", emailSenderPort );
+						updateProjectCommand.Parameters.AddWithValue( "@emailSenderUsesSsl", emailSenderUsesSsl );
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderUsesCredentials", emailSenderUsesCredentials );
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderUsername", emailSenderUsernameEncrypted );
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderPassword", emailSenderPasswordEncrpyted );
@@ -449,6 +453,39 @@ namespace Bibliothecary.Core
 						String fanficHandle = reader.GetString( 0 );
 						yield return fanficsLookup[fanficHandle];
 					}
+				}
+			}
+		}
+
+		public Boolean MarkFanficsAsReported( IEnumerable<IFanficRequestHandle> fanfics, String source )
+		{
+			using ( SQLiteTransaction transaction = _database.Connection.BeginTransaction() )
+			{
+				try
+				{
+					foreach ( IFanficRequestHandle fanfic in fanfics )
+					{
+						using ( SQLiteCommand insertCommand = new SQLiteCommand( _database.Connection ) )
+						{
+							insertCommand.CommandText = "INSERT INTO project_reported_query_results( project_id, source, fanfic_handle ) VALUES( @projectId, @fanficSource, @fanficHandle )";
+							insertCommand.Parameters.AddWithValue( "@projectId", ProjectId );
+							insertCommand.Parameters.AddWithValue( "@fanficSource", source );
+							insertCommand.Parameters.AddWithValue( "@fanficHandle", fanfic.Handle );
+							Int32 numberRowsAffected = insertCommand.ExecuteNonQuery();
+							if ( numberRowsAffected != 1 )
+							{
+								throw new ApplicationException( "Unable to update the project in the database!" );
+							}
+						}
+					}
+
+					transaction.Commit();
+					return true;
+				}
+				catch
+				{
+					transaction.Rollback();
+					return false;
 				}
 			}
 		}

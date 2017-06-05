@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security;
 
 namespace HeadLibrarian.ViewModels
 {
@@ -108,6 +109,32 @@ namespace HeadLibrarian.ViewModels
 			readonly Int32 _newPort;
 		}
 
+		class SetDoesSenderUseSslUndoAction : BaseUndoAction
+		{
+			public SetDoesSenderUseSslUndoAction( PublishingInfoViewModel viewModel, Boolean oldValue, Boolean newValue )
+			{
+				_viewModel = viewModel;
+				_oldValue = oldValue;
+				_newValue = newValue;
+			}
+
+			public override void Undo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetDoesSenderUseSsl( _oldValue ) );
+				_viewModel.InvokeDoesSenderUseSslChanged();
+			}
+
+			public override void Redo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetDoesSenderUseSsl( _newValue ) );
+				_viewModel.InvokeDoesSenderUseSslChanged();
+			}
+
+			readonly PublishingInfoViewModel _viewModel;
+			readonly Boolean _oldValue;
+			readonly Boolean _newValue;
+		}
+
 		class SetDoesSenderRequireCredentialsUndoAction : BaseUndoAction
 		{
 			public SetDoesSenderRequireCredentialsUndoAction( PublishingInfoViewModel viewModel, Boolean oldValue, Boolean newValue )
@@ -134,56 +161,37 @@ namespace HeadLibrarian.ViewModels
 			readonly Boolean _newValue;
 		}
 
-		class SetSenderUsernameUndoAction : BaseUndoAction
+		class SetSenderLoginCredentialsUndoAction : BaseUndoAction
 		{
-			public SetSenderUsernameUndoAction( PublishingInfoViewModel viewModel, String oldUsername, String newUsername )
+			public SetSenderLoginCredentialsUndoAction( PublishingInfoViewModel viewModel, String oldUsername, String newUsername,
+				SecureString oldPassword, SecureString newPassword )
 			{
 				_viewModel = viewModel;
 				_oldUsername = oldUsername;
 				_newUsername = newUsername;
-			}
-
-			public override void Undo()
-			{
-				AssertModelSetFunction( _viewModel._info.SetSenderUsername( _oldUsername ) );
-				_viewModel.InvokeSenderUsernameChanged();
-			}
-
-			public override void Redo()
-			{
-				AssertModelSetFunction( _viewModel._info.SetSenderUsername( _newUsername ) );
-				_viewModel.InvokeSenderUsernameChanged();
-			}
-
-			readonly PublishingInfoViewModel _viewModel;
-			readonly String _oldUsername;
-			readonly String _newUsername;
-		}
-
-		class SetSenderPasswordUndoAction : BaseUndoAction
-		{
-			public SetSenderPasswordUndoAction( PublishingInfoViewModel viewModel, String oldPassword, String newPassword )
-			{
-				_viewModel = viewModel;
 				_oldPassword = oldPassword;
 				_newPassword = newPassword;
 			}
 
 			public override void Undo()
 			{
+				AssertModelSetFunction( _viewModel._info.SetSenderUsername( _oldUsername ) );
 				AssertModelSetFunction( _viewModel._info.SetSenderPassword( _oldPassword ) );
-				_viewModel.InvokeSenderPasswordChanged();
+				_viewModel._projectViewModel.RefreshHasSavedChanged();
 			}
 
 			public override void Redo()
 			{
+				AssertModelSetFunction( _viewModel._info.SetSenderUsername( _newUsername ) );
 				AssertModelSetFunction( _viewModel._info.SetSenderPassword( _newPassword ) );
-				_viewModel.InvokeSenderPasswordChanged();
+				_viewModel._projectViewModel.RefreshHasSavedChanged();
 			}
 
 			readonly PublishingInfoViewModel _viewModel;
-			readonly String _oldPassword;
-			readonly String _newPassword;
+			readonly String _oldUsername;
+			readonly String _newUsername;
+			readonly SecureString _oldPassword;
+			readonly SecureString _newPassword;
 		}
 
 		class SetRecipientEmailUndoAction : BaseUndoAction
