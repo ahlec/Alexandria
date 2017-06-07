@@ -82,5 +82,9 @@
 					Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
 					Command="{Binding SendTestEmailCommand}">Send Test Email</Button>
 		</controls:ToggleSectionContainer>
+		
+		<controls:ToggleSectionContainer Header="Tumblr">
+			<Button Command="{Binding AuthenticateTumblrCommand}">Authenticate [TEST!]</Button>
+		</controls:ToggleSectionContainer>
 	</StackPanel>
 </UserControl>

@@ -161,6 +161,8 @@ namespace HeadLibrarian.ViewModels
 
 		public ICommand SendTestEmailCommand => ( _sendTestEmailCommand ?? ( _sendTestEmailCommand = new Command( null, CommandSendTestEmail ) ) );
 
+		public ICommand AuthenticateTumblrCommand => ( _authenticateTumblrCommand ?? ( _authenticateTumblrCommand = new Command( null, CommandAuthenticateTumblr ) ) );
+
 		void CommandProvideEmailCredentials( Object o )
 		{
 			ProvideEmailCredentialsDialog dialog = new ProvideEmailCredentialsDialog( _info.SenderUsername );
@@ -205,8 +207,20 @@ namespace HeadLibrarian.ViewModels
 			}
 		}
 
+		void CommandAuthenticateTumblr( Object o )
+		{
+			TumblrClient tumblrClient = new TumblrClient
+			{
+				ConsumerKey = "",
+				ConsumerSecret = ""
+			};
+
+			tumblrClient.Authenticate();
+		}
+
 		ICommand _provideEmailCredentialsCommand;
 		ICommand _sendTestEmailCommand;
+		ICommand _authenticateTumblrCommand;
 
 		readonly ProjectViewModel _projectViewModel;
 		readonly PublishingInfo _info;

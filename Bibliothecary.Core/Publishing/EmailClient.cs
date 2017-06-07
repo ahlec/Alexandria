@@ -6,7 +6,7 @@ using Alexandria.Model;
 
 namespace Bibliothecary.Core.Publishing
 {
-	public class EmailClient
+	public sealed class EmailClient
 	{
 		public EmailClient()
 		{
