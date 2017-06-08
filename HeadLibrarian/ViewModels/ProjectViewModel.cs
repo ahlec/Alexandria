@@ -64,7 +64,9 @@ namespace HeadLibrarian.ViewModels
 
 		public Int32 ProjectId => Project.ProjectId;
 
-		public Boolean HasUnsavedChanges => Project.HasUnsavedChanges;
+		public Boolean HasUnsavedChanges => Project.HasUnsavedChanges || HasChangedPublishingSenderEmailCredentials;
+
+		public Boolean HasChangedPublishingSenderEmailCredentials { get; set; }
 
 		public String Name
 		{
@@ -148,6 +150,7 @@ namespace HeadLibrarian.ViewModels
 		void CommandSave( Object o )
 		{
 			Project.Save();
+			HasChangedPublishingSenderEmailCredentials = false;
 			OnPropertyChanged( nameof( HasUnsavedChanges ) );
 		}
 

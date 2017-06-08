@@ -78,7 +78,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishingInfo.cs" />
     <Compile Include="Publishing\EmailClient.cs" />
-    <Compile Include="Publishing\InternalWebListener.cs" />
     <Compile Include="Publishing\TumblrClient.cs" />
     <Compile Include="Schema\SchemaUpdater.cs" />
     <Compile Include="Schema\SchemaVersion.cs" />

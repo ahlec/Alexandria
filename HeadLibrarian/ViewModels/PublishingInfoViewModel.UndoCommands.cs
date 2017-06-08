@@ -177,6 +177,7 @@ namespace HeadLibrarian.ViewModels
 			{
 				AssertModelSetFunction( _viewModel._info.SetSenderUsername( _oldUsername ) );
 				AssertModelSetFunction( _viewModel._info.SetSenderPassword( _oldPassword ) );
+				_viewModel._projectViewModel.HasChangedPublishingSenderEmailCredentials = false;
 				_viewModel._projectViewModel.RefreshHasSavedChanged();
 			}
 
@@ -184,6 +185,7 @@ namespace HeadLibrarian.ViewModels
 			{
 				AssertModelSetFunction( _viewModel._info.SetSenderUsername( _newUsername ) );
 				AssertModelSetFunction( _viewModel._info.SetSenderPassword( _newPassword ) );
+				_viewModel._projectViewModel.HasChangedPublishingSenderEmailCredentials = true;
 				_viewModel._projectViewModel.RefreshHasSavedChanged();
 			}
 

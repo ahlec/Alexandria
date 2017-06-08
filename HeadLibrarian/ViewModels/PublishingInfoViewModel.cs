@@ -209,13 +209,19 @@ namespace HeadLibrarian.ViewModels
 
 		void CommandAuthenticateTumblr( Object o )
 		{
-			TumblrClient tumblrClient = new TumblrClient
-			{
-				ConsumerKey = "",
-				ConsumerSecret = ""
-			};
+			const String CONSUMER_KEY = "R4UnoBXPnLXwDLoRJRb5rD97JFug9eRA64ArSg9qsDtpLUXTAw";
+			const String CONSUMER_SECRET = "vZb75SXj6aez6U2m5NhD5zG5qeOL9BHaVCQMZttRST9bglFQWx";
 
-			tumblrClient.Authenticate();
+			AuthenticateTumblrDialog dialog = new AuthenticateTumblrDialog( CONSUMER_KEY, CONSUMER_SECRET );
+			dialog.ShowDialog();
+
+			if ( dialog.DialogResult != true )
+			{
+				return;
+			}
+
+			String oauthKey = dialog.OauthToken;
+			String oauthSecret = dialog.OauthSecret;
 		}
 
 		ICommand _provideEmailCredentialsCommand;

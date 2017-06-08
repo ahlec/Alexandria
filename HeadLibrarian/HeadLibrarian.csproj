@@ -37,9 +37,21 @@
     <ApplicationIcon>Resources\HeadLibrarian.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DontPanic.TumblrSharp, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TumblrSharp.1.0.0.6\lib\net45\DontPanic.TumblrSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="DontPanic.TumblrSharp.Client, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TumblrSharp.1.0.0.6\lib\net45\DontPanic.TumblrSharp.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="DontPanic.TumblrSharp.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TumblrSharp.1.0.0.6\lib\net45\DontPanic.TumblrSharp.Net45.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PubSub, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\PubSub.1.5.0\lib\portable-net45+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\PubSub.dll</HintPath>
@@ -97,13 +109,15 @@
     <Compile Include="Converters\NotNullToBooleanConverter.cs" />
     <Compile Include="Converters\ProjectDisplayNameMultiConverter.cs" />
     <Compile Include="Converters\SaveProjectButtonMultiConverter.cs" />
+    <Compile Include="Dialogs\AuthenticateTumblrDialog.xaml.cs">
+      <DependentUpon>AuthenticateTumblrDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ConfirmProjectDeletionDialog.xaml.cs">
       <DependentUpon>ConfirmProjectDeletionDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\ProvideEmailCredentialsDialog.xaml.cs">
       <DependentUpon>ProvideEmailCredentialsDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TriggerActions\SetSelectedItemToEventArgsAction.cs" />
     <Compile Include="IUndoRedoAction.cs" />
     <Compile Include="UndoRedoStack.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
@@ -158,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ToggleSectionContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\AuthenticateTumblrDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

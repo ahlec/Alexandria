@@ -18,7 +18,7 @@ namespace Bibliothecary.Core.Publishing
 			{
 				if ( _isListeningToWebServer )
 				{
-					InternalWebListener.DeregisterAsCurrentTumblrClient( this );
+					//InternalWebListener.DeregisterAsCurrentTumblrClient( this );
 				}
 
 				_isDisposed = true;
@@ -51,7 +51,7 @@ namespace Bibliothecary.Core.Publishing
 			_oauthClient = new OAuthClient( new HmacSha1HashProvider(), ConsumerKey, ConsumerSecret );
 			_requestToken = await _oauthClient.GetRequestTokenAsync( CallbackUrl );
 
-			InternalWebListener.RegisterAsCurrentTumblrClient( this );
+			//InternalWebListener.RegisterAsCurrentTumblrClient( this );
 			_isListeningToWebServer = true;
 
 			String authenticateUrl = String.Concat( "https://www.tumblr.com/oauth/authorize?oauth_token=", _requestToken.Key );
