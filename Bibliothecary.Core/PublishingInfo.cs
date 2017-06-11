@@ -28,6 +28,18 @@ namespace Bibliothecary.Core
 
 		public String RecipientEmail { get; internal set; }
 
+		public Boolean UsesTumblr { get; internal set; }
+
+		public String TumblrConsumerKey { get; internal set; }
+
+		public String TumblrConsumerSecret { get; internal set; }
+
+		public String TumblrOauthToken { get; internal set; }
+
+		public String TumblrOauthSecret { get; internal set; }
+
+		public String TumblrBlogName { get; internal set; }
+
 		public Boolean SetUsesEmail( Boolean value )
 		{
 			if ( value == UsesEmail )
@@ -162,6 +174,97 @@ namespace Bibliothecary.Core
 			return true;
 		}
 
+		public Boolean SetUsesTumblr( Boolean value )
+		{
+			if ( value == UsesTumblr )
+			{
+				return false;
+			}
+
+			UsesTumblr = value;
+			return true;
+		}
+
+		public Boolean SetTumblrConsumerKey( String consumerKey )
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrConsumerKey )} when ({nameof( UsesTumblr )} is false." );
+			}
+
+			if ( String.Equals( TumblrConsumerKey, consumerKey, StringComparison.InvariantCulture ) )
+			{
+				return false;
+			}
+
+			TumblrConsumerKey = consumerKey;
+			return true;
+		}
+
+		public Boolean SetTumblrConsumerSecret( String consumerSecret )
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrConsumerKey )} when ({nameof( UsesTumblr )} is false." );
+			}
+
+			if ( String.Equals( TumblrConsumerSecret, consumerSecret, StringComparison.InvariantCulture ) )
+			{
+				return false;
+			}
+
+			TumblrConsumerSecret = consumerSecret;
+			return true;
+		}
+
+		public Boolean SetTumblrOauthToken( String oauthToken )
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrOauthToken )} when ({nameof( UsesTumblr )} is false." );
+			}
+
+			if ( String.Equals( TumblrOauthToken, oauthToken, StringComparison.InvariantCulture ) )
+			{
+				return false;
+			}
+
+			TumblrOauthToken = oauthToken;
+			return true;
+		}
+
+		public Boolean SetTumblrOauthSecret( String oauthSecret )
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrOauthSecret )} when ({nameof( UsesTumblr )} is false." );
+			}
+
+			if ( String.Equals( TumblrOauthSecret, oauthSecret, StringComparison.InvariantCulture ) )
+			{
+				return false;
+			}
+
+			TumblrOauthSecret = oauthSecret;
+			return true;
+		}
+
+		public Boolean SetTumblrBlogName( String blogName )
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrBlogName )} when ({nameof( UsesTumblr )} is false." );
+			}
+
+			if ( String.Equals( TumblrBlogName, blogName, StringComparison.InvariantCultureIgnoreCase ) )
+			{
+				return false;
+			}
+
+			TumblrBlogName = blogName;
+			return true;
+		}
+
 		public PublishingInfo Clone()
 		{
 			return new PublishingInfo( _projectId )
@@ -174,7 +277,13 @@ namespace Bibliothecary.Core
 				DoesSenderRequireCredentials = DoesSenderRequireCredentials,
 				SenderUsername = SenderUsername,
 				SenderPassword = SenderPassword,
-				RecipientEmail = RecipientEmail
+				RecipientEmail = RecipientEmail,
+				UsesTumblr = UsesTumblr,
+				TumblrConsumerKey = TumblrConsumerKey,
+				TumblrConsumerSecret = TumblrConsumerSecret,
+				TumblrOauthToken = TumblrOauthToken,
+				TumblrOauthSecret = TumblrOauthSecret,
+				TumblrBlogName = TumblrBlogName
 			};
 		}
 
@@ -226,6 +335,29 @@ namespace Bibliothecary.Core
 				}
 
 				if ( !String.Equals( RecipientEmail, other.RecipientEmail, StringComparison.InvariantCultureIgnoreCase ) )
+				{
+					return false;
+				}
+			}
+
+			if ( UsesTumblr != other.UsesTumblr )
+			{
+				return false;
+			}
+
+			if ( UsesTumblr )
+			{
+				if ( !String.Equals( TumblrConsumerKey, other.TumblrConsumerKey, StringComparison.InvariantCulture ) )
+				{
+					return false;
+				}
+
+				if ( !String.Equals( TumblrOauthToken, other.TumblrOauthToken, StringComparison.InvariantCulture ) )
+				{
+					return false;
+				}
+
+				if ( !String.Equals( TumblrBlogName, other.TumblrBlogName, StringComparison.InvariantCultureIgnoreCase ) )
 				{
 					return false;
 				}

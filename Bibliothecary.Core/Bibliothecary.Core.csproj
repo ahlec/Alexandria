@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="DatabaseFunctions\DataReaderExtensions.cs" />
     <Compile Include="DatabaseFunctions\GeneralDatabaseFunctions.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

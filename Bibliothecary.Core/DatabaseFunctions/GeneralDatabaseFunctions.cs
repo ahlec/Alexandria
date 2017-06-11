@@ -4,7 +4,7 @@ using Bibliothecary.Core.Utils;
 
 namespace Bibliothecary.Core.DatabaseFunctions
 {
-	public static class GeneralDatabaseFunctions
+	internal static class GeneralDatabaseFunctions
 	{
 		public static Int32 GetDatabaseVersionNumber( this SQLiteConnection connection )
 		{

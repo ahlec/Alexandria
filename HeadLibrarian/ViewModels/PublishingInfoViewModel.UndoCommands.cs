@@ -221,5 +221,157 @@ namespace HeadLibrarian.ViewModels
 			readonly String _oldEmail;
 			readonly String _newEmail;
 		}
+
+		class SetUsesTumblrUndoAction : BaseUndoAction
+		{
+			public SetUsesTumblrUndoAction( PublishingInfoViewModel viewModel, Boolean oldValue, Boolean newValue )
+			{
+				_viewModel = viewModel;
+				_oldValue = oldValue;
+				_newValue = newValue;
+			}
+
+			public override void Undo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetUsesTumblr( _oldValue ) );
+				_viewModel.InvokeUsesTumblrChanged();
+			}
+
+			public override void Redo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetUsesTumblr( _newValue ) );
+				_viewModel.InvokeUsesTumblrChanged();
+			}
+
+			readonly PublishingInfoViewModel _viewModel;
+			readonly Boolean _oldValue;
+			readonly Boolean _newValue;
+		}
+
+		class SetTumblrConsumerKeyUndoAction : BaseUndoAction
+		{
+			public SetTumblrConsumerKeyUndoAction( PublishingInfoViewModel viewModel, String oldValue, String newValue, String oldOauthToken, String oldOauthSecret )
+			{
+				_viewModel = viewModel;
+				_oldValue = oldValue;
+				_newValue = newValue;
+				_oldOauthToken = oldOauthToken;
+				_oldOauthSecret = oldOauthSecret;
+			}
+
+			public override void Undo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetTumblrConsumerKey( _oldValue ) );
+				_viewModel._info.SetTumblrOauthToken( _oldOauthToken );
+				_viewModel._info.SetTumblrOauthSecret( _oldOauthSecret );
+				_viewModel.InvokeTumblrConsumerKeyChanged();
+			}
+
+			public override void Redo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetTumblrConsumerKey( _newValue ) );
+				_viewModel._info.SetTumblrOauthToken( null );
+				_viewModel._info.SetTumblrOauthSecret( null );
+				_viewModel.InvokeTumblrConsumerKeyChanged();
+			}
+
+			readonly PublishingInfoViewModel _viewModel;
+			readonly String _oldValue;
+			readonly String _newValue;
+			readonly String _oldOauthToken;
+			readonly String _oldOauthSecret;
+		}
+
+		class SetTumblrConsumerSecretUndoAction : BaseUndoAction
+		{
+			public SetTumblrConsumerSecretUndoAction( PublishingInfoViewModel viewModel, String oldValue, String newValue, String oldOauthToken, String oldOauthSecret )
+			{
+				_viewModel = viewModel;
+				_oldValue = oldValue;
+				_newValue = newValue;
+				_oldOauthToken = oldOauthToken;
+				_oldOauthSecret = oldOauthSecret;
+			}
+
+			public override void Undo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetTumblrConsumerSecret( _oldValue ) );
+				_viewModel._info.SetTumblrOauthToken( _oldOauthToken );
+				_viewModel._info.SetTumblrOauthSecret( _oldOauthSecret );
+				_viewModel.InvokeTumblrConsumerSecretChanged();
+			}
+
+			public override void Redo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetTumblrConsumerSecret( _newValue ) );
+				_viewModel._info.SetTumblrOauthToken( null );
+				_viewModel._info.SetTumblrOauthSecret( null );
+				_viewModel.InvokeTumblrConsumerSecretChanged();
+			}
+
+			readonly PublishingInfoViewModel _viewModel;
+			readonly String _oldValue;
+			readonly String _newValue;
+			readonly String _oldOauthToken;
+			readonly String _oldOauthSecret;
+		}
+
+		class SetTumblrOauthUndoAction : BaseUndoAction
+		{
+			public SetTumblrOauthUndoAction( PublishingInfoViewModel viewModel, String oldOauthToken, String oldOauthSecret, String newOauthToken, String newOauthSecret )
+			{
+				_viewModel = viewModel;
+				_oldOauthToken = oldOauthToken;
+				_oldOauthSecret = oldOauthSecret;
+				_newOauthToken = newOauthToken;
+				_newOauthSecret = newOauthSecret;
+			}
+
+			public override void Undo()
+			{
+				_viewModel._info.SetTumblrOauthToken( _oldOauthToken );
+				_viewModel._info.SetTumblrOauthSecret( _oldOauthSecret );
+				_viewModel.InvokeTumblrOauthChanged();
+			}
+
+			public override void Redo()
+			{
+				_viewModel._info.SetTumblrOauthToken( _newOauthToken );
+				_viewModel._info.SetTumblrOauthSecret( _newOauthSecret );
+				_viewModel.InvokeTumblrOauthChanged();
+			}
+
+			readonly PublishingInfoViewModel _viewModel;
+			readonly String _oldOauthToken;
+			readonly String _oldOauthSecret;
+			readonly String _newOauthToken;
+			readonly String _newOauthSecret;
+		}
+
+		class SetTumblrBlogNameUndoAction : BaseUndoAction
+		{
+			public SetTumblrBlogNameUndoAction( PublishingInfoViewModel viewModel, String oldValue, String newValue )
+			{
+				_viewModel = viewModel;
+				_oldValue = oldValue;
+				_newValue = newValue;
+			}
+
+			public override void Undo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetTumblrBlogName( _oldValue ) );
+				_viewModel.InvokeTumblrBlogNameChanged();
+			}
+
+			public override void Redo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetTumblrBlogName( _newValue ) );
+				_viewModel.InvokeTumblrBlogNameChanged();
+			}
+
+			readonly PublishingInfoViewModel _viewModel;
+			readonly String _oldValue;
+			readonly String _newValue;
+		}
 	}
 }

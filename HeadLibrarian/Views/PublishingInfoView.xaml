@@ -64,7 +64,7 @@
 							  Grid.ColumnSpan="2"
 							  Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
 							  IsChecked="{Binding DoesSenderRequireCredentials}">Has Login Credentials</CheckBox>
-					
+
 					<Button Grid.Row="3"
 							Grid.Column="2"
 							Grid.ColumnSpan="2"
@@ -82,9 +82,25 @@
 					Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
 					Command="{Binding SendTestEmailCommand}">Send Test Email</Button>
 		</controls:ToggleSectionContainer>
-		
-		<controls:ToggleSectionContainer Header="Tumblr">
-			<Button Command="{Binding AuthenticateTumblrCommand}">Authenticate [TEST!]</Button>
+
+		<controls:ToggleSectionContainer Header="Tumblr"
+										 IsSectionEnabled="{Binding UsesTumblr, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+			<controls:GeneralViewRow FieldName="Consumer Key:">
+				<TextBox Text="{Binding TumblrConsumerKey, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+			</controls:GeneralViewRow>
+			
+			<controls:GeneralViewRow FieldName="Consumer Secret:">
+				<TextBox Text="{Binding TumblrConsumerSecret, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+			</controls:GeneralViewRow>
+
+			<Button Command="{Binding AuthenticateTumblrCommand}"
+					IsEnabled="{Binding CanAttemptTumblrAuthentication}">Authenticate</Button>
+
+			<controls:GeneralViewRow FieldName="Blog Name:">
+				<TextBox Text="{Binding TumblrBlogName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+						 IsEnabled="{Binding IsAuthenticatedToTumblr}" />
+			</controls:GeneralViewRow>
+
 		</controls:ToggleSectionContainer>
 	</StackPanel>
 </UserControl>

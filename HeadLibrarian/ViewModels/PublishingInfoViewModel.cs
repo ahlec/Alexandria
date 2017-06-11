@@ -157,6 +157,108 @@ namespace HeadLibrarian.ViewModels
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
+		public Boolean UsesTumblr
+		{
+			get => _info.UsesTumblr;
+			set
+			{
+				Boolean oldValue = UsesTumblr;
+				if ( _info.SetUsesTumblr( value ) )
+				{
+					_projectViewModel.UndoStack.Push( new SetUsesTumblrUndoAction( this, oldValue, value ) );
+					InvokeUsesTumblrChanged();
+				}
+			}
+		}
+
+		void InvokeUsesTumblrChanged()
+		{
+			OnPropertyChanged( nameof( UsesTumblr ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
+		public String TumblrConsumerKey
+		{
+			get => _info.TumblrConsumerKey;
+			set
+			{
+				String oldValue = TumblrConsumerKey;
+				if ( _info.SetTumblrConsumerKey( value ) )
+				{
+					String oldOauthToken = _info.TumblrOauthToken;
+					String oldOauthSecret = _info.TumblrOauthSecret;
+					_info.SetTumblrOauthToken( null );
+					_info.SetTumblrOauthSecret( null );
+					_projectViewModel.UndoStack.Push( new SetTumblrConsumerKeyUndoAction( this, oldValue, value, oldOauthToken, oldOauthSecret ) );
+					InvokeTumblrConsumerKeyChanged();
+				}
+			}
+		}
+
+		void InvokeTumblrConsumerKeyChanged()
+		{
+			OnPropertyChanged( nameof( TumblrConsumerKey ) );
+			OnPropertyChanged( nameof( CanAttemptTumblrAuthentication ) );
+			OnPropertyChanged( nameof( IsAuthenticatedToTumblr ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
+		public String TumblrConsumerSecret
+		{
+			get => _info.TumblrConsumerSecret;
+			set
+			{
+				String oldValue = TumblrConsumerSecret;
+				if ( _info.SetTumblrConsumerSecret( value ) )
+				{
+					String oldOauthToken = _info.TumblrOauthToken;
+					String oldOauthSecret = _info.TumblrOauthSecret;
+					_info.SetTumblrOauthToken( null );
+					_info.SetTumblrOauthSecret( null );
+					_projectViewModel.UndoStack.Push( new SetTumblrConsumerSecretUndoAction( this, oldValue, value, oldOauthToken, oldOauthSecret ) );
+					InvokeTumblrConsumerSecretChanged();
+				}
+			}
+		}
+
+		void InvokeTumblrConsumerSecretChanged()
+		{
+			OnPropertyChanged( nameof( TumblrConsumerSecret ) );
+			OnPropertyChanged( nameof( CanAttemptTumblrAuthentication ) );
+			OnPropertyChanged( nameof( IsAuthenticatedToTumblr ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
+		public Boolean CanAttemptTumblrAuthentication => !String.IsNullOrWhiteSpace( TumblrConsumerKey ) && !String.IsNullOrWhiteSpace( TumblrConsumerSecret );
+
+		public Boolean IsAuthenticatedToTumblr => !String.IsNullOrEmpty( _info.TumblrOauthToken ) && !String.IsNullOrEmpty( _info.TumblrOauthSecret );
+
+		void InvokeTumblrOauthChanged()
+		{
+			OnPropertyChanged( nameof( IsAuthenticatedToTumblr ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
+		public String TumblrBlogName
+		{
+			get => _info.TumblrBlogName;
+			set
+			{
+				String oldValue = TumblrBlogName;
+				if ( _info.SetTumblrBlogName( value ) )
+				{
+					_projectViewModel.UndoStack.Push( new SetTumblrBlogNameUndoAction( this, oldValue, value ) );
+					InvokeTumblrBlogNameChanged();
+				}
+			}
+		}
+
+		void InvokeTumblrBlogNameChanged()
+		{
+			OnPropertyChanged( nameof( TumblrBlogName ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
 		public ICommand ProvideEmailCredentialsCommand => ( _provideEmailCredentialsCommand ?? ( _provideEmailCredentialsCommand = new Command( null, CommandProvideEmailCredentials ) ) );
 
 		public ICommand SendTestEmailCommand => ( _sendTestEmailCommand ?? ( _sendTestEmailCommand = new Command( null, CommandSendTestEmail ) ) );
@@ -209,10 +311,12 @@ namespace HeadLibrarian.ViewModels
 
 		void CommandAuthenticateTumblr( Object o )
 		{
-			const String CONSUMER_KEY = "R4UnoBXPnLXwDLoRJRb5rD97JFug9eRA64ArSg9qsDtpLUXTAw";
-			const String CONSUMER_SECRET = "vZb75SXj6aez6U2m5NhD5zG5qeOL9BHaVCQMZttRST9bglFQWx";
+			if ( !UsesTumblr || !CanAttemptTumblrAuthentication )
+			{
+				return;
+			}
 
-			AuthenticateTumblrDialog dialog = new AuthenticateTumblrDialog( CONSUMER_KEY, CONSUMER_SECRET );
+			AuthenticateTumblrDialog dialog = new AuthenticateTumblrDialog( TumblrConsumerKey, TumblrConsumerSecret );
 			dialog.ShowDialog();
 
 			if ( dialog.DialogResult != true )
@@ -220,8 +324,18 @@ namespace HeadLibrarian.ViewModels
 				return;
 			}
 
-			String oauthKey = dialog.OauthToken;
-			String oauthSecret = dialog.OauthSecret;
+			String oldOauthToken = _info.TumblrOauthToken;
+			String oldOauthSecret = _info.TumblrOauthSecret;
+			Boolean didChangeToken = _info.SetTumblrOauthToken( dialog.OauthToken );
+			Boolean didChangeSecret = _info.SetTumblrOauthSecret( dialog.OauthSecret );
+			if ( !didChangeToken && !didChangeSecret )
+			{
+				return;
+			}
+
+			_projectViewModel.UndoStack.Push( new SetTumblrOauthUndoAction( this, oldOauthToken, oldOauthSecret,
+				_info.TumblrOauthToken, _info.TumblrOauthSecret ) );
+			InvokeTumblrOauthChanged();
 		}
 
 		ICommand _provideEmailCredentialsCommand;

@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using System.Text;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
+using Bibliothecary.Core.DatabaseFunctions;
 using Bibliothecary.Core.Utils;
 
 namespace Bibliothecary.Core
@@ -219,10 +220,27 @@ namespace Bibliothecary.Core
 			SQLiteUtils.ValidateConnection( database.Connection );
 
 			Project parsed = new Project( database, projectId );
-			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( @"SELECT project_name, update_frequency_minutes,
-				max_results_per_search, search_ao3, publishes_email, email_sender, email_sender_host, email_sender_port,
-				email_sender_uses_ssl, email_sender_uses_credentials, email_sender_username, email_sender_password,
-				email_recipient FROM projects WHERE project_id = @projectId", database.Connection ) )
+			using ( SQLiteCommand selectBasicDataCommand = new SQLiteCommand( @"SELECT
+				project_name,
+				update_frequency_minutes,
+				max_results_per_search,
+				search_ao3,
+				publishes_email,
+				email_sender,
+				email_sender_host,
+				email_sender_port,
+				email_sender_uses_ssl,
+				email_sender_uses_credentials,
+				email_sender_username,
+				email_sender_password,
+				email_recipient,
+				publishes_tumblr,
+				tumblr_consumer_key,
+				tumblr_consumer_secret,
+				tumblr_oauth_token,
+				tumblr_oauth_secret,
+				tumblr_blog_name
+				FROM projects WHERE project_id = @projectId", database.Connection ) )
 			{
 				selectBasicDataCommand.Parameters.AddWithValue( "@projectId", projectId );
 				using ( SQLiteDataReader reader = selectBasicDataCommand.ExecuteReader() )
@@ -232,7 +250,7 @@ namespace Bibliothecary.Core
 						throw new ArgumentOutOfRangeException( nameof( projectId ), "No project exists with the specified projectId" );
 					}
 
-					parsed.Name = reader.GetString( 0 );
+					parsed.Name = reader.GetStringSafe( 0 );
 					Int32 updateFrequencyMinutes = Math.Max( MinimumUpdateFrequencyMinutes, reader.GetInt32( 1 ) );
 					parsed.UpdateFrequency = TimeSpan.FromMinutes( updateFrequencyMinutes );
 					parsed.MaxResultsPerSearch = reader.GetInt32( 2 );
@@ -240,21 +258,30 @@ namespace Bibliothecary.Core
 
 					parsed.PublishingInfo = new PublishingInfo( projectId )
 					{
-						UsesEmail = ( reader.GetInt32( 4 ) != 0 )
+						UsesEmail = ( reader.GetInt32( 4 ) != 0 ),
+						UsesTumblr = ( reader.GetInt32( 13 ) != 0 )
 					};
 					if ( parsed.PublishingInfo.UsesEmail )
 					{
-						parsed.PublishingInfo.SenderEmail = reader.GetString( 5 );
-						parsed.PublishingInfo.SenderHost = reader.GetString( 6 );
+						parsed.PublishingInfo.SenderEmail = reader.GetStringSafe( 5 );
+						parsed.PublishingInfo.SenderHost = reader.GetStringSafe( 6 );
 						parsed.PublishingInfo.SenderPort = reader.GetInt32( 7 );
 						parsed.PublishingInfo.DoesSenderUseSsl = ( reader.GetInt32( 8 ) != 0 );
 						parsed.PublishingInfo.DoesSenderRequireCredentials = ( reader.GetInt32( 9 ) != 0 );
 						if ( parsed.PublishingInfo.DoesSenderRequireCredentials )
 						{
-							parsed.PublishingInfo.SenderUsername = CryptographyUtils.DecryptString( reader.GetString( 10 ) );
-							parsed.PublishingInfo.SenderPassword = CryptographyUtils.DecryptSecureString( reader.GetString( 11 ) );
+							parsed.PublishingInfo.SenderUsername = CryptographyUtils.DecryptString( reader.GetStringSafe( 10 ) );
+							parsed.PublishingInfo.SenderPassword = CryptographyUtils.DecryptSecureString( reader.GetStringSafe( 11 ) );
 						}
-						parsed.PublishingInfo.RecipientEmail = reader.GetString( 12 );
+						parsed.PublishingInfo.RecipientEmail = reader.GetStringSafe( 12 );
+					}
+					if ( parsed.PublishingInfo.UsesTumblr )
+					{
+						parsed.PublishingInfo.TumblrConsumerKey = reader.GetStringSafe( 14 );
+						parsed.PublishingInfo.TumblrConsumerSecret = reader.GetStringSafe( 15 );
+						parsed.PublishingInfo.TumblrOauthToken = reader.GetStringSafe( 16 );
+						parsed.PublishingInfo.TumblrOauthSecret = reader.GetStringSafe( 17 );
+						parsed.PublishingInfo.TumblrBlogName = reader.GetStringSafe( 18 );
 					}
 				}
 			}
@@ -273,18 +300,34 @@ namespace Bibliothecary.Core
 				{
 					using ( SQLiteCommand updateProjectCommand = new SQLiteCommand( _database.Connection ) )
 					{
-						updateProjectCommand.CommandText = @"UPDATE projects SET project_name = @name, update_frequency_minutes = @frequency,
-								max_results_per_search = @maxResultsPerSearch, search_ao3 = @searchAO3,
-								publishes_email = @publishesEmail, email_sender = @emailSender, email_sender_host = @emailSenderHost,
-								email_sender_port = @emailSenderPort, email_sender_uses_ssl = @emailSenderUsesSsl,
-								email_sender_uses_credentials = @emailSenderUsesCredentials, email_sender_username = @emailSenderUsername,
-								email_sender_password = @emailSenderPassword, email_recipient = @emailRecipient WHERE project_id = @projectId";
+						updateProjectCommand.CommandText = @"UPDATE projects SET
+							project_name = @name,
+							update_frequency_minutes = @frequency,
+							max_results_per_search = @maxResultsPerSearch,
+							search_ao3 = @searchAO3,
+							publishes_email = @publishesEmail,
+							email_sender = @emailSender,
+							email_sender_host = @emailSenderHost,
+							email_sender_port = @emailSenderPort,
+							email_sender_uses_ssl = @emailSenderUsesSsl,
+							email_sender_uses_credentials = @emailSenderUsesCredentials,
+							email_sender_username = @emailSenderUsername,
+							email_sender_password = @emailSenderPassword,
+							email_recipient = @emailRecipient,
+							publishes_tumblr = @publishesTumblr,
+							tumblr_consumer_key = @tumblrConsumerKey,
+							tumblr_consumer_secret = @tumblrConsumerSecret,
+							tumblr_oauth_token = @tumblrOauthToken,
+							tumblr_oauth_secret = @tumblrOauthSecret,
+							tumblr_blog_name = @tumblrBlogName
+							WHERE project_id = @projectId";
 						updateProjectCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 						updateProjectCommand.Parameters.AddWithValue( "@name", Name );
 						updateProjectCommand.Parameters.AddWithValue( "@frequency", UpdateFrequency.TotalMinutes );
 						updateProjectCommand.Parameters.AddWithValue( "@maxResultsPerSearch", MaxResultsPerSearch );
 						updateProjectCommand.Parameters.AddWithValue( "@searchAO3", ( SearchAO3 ? 1 : 0 ) );
 						updateProjectCommand.Parameters.AddWithValue( "@publishesEmail", ( PublishingInfo.UsesEmail ? 1 : 0 ) );
+						updateProjectCommand.Parameters.AddWithValue( "@publishesTumblr", ( PublishingInfo.UsesTumblr ? 1 : 0 ) );
 
 						String emailSender = null;
 						String emailSenderHost = null;
@@ -309,6 +352,20 @@ namespace Bibliothecary.Core
 							emailRecipient = PublishingInfo.RecipientEmail;
 						}
 
+						String tumblrConsumerKey = null;
+						String tumblrConsumerSecret = null;
+						String tumblrOauthToken = null;
+						String tumblrOauthSecret = null;
+						String tumblrBlogName = null;
+						if ( PublishingInfo.UsesTumblr )
+						{
+							tumblrConsumerKey = PublishingInfo.TumblrConsumerKey;
+							tumblrConsumerSecret = PublishingInfo.TumblrConsumerSecret;
+							tumblrOauthToken = PublishingInfo.TumblrOauthToken;
+							tumblrOauthSecret = PublishingInfo.TumblrOauthSecret;
+							tumblrBlogName = PublishingInfo.TumblrBlogName;
+						}
+
 						updateProjectCommand.Parameters.AddWithValue( "@emailSender", emailSender );
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderHost", emailSenderHost );
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderPort", emailSenderPort );
@@ -317,6 +374,11 @@ namespace Bibliothecary.Core
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderUsername", emailSenderUsernameEncrypted );
 						updateProjectCommand.Parameters.AddWithValue( "@emailSenderPassword", emailSenderPasswordEncrpyted );
 						updateProjectCommand.Parameters.AddWithValue( "@emailRecipient", emailRecipient );
+						updateProjectCommand.Parameters.AddWithValue( "@tumblrConsumerKey", tumblrConsumerKey );
+						updateProjectCommand.Parameters.AddWithValue( "@tumblrConsumerSecret", tumblrConsumerSecret );
+						updateProjectCommand.Parameters.AddWithValue( "@tumblrOauthToken", tumblrOauthToken );
+						updateProjectCommand.Parameters.AddWithValue( "@tumblrOauthSecret", tumblrOauthSecret );
+						updateProjectCommand.Parameters.AddWithValue( "@tumblrBlogName", tumblrBlogName );
 
 						Int32 numberRowsAffected = updateProjectCommand.ExecuteNonQuery();
 						if ( numberRowsAffected != 1 )
@@ -450,7 +512,7 @@ namespace Bibliothecary.Core
 				{
 					while ( reader.Read() )
 					{
-						String fanficHandle = reader.GetString( 0 );
+						String fanficHandle = reader.GetStringSafe( 0 );
 						yield return fanficsLookup[fanficHandle];
 					}
 				}
