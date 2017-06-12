@@ -1,11 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Bibliothecary.Core;
 using Bibliothecary.Core.Publishing;
+using DontPanic.TumblrSharp;
+using DontPanic.TumblrSharp.Client;
+using DontPanic.TumblrSharp.OAuth;
 using HeadLibrarian.Dialogs;
 using HeadLibrarian.WPF;
+using DontPanicTumblrClient = DontPanic.TumblrSharp.Client.TumblrClient;
 
 namespace HeadLibrarian.ViewModels
 {
@@ -15,6 +22,7 @@ namespace HeadLibrarian.ViewModels
 		{
 			_projectViewModel = viewModel;
 			_info = info;
+			AvailableTumblrBlogNames = GetTumblrBlogNames();
 		}
 
 		public Boolean UsesEmail
@@ -233,9 +241,12 @@ namespace HeadLibrarian.ViewModels
 
 		public Boolean IsAuthenticatedToTumblr => !String.IsNullOrEmpty( _info.TumblrOauthToken ) && !String.IsNullOrEmpty( _info.TumblrOauthSecret );
 
+		public IEnumerable<String> AvailableTumblrBlogNames { get; private set; }
+
 		void InvokeTumblrOauthChanged()
 		{
 			OnPropertyChanged( nameof( IsAuthenticatedToTumblr ) );
+			OnPropertyChanged( nameof( AvailableTumblrBlogNames ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
 
@@ -333,9 +344,27 @@ namespace HeadLibrarian.ViewModels
 				return;
 			}
 
+			IEnumerable<String> oldBlogNames = AvailableTumblrBlogNames;
+			AvailableTumblrBlogNames = GetTumblrBlogNames();
+
 			_projectViewModel.UndoStack.Push( new SetTumblrOauthUndoAction( this, oldOauthToken, oldOauthSecret,
-				_info.TumblrOauthToken, _info.TumblrOauthSecret ) );
+				_info.TumblrOauthToken, _info.TumblrOauthSecret, oldBlogNames, AvailableTumblrBlogNames ) );
 			InvokeTumblrOauthChanged();
+		}
+
+		IEnumerable<String> GetTumblrBlogNames()
+		{
+			if ( !UsesTumblr || !IsAuthenticatedToTumblr )
+			{
+				return new List<String>();
+			}
+
+			DontPanicTumblrClient client = new DontPanicTumblrClient( new HmacSha1HashProvider(), TumblrConsumerKey, TumblrConsumerSecret,
+				new Token( _info.TumblrOauthToken, _info.TumblrOauthSecret ) );
+			Task<UserInfo> getUserInfoTask = client.GetUserInfoAsync();
+			getUserInfoTask.Wait();
+			List<String> blogNames = getUserInfoTask.Result.Blogs.Select( blog => blog.Name ).ToList();
+			return blogNames;
 		}
 
 		ICommand _provideEmailCredentialsCommand;

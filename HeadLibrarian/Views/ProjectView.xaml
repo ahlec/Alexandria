@@ -30,6 +30,7 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
 		<Grid.ColumnDefinitions>
@@ -67,45 +68,54 @@
 		<TextBlock Grid.Row="3"
 				   Grid.Column="1"
 				   Style="{StaticResource FieldNameLabel}"
+				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Update Frequency:</TextBlock>
+
+		<controls:TimeSpanEditor Grid.Row="3"
+								 Grid.Column="3"
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
+		
+		<TextBlock Grid.Row="4"
+				   Grid.Column="1"
+				   Style="{StaticResource FieldNameLabel}"
 				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Max Results Per Search:</TextBlock>
 
-		<controls:NumericUpDown Grid.Row="3"
+		<controls:NumericUpDown Grid.Row="4"
 								Grid.Column="3"
 								Value="{Binding MaxResultsPerSearch, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
 								MinValue="1"
 								MaxValue="{x:Static system:Int32.MaxValue}"
 								Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
 
-		<TextBlock Grid.Row="4"
+		<TextBlock Grid.Row="5"
 				   Grid.Column="1"
 				   Style="{StaticResource FieldNameLabel}"
 				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Sources:</TextBlock>
 
-		<WrapPanel Grid.Row="4"
+		<WrapPanel Grid.Row="5"
 				   Grid.Column="3"
 				   Orientation="Horizontal"
 				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">
 			<CheckBox IsChecked="{Binding SearchAO3, UpdateSourceTrigger=PropertyChanged}">Archive of Our Own</CheckBox>
 		</WrapPanel>
 
-		<TextBlock Grid.Row="5"
+		<TextBlock Grid.Row="6"
 				   Grid.Column="0"
 				   Grid.ColumnSpan="4"
 				   Style="{StaticResource SectionHeader}"
 				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Search Query</TextBlock>
 
-		<views:LibrarySearchView Grid.Row="6"
+		<views:LibrarySearchView Grid.Row="7"
 								 Grid.Column="1"
 								 Grid.ColumnSpan="3"
 								 DataContext="{Binding SearchQuery}" />
 
-		<TextBlock Grid.Row="7"
+		<TextBlock Grid.Row="8"
 				   Grid.Column="0"
 				   Grid.ColumnSpan="4"
 				   Style="{StaticResource SectionHeader}"
 				   Margin="{StaticResource ProjectViewModelVerticalRowPadding}">Publishing</TextBlock>
-		
-		<views:PublishingInfoView Grid.Row="8"
+
+		<views:PublishingInfoView Grid.Row="9"
 								  Grid.Column="1"
 								  Grid.ColumnSpan="3"
 								  DataContext="{Binding PublishingInfo}" />

@@ -97,8 +97,9 @@
 					IsEnabled="{Binding CanAttemptTumblrAuthentication}">Authenticate</Button>
 
 			<controls:GeneralViewRow FieldName="Blog Name:">
-				<TextBox Text="{Binding TumblrBlogName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-						 IsEnabled="{Binding IsAuthenticatedToTumblr}" />
+				<ComboBox ItemsSource="{Binding AvailableTumblrBlogNames, Mode=OneWay}"
+						  SelectedItem="{Binding TumblrBlogName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+						  IsEnabled="{Binding IsAuthenticatedToTumblr}" />
 			</controls:GeneralViewRow>
 
 		</controls:ToggleSectionContainer>

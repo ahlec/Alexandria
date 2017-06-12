@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security;
 
 namespace HeadLibrarian.ViewModels
@@ -318,19 +319,23 @@ namespace HeadLibrarian.ViewModels
 
 		class SetTumblrOauthUndoAction : BaseUndoAction
 		{
-			public SetTumblrOauthUndoAction( PublishingInfoViewModel viewModel, String oldOauthToken, String oldOauthSecret, String newOauthToken, String newOauthSecret )
+			public SetTumblrOauthUndoAction( PublishingInfoViewModel viewModel, String oldOauthToken, String oldOauthSecret, String newOauthToken, String newOauthSecret,
+				IEnumerable<String> oldBlogNames, IEnumerable<String> newBlogNames )
 			{
 				_viewModel = viewModel;
 				_oldOauthToken = oldOauthToken;
 				_oldOauthSecret = oldOauthSecret;
 				_newOauthToken = newOauthToken;
 				_newOauthSecret = newOauthSecret;
+				_oldBlogNames = oldBlogNames;
+				_newBlogNames = newBlogNames;
 			}
 
 			public override void Undo()
 			{
 				_viewModel._info.SetTumblrOauthToken( _oldOauthToken );
 				_viewModel._info.SetTumblrOauthSecret( _oldOauthSecret );
+				_viewModel.AvailableTumblrBlogNames = _oldBlogNames;
 				_viewModel.InvokeTumblrOauthChanged();
 			}
 
@@ -338,6 +343,7 @@ namespace HeadLibrarian.ViewModels
 			{
 				_viewModel._info.SetTumblrOauthToken( _newOauthToken );
 				_viewModel._info.SetTumblrOauthSecret( _newOauthSecret );
+				_viewModel.AvailableTumblrBlogNames = _newBlogNames;
 				_viewModel.InvokeTumblrOauthChanged();
 			}
 
@@ -346,6 +352,8 @@ namespace HeadLibrarian.ViewModels
 			readonly String _oldOauthSecret;
 			readonly String _newOauthToken;
 			readonly String _newOauthSecret;
+			readonly IEnumerable<String> _oldBlogNames;
+			readonly IEnumerable<String> _newBlogNames;
 		}
 
 		class SetTumblrBlogNameUndoAction : BaseUndoAction
