@@ -72,7 +72,8 @@
 
 		<controls:TimeSpanEditor Grid.Row="3"
 								 Grid.Column="3"
-								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}" />
+								 Margin="{StaticResource ProjectViewModelVerticalRowPadding}"
+								 TimeSpan="{Binding UpdateFrequency, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 		
 		<TextBlock Grid.Row="4"
 				   Grid.Column="1"

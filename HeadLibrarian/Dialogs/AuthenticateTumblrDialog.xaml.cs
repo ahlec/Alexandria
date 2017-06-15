@@ -5,6 +5,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Bibliothecary.Core;
 using DontPanic.TumblrSharp;
 using DontPanic.TumblrSharp.OAuth;
 using HeadLibrarian.WPF;
@@ -13,6 +14,14 @@ namespace HeadLibrarian.Dialogs
 {
 	public partial class AuthenticateTumblrDialog
 	{
+		static AuthenticateTumblrDialog()
+		{
+			if ( Constants.HttpServiceAddress.AbsoluteUri.StartsWith( CallbackPrefix, StringComparison.InvariantCultureIgnoreCase ) )
+			{
+				_bibliothecaryServiceLocalhostPortNumber = Constants.HttpServiceAddress.Port;
+			}
+		}
+
 		public AuthenticateTumblrDialog( String consumerKey, String consumerSecret )
 		{
 			if ( String.IsNullOrEmpty( consumerKey ) )
@@ -44,10 +53,20 @@ namespace HeadLibrarian.Dialogs
 
 		public ICommand CancelCommand { get; }
 
+		Boolean IsValidPortNumber( Int32 callbackPort )
+		{
+			if ( _bibliothecaryServiceLocalhostPortNumber == callbackPort )
+			{
+				return false;
+			}
+
+			return ( callbackPort >= MinPortNumber && callbackPort <= MaxPortNumber );
+		}
+
 		void CommandAuthenticate( Object o )
 		{
 			Int32 callbackPort = CallbackPort;
-			if ( callbackPort < MinPortNumber || callbackPort > MaxPortNumber )
+			if ( !IsValidPortNumber( callbackPort ) )
 			{
 				return;
 			}
@@ -125,6 +144,7 @@ namespace HeadLibrarian.Dialogs
 		public const Int32 MaxPortNumber = UInt16.MaxValue;
 		public const Int32 DefaultPortNumber = 1717;
 
+		static readonly Int32? _bibliothecaryServiceLocalhostPortNumber;
 		readonly String _consumerKey;
 		readonly String _consumerSecret;
 		readonly Object _authenticationThreadLock = new Object();

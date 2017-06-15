@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
-using Alexandria;
-using Alexandria.Model;
-using Alexandria.RequestHandles;
-using Bibliothecary.Core;
+﻿using System.ServiceProcess;
 
 namespace Bibliothecary
 {
@@ -15,12 +6,7 @@ namespace Bibliothecary
 	{
 		static void Main()
 		{
-			ServiceBase[] ServicesToRun;
-			ServicesToRun = new ServiceBase[]
-			{
-				new Bibliothecary()
-			};
-			ServiceBase.Run( ServicesToRun );
+			ServiceBase.Run( new ServiceBase[] { new WindowsNativeService() } );
 		}
 	}
 }

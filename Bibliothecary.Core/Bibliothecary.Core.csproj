@@ -63,6 +63,7 @@
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.105.1\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -75,6 +76,7 @@
     <Compile Include="Database.cs" />
     <Compile Include="DatabaseFunctions\DataReaderExtensions.cs" />
     <Compile Include="DatabaseFunctions\GeneralDatabaseFunctions.cs" />
+    <Compile Include="IBibliothecaryService.cs" />
     <Compile Include="Project.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishingInfo.cs" />
