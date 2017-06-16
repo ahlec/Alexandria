@@ -1,23 +1,26 @@
 ﻿using System;
+using System.ServiceModel;
 using Bibliothecary.Core;
 
 namespace Bibliothecary
 {
+	[ServiceBehavior( InstanceContextMode = InstanceContextMode.Single )]
 	public sealed class BibliothecaryService : IBibliothecaryService
 	{
 		public void RestartProjectTimer()
 		{
-			throw new NotImplementedException();
 		}
 
 		public void RefreshProjects()
 		{
-			throw new NotImplementedException();
 		}
 
 		public void AggregateProjectsNow()
 		{
-			throw new NotImplementedException();
+		}
+
+		public void MarkTimeElapsed( Double time )
+		{
 		}
 	}
 }
