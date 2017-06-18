@@ -1,11 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.ServiceModel;
 using System.ServiceProcess;
 using System.Timers;
 using Bibliothecary.Core;
-using Bibliothecary.Extensions;
+using NLog;
 
 namespace Bibliothecary
 {
@@ -14,14 +13,6 @@ namespace Bibliothecary
 	{
 		public WindowsNativeService()
 		{
-			_log = new EventLog();
-			if ( !EventLog.SourceExists( Constants.ServiceEventLogSource ) )
-			{
-				EventLog.CreateEventSource( Constants.ServiceEventLogSource, Constants.WindowsNativeServiceEventLogName );
-			}
-			_log.Source = Constants.ServiceEventLogSource;
-			_log.Log = Constants.WindowsNativeServiceEventLogName;
-
 			_timer = new Timer( PollingTimeMilliseconds );
 			_timer.Elapsed += OnPollingTimerElapsed;
 
@@ -35,10 +26,12 @@ namespace Bibliothecary
 				_serviceHost = new ServiceHost( _bibliothecary, Constants.HttpServiceAddress );
 				_serviceHost.Open();
 				_timer.Start();
+				_log.Info( $"{nameof( WindowsNativeService )} has started successfully." );
+				_log.Info( $"Bibliothecary polling is occurring on a {_pollingTimeTimeSpan} interval" );
 			}
 			catch ( Exception ex )
 			{
-				_log.WriteException( ex );
+				_log.Error( ex );
 			}
 		}
 
@@ -48,10 +41,11 @@ namespace Bibliothecary
 			{
 				_timer.Stop();
 				_serviceHost.Close();
+				_log.Info( $"{nameof( WindowsNativeService )} has stopped successfully." );
 			}
 			catch ( Exception ex )
 			{
-				_log.WriteException( ex );
+				_log.Error( ex );
 			}
 		}
 
@@ -59,16 +53,17 @@ namespace Bibliothecary
 		{
 			try
 			{
-				_bibliothecary.MarkTimeElapsed( PollingTimeMilliseconds );
+				_bibliothecary.MarkTimeElapsed( _pollingTimeTimeSpan );
 			}
 			catch ( Exception ex )
 			{
-				_log.WriteException( ex );
+				_log.Error( ex );
 			}
 		}
 
-		const Double PollingTimeMilliseconds = 10 * 60 * 1000; // 10 minutes
-		readonly EventLog _log;
+		const Double PollingTimeMilliseconds = 2.5 * 60 * 1000; // 10 minutes
+		static readonly TimeSpan _pollingTimeTimeSpan = TimeSpan.FromMilliseconds( PollingTimeMilliseconds );
+		static readonly Logger _log = LogManager.GetCurrentClassLogger();
 		readonly Timer _timer;
 		readonly BibliothecaryService _bibliothecary;
 		ServiceHost _serviceHost;

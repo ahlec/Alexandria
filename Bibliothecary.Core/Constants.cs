@@ -8,8 +8,6 @@ namespace Bibliothecary.Core
 		public const String DatabaseFilename = "bibliothecary.sqlite";
 		public static readonly Uri HttpServiceAddress = new Uri( "http://localhost:1700" );
 		public const String ServiceEndpoint = "Bibliothecary";
-		public const String ServiceEventLogSource = "Bibliothecary";
-		public const String ServiceEventLogName = "Bibliothecary (main)";
-		public const String WindowsNativeServiceEventLogName = "Bibliothecary (ServiceHost)";
+		public const String LogFilename = "bibliothecary.log";
 	}
 }

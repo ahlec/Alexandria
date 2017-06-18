@@ -1,4 +1,5 @@
 ﻿using System;
+using Alexandria.Model;
 
 namespace Bibliothecary.Core.Publishing
 {
@@ -13,5 +14,10 @@ namespace Bibliothecary.Core.Publishing
 		public String OauthTokenSecret { get; set; }
 
 		public String BlogName { get; set; }
+
+		public void Post( IFanfic fanfic )
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
