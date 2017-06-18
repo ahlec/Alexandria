@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security;
+using Bibliothecary.Core.Publishing;
 
 namespace Bibliothecary.Core
 {
@@ -39,6 +42,11 @@ namespace Bibliothecary.Core
 		public String TumblrOauthSecret { get; internal set; }
 
 		public String TumblrBlogName { get; internal set; }
+
+		public Boolean AreTumblrPostsQueued { get; internal set; }
+
+		public IReadOnlyList<TumblrTagRule> TumblrTags => ConcreteTumblrTags;
+		internal List<TumblrTagRule> ConcreteTumblrTags { get; } = new List<TumblrTagRule>();
 
 		public Boolean SetUsesEmail( Boolean value )
 		{
@@ -189,7 +197,7 @@ namespace Bibliothecary.Core
 		{
 			if ( !UsesTumblr )
 			{
-				throw new InvalidOperationException( $"Cannot set {nameof( TumblrConsumerKey )} when ({nameof( UsesTumblr )} is false." );
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrConsumerKey )} when {nameof( UsesTumblr )} is false." );
 			}
 
 			if ( String.Equals( TumblrConsumerKey, consumerKey, StringComparison.InvariantCulture ) )
@@ -205,7 +213,7 @@ namespace Bibliothecary.Core
 		{
 			if ( !UsesTumblr )
 			{
-				throw new InvalidOperationException( $"Cannot set {nameof( TumblrConsumerKey )} when ({nameof( UsesTumblr )} is false." );
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrConsumerKey )} when {nameof( UsesTumblr )} is false." );
 			}
 
 			if ( String.Equals( TumblrConsumerSecret, consumerSecret, StringComparison.InvariantCulture ) )
@@ -221,7 +229,7 @@ namespace Bibliothecary.Core
 		{
 			if ( !UsesTumblr )
 			{
-				throw new InvalidOperationException( $"Cannot set {nameof( TumblrOauthToken )} when ({nameof( UsesTumblr )} is false." );
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrOauthToken )} when {nameof( UsesTumblr )} is false." );
 			}
 
 			if ( String.Equals( TumblrOauthToken, oauthToken, StringComparison.InvariantCulture ) )
@@ -237,7 +245,7 @@ namespace Bibliothecary.Core
 		{
 			if ( !UsesTumblr )
 			{
-				throw new InvalidOperationException( $"Cannot set {nameof( TumblrOauthSecret )} when ({nameof( UsesTumblr )} is false." );
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrOauthSecret )} when {nameof( UsesTumblr )} is false." );
 			}
 
 			if ( String.Equals( TumblrOauthSecret, oauthSecret, StringComparison.InvariantCulture ) )
@@ -253,7 +261,7 @@ namespace Bibliothecary.Core
 		{
 			if ( !UsesTumblr )
 			{
-				throw new InvalidOperationException( $"Cannot set {nameof( TumblrBlogName )} when ({nameof( UsesTumblr )} is false." );
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrBlogName )} when {nameof( UsesTumblr )} is false." );
 			}
 
 			if ( String.Equals( TumblrBlogName, blogName, StringComparison.InvariantCultureIgnoreCase ) )
@@ -265,9 +273,117 @@ namespace Bibliothecary.Core
 			return true;
 		}
 
+		public Boolean SetAreTumblrPostsQueued( Boolean value )
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrBlogName )} when {nameof( UsesTumblr )} is false." );
+			}
+
+			if ( value == AreTumblrPostsQueued )
+			{
+				return false;
+			}
+
+			AreTumblrPostsQueued = value;
+			return true;
+		}
+
+		public Boolean AddTumblrTag( TumblrTagRule tag, Int32 index = -1 )
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrBlogName )} when {nameof( UsesTumblr )} is false." );
+			}
+
+			if ( tag == null )
+			{
+				throw new ArgumentNullException( nameof( tag ) );
+			}
+
+			if ( TumblrTags.Any( tag.Equals ) )
+			{
+				return false; // Basically expecting this to never happen, because GUID equality
+			}
+
+			if ( index < 0 || index >= ConcreteTumblrTags.Count )
+			{
+				ConcreteTumblrTags.Add( tag );
+			}
+			else
+			{
+				ConcreteTumblrTags.Insert( index, tag );
+			}
+			return true;
+		}
+
+		public Boolean RemoveTumblrTag( TumblrTagRule tag, out Int32 oldIndex )
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot set {nameof( TumblrBlogName )} when {nameof( UsesTumblr )} is false." );
+			}
+
+			if ( tag == null )
+			{
+				throw new ArgumentNullException( nameof( tag ) );
+			}
+
+			oldIndex = ConcreteTumblrTags.IndexOf( tag );
+			if ( oldIndex < 0 )
+			{
+				return false;
+			}
+			ConcreteTumblrTags.RemoveAt( oldIndex );
+			return true;
+		}
+
+		public EmailClient CreateEmailClient()
+		{
+			if ( !UsesEmail )
+			{
+				throw new InvalidOperationException( $"Cannot create a new {nameof( EmailClient )} when {nameof( UsesEmail )} is false." );
+			}
+
+			EmailClient client = new EmailClient
+			{
+				FromEmail = SenderEmail,
+				Host = SenderHost,
+				Port = SenderPort,
+				EnableSsl = DoesSenderUseSsl,
+				ToEmail = RecipientEmail
+			};
+
+			if ( DoesSenderRequireCredentials )
+			{
+				client.SetCredentials( SenderUsername, SenderPassword );
+			}
+
+			return client;
+		}
+
+		public TumblrClient CreateTumblrClient()
+		{
+			if ( !UsesTumblr )
+			{
+				throw new InvalidOperationException( $"Cannot create a new {nameof( TumblrClient )} when {nameof( UsesTumblr )} is false." );
+			}
+
+			return new TumblrClient
+			{
+				ConsumerKey = TumblrConsumerKey,
+				ConsumerSecret = TumblrConsumerSecret,
+				OauthToken = TumblrOauthToken,
+				OauthTokenSecret = TumblrOauthSecret,
+				BlogName = TumblrBlogName,
+				ArePostsQueued = AreTumblrPostsQueued,
+				TagRules = TumblrTags
+			};
+		}
+
 		public PublishingInfo Clone()
 		{
-			return new PublishingInfo( _projectId )
+			PublishingInfo clone = new PublishingInfo( _projectId )
 			{
 				UsesEmail = UsesEmail,
 				SenderEmail = SenderEmail,
@@ -283,8 +399,11 @@ namespace Bibliothecary.Core
 				TumblrConsumerSecret = TumblrConsumerSecret,
 				TumblrOauthToken = TumblrOauthToken,
 				TumblrOauthSecret = TumblrOauthSecret,
-				TumblrBlogName = TumblrBlogName
+				TumblrBlogName = TumblrBlogName,
+				AreTumblrPostsQueued = AreTumblrPostsQueued
 			};
+			clone.ConcreteTumblrTags.AddRange( TumblrTags.Select( tag => tag.Clone() ) );
+			return clone;
 		}
 
 		public Boolean Equals( PublishingInfo other )
@@ -358,6 +477,21 @@ namespace Bibliothecary.Core
 				}
 
 				if ( !String.Equals( TumblrBlogName, other.TumblrBlogName, StringComparison.InvariantCultureIgnoreCase ) )
+				{
+					return false;
+				}
+
+				if ( AreTumblrPostsQueued != other.AreTumblrPostsQueued )
+				{
+					return false;
+				}
+
+				if ( TumblrTags.Count != other.TumblrTags.Count )
+				{
+					return false;
+				}
+
+				if ( TumblrTags.Count > 0 && TumblrTags.Where( ( tag, index ) => !tag.ContentEquals( other.TumblrTags[index] ) ).Any() )
 				{
 					return false;
 				}

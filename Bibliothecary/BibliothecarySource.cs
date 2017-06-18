@@ -31,32 +31,13 @@ namespace Bibliothecary
 			EmailClient emailClient = null;
 			if ( project.PublishingInfo.UsesEmail )
 			{
-				emailClient = new EmailClient
-				{
-					FromEmail = project.PublishingInfo.SenderEmail,
-					Host = project.PublishingInfo.SenderHost,
-					Port = project.PublishingInfo.SenderPort,
-					EnableSsl = project.PublishingInfo.DoesSenderUseSsl,
-					ToEmail = project.PublishingInfo.RecipientEmail
-				};
-
-				if ( project.PublishingInfo.DoesSenderRequireCredentials )
-				{
-					emailClient.SetCredentials( project.PublishingInfo.SenderUsername, project.PublishingInfo.SenderPassword );
-				}
+				emailClient = project.PublishingInfo.CreateEmailClient();
 				log.Info( $"-> Set up {nameof( emailClient )} to send to {project.PublishingInfo.RecipientEmail}" );
 			}
 			TumblrClient tumblrClient = null;
 			if ( project.PublishingInfo.UsesTumblr )
 			{
-				tumblrClient = new TumblrClient
-				{
-					ConsumerKey = project.PublishingInfo.TumblrConsumerKey,
-					ConsumerSecret = project.PublishingInfo.TumblrConsumerSecret,
-					OauthToken = project.PublishingInfo.TumblrOauthToken,
-					OauthTokenSecret = project.PublishingInfo.TumblrOauthSecret,
-					BlogName = project.PublishingInfo.TumblrBlogName
-				};
+				tumblrClient = project.PublishingInfo.CreateTumblrClient();
 				log.Info( $"-> Set up {nameof( tumblrClient )} to post to {project.PublishingInfo.TumblrBlogName}" );
 			}
 
@@ -94,8 +75,8 @@ namespace Bibliothecary
 				Boolean didSuccessfullyReport = true;
 				try
 				{
-					emailClient?.SendMail( fanfic );
-					tumblrClient?.Post( fanfic );
+					//emailClient?.SendMail( fanfic );
+					tumblrClient?.Post( fanfic, Source );
 				}
 				catch ( Exception ex )
 				{

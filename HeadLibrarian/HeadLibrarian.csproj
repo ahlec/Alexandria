@@ -108,6 +108,9 @@
     <Compile Include="Controls\ToggleSectionContainer.xaml.cs">
       <DependentUpon>ToggleSectionContainer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\TumblrTagRuleListEditor.xaml.cs">
+      <DependentUpon>TumblrTagRuleListEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
@@ -142,6 +145,8 @@
     <Compile Include="ViewModels\PublishingInfoViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\StringListViewModel.cs" />
     <Compile Include="ViewModels\StringListViewModel.UndoCommands.cs" />
+    <Compile Include="ViewModels\TumblrTagRuleListViewModel.cs" />
+    <Compile Include="ViewModels\TumblrTagRuleListViewModel.UndoCommands.cs" />
     <Compile Include="Views\LibrarySearchView.xaml.cs">
       <DependentUpon>LibrarySearchView.xaml</DependentUpon>
     </Compile>
@@ -181,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ToggleSectionContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\TumblrTagRuleListEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

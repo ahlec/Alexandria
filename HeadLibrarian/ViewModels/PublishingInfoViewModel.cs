@@ -23,6 +23,7 @@ namespace HeadLibrarian.ViewModels
 			_projectViewModel = viewModel;
 			_info = info;
 			AvailableTumblrBlogNames = GetTumblrBlogNames();
+			TumblrTags = new TumblrTagRuleListViewModel( viewModel );
 		}
 
 		public Boolean UsesEmail
@@ -269,6 +270,28 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( TumblrBlogName ) );
 			_projectViewModel.RefreshHasSavedChanged();
 		}
+
+		public Boolean AreTumblrPostsQueued
+		{
+			get => _info.AreTumblrPostsQueued;
+			set
+			{
+				Boolean oldValue = AreTumblrPostsQueued;
+				if ( _info.SetAreTumblrPostsQueued( value ) )
+				{
+					_projectViewModel.UndoStack.Push( new SetAreTumblrPostsQueuedUndoAction( this, oldValue, value ) );
+					InvokeAreTumblrPostsQueuedChanged();
+				}
+			}
+		}
+
+		void InvokeAreTumblrPostsQueuedChanged()
+		{
+			OnPropertyChanged( nameof( AreTumblrPostsQueued ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
+		public TumblrTagRuleListViewModel TumblrTags { get; }
 
 		public ICommand ProvideEmailCredentialsCommand => ( _provideEmailCredentialsCommand ?? ( _provideEmailCredentialsCommand = new Command( null, CommandProvideEmailCredentials ) ) );
 

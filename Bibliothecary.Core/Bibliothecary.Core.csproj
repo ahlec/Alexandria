@@ -82,6 +82,7 @@
     <Compile Include="PublishingInfo.cs" />
     <Compile Include="Publishing\EmailClient.cs" />
     <Compile Include="Publishing\TumblrClient.cs" />
+    <Compile Include="Publishing\TumblrTagRule.cs" />
     <Compile Include="Schema\SchemaUpdater.cs" />
     <Compile Include="Schema\SchemaVersion.cs" />
     <Compile Include="Schema\Version0.cs" />

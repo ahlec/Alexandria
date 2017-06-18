@@ -30,7 +30,8 @@ namespace Bibliothecary.Core.Schema
 					tumblr_consumer_secret        VARCHAR,
 					tumblr_oauth_token            VARCHAR,
 					tumblr_oauth_secret           VARCHAR,
-					tumblr_blog_name              VARCHAR );", connection );
+					tumblr_blog_name              VARCHAR,
+					tumblr_queue_posts            INTEGER );", connection );
 			createProjects.ExecuteNonQuery();
 
 			SQLiteCommand createProjectSearchFields = new SQLiteCommand( @"CREATE TABLE project_search_fields (
@@ -40,6 +41,11 @@ namespace Bibliothecary.Core.Schema
 			SQLiteCommand createProjectReportedQueryResults = new SQLiteCommand( @"CREATE TABLE project_reported_query_results(
 				project_id INTEGER REFERENCES projects( project_id ) NOT NULL, source VARCHAR NOT NULL, fanfic_handle VARCHAR NOT NULL UNIQUE );", connection );
 			createProjectReportedQueryResults.ExecuteNonQuery();
+
+			SQLiteCommand createTumblrTags = new SQLiteCommand( @"CREATE TABLE tumblr_tags (
+					project_id INTEGER REFERENCES projects ( project_id ),
+					tag        TEXT    NOT NULL );", connection );
+			createTumblrTags.ExecuteNonQuery();
 
 			return true;
 		}

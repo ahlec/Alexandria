@@ -102,6 +102,13 @@
 						  IsEnabled="{Binding IsAuthenticatedToTumblr}" />
 			</controls:GeneralViewRow>
 
+			<controls:GeneralViewRow FieldName="Queue Posts:">
+				<CheckBox IsChecked="{Binding AreTumblrPostsQueued, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+			</controls:GeneralViewRow>
+			
+			<controls:GeneralViewRow FieldName="Tags:">
+				<controls:TumblrTagRuleListEditor DataContext="{Binding TumblrTags}"></controls:TumblrTagRuleListEditor>
+			</controls:GeneralViewRow>
 		</controls:ToggleSectionContainer>
 	</StackPanel>
 </UserControl>

@@ -5,6 +5,7 @@ using System.Text;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
 using Bibliothecary.Core.DatabaseFunctions;
+using Bibliothecary.Core.Publishing;
 using Bibliothecary.Core.Utils;
 
 namespace Bibliothecary.Core
@@ -239,7 +240,8 @@ namespace Bibliothecary.Core
 				tumblr_consumer_secret,
 				tumblr_oauth_token,
 				tumblr_oauth_secret,
-				tumblr_blog_name
+				tumblr_blog_name,
+				tumblr_queue_posts
 				FROM projects WHERE project_id = @projectId", database.Connection ) )
 			{
 				selectBasicDataCommand.Parameters.AddWithValue( "@projectId", projectId );
@@ -282,10 +284,27 @@ namespace Bibliothecary.Core
 						parsed.PublishingInfo.TumblrOauthToken = reader.GetStringSafe( 16 );
 						parsed.PublishingInfo.TumblrOauthSecret = reader.GetStringSafe( 17 );
 						parsed.PublishingInfo.TumblrBlogName = reader.GetStringSafe( 18 );
+						parsed.PublishingInfo.AreTumblrPostsQueued = ( reader.GetInt32( 19 ) != 0 );
 					}
 				}
 			}
 			parsed.SearchQuery = LibrarySearchUtils.ReadFromDatabase( database.Connection, projectId );
+
+			if ( parsed.PublishingInfo.UsesTumblr )
+			{
+				using ( SQLiteCommand selectTumblrTagsCommand = new SQLiteCommand( "SELECT tag FROM tumblr_tags WHERE project_id = @projectId", database.Connection ) )
+				{
+					selectTumblrTagsCommand.Parameters.AddWithValue( "@projectId", projectId );
+					using ( SQLiteDataReader reader = selectTumblrTagsCommand.ExecuteReader() )
+					{
+						while ( reader.Read() )
+						{
+							TumblrTagRule tag = new TumblrTagRule( reader.GetStringSafe( 0 ) );
+							parsed.PublishingInfo.ConcreteTumblrTags.Add( tag );
+						}
+					}
+				}
+			}
 
 			parsed.MarkLastSavedData();
 
@@ -319,7 +338,8 @@ namespace Bibliothecary.Core
 							tumblr_consumer_secret = @tumblrConsumerSecret,
 							tumblr_oauth_token = @tumblrOauthToken,
 							tumblr_oauth_secret = @tumblrOauthSecret,
-							tumblr_blog_name = @tumblrBlogName
+							tumblr_blog_name = @tumblrBlogName,
+							tumblr_queue_posts = @tumblrQueuePosts
 							WHERE project_id = @projectId";
 						updateProjectCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 						updateProjectCommand.Parameters.AddWithValue( "@name", Name );
@@ -357,6 +377,7 @@ namespace Bibliothecary.Core
 						String tumblrOauthToken = null;
 						String tumblrOauthSecret = null;
 						String tumblrBlogName = null;
+						Int32 tumblrQueuePosts = 0;
 						if ( PublishingInfo.UsesTumblr )
 						{
 							tumblrConsumerKey = PublishingInfo.TumblrConsumerKey;
@@ -364,6 +385,7 @@ namespace Bibliothecary.Core
 							tumblrOauthToken = PublishingInfo.TumblrOauthToken;
 							tumblrOauthSecret = PublishingInfo.TumblrOauthSecret;
 							tumblrBlogName = PublishingInfo.TumblrBlogName;
+							tumblrQueuePosts = ( PublishingInfo.AreTumblrPostsQueued ? 1 : 0 );
 						}
 
 						updateProjectCommand.Parameters.AddWithValue( "@emailSender", emailSender );
@@ -379,6 +401,7 @@ namespace Bibliothecary.Core
 						updateProjectCommand.Parameters.AddWithValue( "@tumblrOauthToken", tumblrOauthToken );
 						updateProjectCommand.Parameters.AddWithValue( "@tumblrOauthSecret", tumblrOauthSecret );
 						updateProjectCommand.Parameters.AddWithValue( "@tumblrBlogName", tumblrBlogName );
+						updateProjectCommand.Parameters.AddWithValue( "@tumblrQueuePosts", tumblrQueuePosts );
 
 						Int32 numberRowsAffected = updateProjectCommand.ExecuteNonQuery();
 						if ( numberRowsAffected != 1 )
@@ -426,6 +449,46 @@ namespace Bibliothecary.Core
 						}
 					}
 
+					HashSet<TumblrTagRule> lastSavedTumblrTags = new HashSet<TumblrTagRule>( _lastSavedPublishingInfo.TumblrTags, new TumblrTagRuleContentEqualityComparer() );
+					if ( PublishingInfo.UsesTumblr )
+					{
+						foreach ( TumblrTagRule tag in PublishingInfo.TumblrTags )
+						{
+							if ( lastSavedTumblrTags.Remove( tag ) )
+							{
+								// This configuration is already in the database
+								continue;
+							}
+
+							using ( SQLiteCommand insertTagCommand = new SQLiteCommand( _database.Connection ) )
+							{
+								insertTagCommand.CommandText = "INSERT INTO tumblr_tags( project_id, tag ) VALUES( @projectId, @tagText )";
+								insertTagCommand.Parameters.AddWithValue( "@projectId", ProjectId );
+								insertTagCommand.Parameters.AddWithValue( "@tagText", tag.Tag );
+								Int32 numberRowsAffected = insertTagCommand.ExecuteNonQuery();
+								if ( numberRowsAffected != 1 )
+								{
+									throw new ApplicationException( $"Unable to insert a {nameof( TumblrTagRule )} into tumblr_tags ( tag = {tag.Tag} )" );
+								}
+							}
+						}
+					}
+
+					foreach ( TumblrTagRule removedTag in lastSavedTumblrTags )
+					{
+						using ( SQLiteCommand deleteTagCommand = new SQLiteCommand( _database.Connection ) )
+						{
+							deleteTagCommand.CommandText = "DELETE FROM tumblr_tags WHERE project_id = @projectId AND tag = @tagText";
+							deleteTagCommand.Parameters.AddWithValue( "@projectId", ProjectId );
+							deleteTagCommand.Parameters.AddWithValue( "@tagText", removedTag.Tag );
+							Int32 numberRowsAffected = deleteTagCommand.ExecuteNonQuery();
+							if ( numberRowsAffected != 1 )
+							{
+								throw new ApplicationException( $"Unable to delete a {nameof( TumblrTagRule )} from tumblr_tags ( tag = {removedTag.Tag}, project_id = {ProjectId} )" );
+							}
+						}
+					}
+
 					transaction.Commit();
 				}
 				catch
@@ -444,6 +507,20 @@ namespace Bibliothecary.Core
 			{
 				try
 				{
+					using ( SQLiteCommand deleteFromTumblrTagsCommand = new SQLiteCommand( _database.Connection ) )
+					{
+						deleteFromTumblrTagsCommand.CommandText = "DELETE FROM tumblr_tags WHERE project_id = @projectId";
+						deleteFromTumblrTagsCommand.Parameters.AddWithValue( "@projectId", ProjectId );
+						deleteFromTumblrTagsCommand.ExecuteNonQuery();
+					}
+
+					using ( SQLiteCommand deleteFromReportedQueryResultsCommand = new SQLiteCommand( _database.Connection ) )
+					{
+						deleteFromReportedQueryResultsCommand.CommandText = "DELETE FROM project_reported_query_results WHERE project_id = @projectId";
+						deleteFromReportedQueryResultsCommand.Parameters.AddWithValue( "@projectId", ProjectId );
+						deleteFromReportedQueryResultsCommand.ExecuteNonQuery();
+					}
+
 					using ( SQLiteCommand deleteFromProjectsCommand = new SQLiteCommand( _database.Connection ) )
 					{
 						deleteFromProjectsCommand.CommandText = "DELETE FROM projects WHERE project_id = @projectId";
@@ -519,7 +596,7 @@ namespace Bibliothecary.Core
 			}
 		}
 
-		public Boolean MarkFanficsAsReported( IEnumerable<IFanficRequestHandle> fanfics, String source )
+		public void MarkFanficsAsReported( IEnumerable<IFanficRequestHandle> fanfics, String source )
 		{
 			using ( SQLiteTransaction transaction = _database.Connection.BeginTransaction() )
 			{
@@ -542,12 +619,11 @@ namespace Bibliothecary.Core
 					}
 
 					transaction.Commit();
-					return true;
 				}
-				catch
+				catch ( Exception )
 				{
 					transaction.Rollback();
-					return false;
+					throw;
 				}
 			}
 		}

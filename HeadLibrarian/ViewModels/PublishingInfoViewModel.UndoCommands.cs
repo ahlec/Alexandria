@@ -381,5 +381,31 @@ namespace HeadLibrarian.ViewModels
 			readonly String _oldValue;
 			readonly String _newValue;
 		}
+
+		class SetAreTumblrPostsQueuedUndoAction : BaseUndoAction
+		{
+			public SetAreTumblrPostsQueuedUndoAction( PublishingInfoViewModel viewModel, Boolean oldValue, Boolean newValue )
+			{
+				_viewModel = viewModel;
+				_oldValue = oldValue;
+				_newValue = newValue;
+			}
+
+			public override void Undo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetAreTumblrPostsQueued( _oldValue ) );
+				_viewModel.InvokeAreTumblrPostsQueuedChanged();
+			}
+
+			public override void Redo()
+			{
+				AssertModelSetFunction( _viewModel._info.SetAreTumblrPostsQueued( _newValue ) );
+				_viewModel.InvokeAreTumblrPostsQueuedChanged();
+			}
+
+			readonly PublishingInfoViewModel _viewModel;
+			readonly Boolean _oldValue;
+			readonly Boolean _newValue;
+		}
 	}
 }
