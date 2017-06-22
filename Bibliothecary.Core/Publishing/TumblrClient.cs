@@ -1,15 +1,16 @@
-﻿//#define POST_AS_TEXT
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
+using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Alexandria;
 using Alexandria.Model;
+using Bibliothecary.Core.Utils;
 using DontPanic.TumblrSharp;
 using DontPanic.TumblrSharp.OAuth;
 using TumblrSharpTumblrClient = DontPanic.TumblrSharp.Client.TumblrClient;
@@ -44,64 +45,58 @@ namespace Bibliothecary.Core.Publishing
 
 			TumblrSharpTumblrClient client = _clientFactory.Create<TumblrSharpTumblrClient>( ConsumerKey, ConsumerSecret, new Token( OauthToken, OauthTokenSecret ) );
 
-#if POST_AS_TEXT
-			String body = ComposePostBox( fanfic, author );
-			PostData post = PostData.CreateText( body, null, tags );
-#else
 			IEnumerable<BinaryFile> photos = CreatePostPhotos( fanfic, author );
 			String caption = $"Read the fanfic on AO3 <a href=\"{fanfic.Url}\" target=\"_blank\">here</a>";
 			PostData post = PostData.CreatePhoto( photos, caption, fanfic.Url.AbsoluteUri, tags );
-#endif
 			post.State = ( ArePostsQueued ? PostCreationState.Queue : PostCreationState.Published );
 			post.Format = PostFormat.Html;
 			client.CreatePostAsync( BlogName, post );
 		}
 
-#if POST_AS_TEXT
-		static String ComposePostBox( IFanfic fanfic, IAuthor author )
-		{
-			StringBuilder body = new StringBuilder();
-			body.AppendLine( $"<a href=\"{fanfic.Url}\" target=\"_blank\"><h2>{fanfic.Title}</h2></a>" );
-			body.AppendLine( "<br />" );
-			body.AppendLine( $"<i><small>by <a href=\"{author.Url}\" target=\"_blank\">{author.Name}</a></small></i>" );
-			body.AppendLine( "<hr />" );
-			body.Append( "<p><small>" );
-			body.Append( $"<strong>{fanfic.Rating}</strong> &bull; " );
-			if ( fanfic.ContentWarnings != ContentWarnings.None )
-			{
-				foreach ( ContentWarnings warning in Enum.GetValues( typeof( ContentWarnings ) ) )
-				{
-					if ( fanfic.ContentWarnings.HasFlag( warning ) )
-					{
-						body.Append( $"{warning} &bull; " );
-					}
-				}
-			}
-			body.AppendLine( $"<strong>{fanfic.NumberWords.ToString( CultureInfo.InvariantCulture.NumberFormat )}</strong>" );
-			body.AppendLine( "</small></p>" );
-			body.AppendLine( "<hr />" );
-			body.Append( "<blockquote>" );
-			body.Append( fanfic.Summary );
-			body.Append( "</blockquote>" );
-			body.Append( $"<small><a href=\"{fanfic.Url}\" target=\"_blank\">Read on AO3</a></small>" );
-			return body.ToString();
-		}
-#else
 		static IReadOnlyList<BinaryFile> CreatePostPhotos( IFanfic fanfic, IAuthor author )
 		{
-			using ( TumblrPhotosetGenerator generator = new TumblrPhotosetGenerator() )
+			using ( Bitmap workspace = new Bitmap( TumblrPhotosetUtils.TumblrPhotoWidth, PhotosetWorkspaceHeight ) )
 			{
-				Int32 currentY = PhotosetPadding;
-				currentY = generator.DrawCenteredWrappingText( PhotosetPadding, currentY,
-					TumblrPhotosetGenerator.TumblrPhotoWidth - PhotosetPadding * 2, fanfic.Title, TumblrPhotosetFont.Title, 24,
-					Brushes.Black ).BottomY;
-				currentY = generator.DrawHorizontalLine( currentY + PhotosetPadding, Brushes.Black, 2 ).BottomY;
-				return generator.BinaryFiles.ToList();
+				Single currentY = PhotosetPadding;
+				using ( Graphics g = Graphics.FromImage( workspace ) )
+				{
+					g.TextRenderingHint = TextRenderingHint.AntiAlias;
+					g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+					g.CompositingMode = CompositingMode.SourceCopy;
+					g.CompositingQuality = CompositingQuality.HighQuality;
+
+					DrawPhotosetHeader( g, ref currentY, fanfic, author );
+				}
+
+				return TumblrPhotosetUtils.SliceForPhotoset( workspace, (Int32) Math.Ceiling( currentY ) ).ToList();
 			}
 		}
-#endif
+
+		static void DrawPhotosetHeader( Graphics g, ref Single currentY, IFanfic fanfic, IAuthor author )
+		{
+			// Title
+			Font titleFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Title, 24 );
+			Single titleTextHeight = g.MeasureString( fanfic.Title, titleFont, new SizeF( UsableSpaceWidth, 0 ) ).Height;
+			g.DrawString( fanfic.Title, titleFont, Brushes.Black, new RectangleF( PhotosetPadding, currentY, UsableSpaceWidth, titleTextHeight ), _horizontalCenterAlignment );
+			currentY += titleTextHeight;
+
+			// Author
+			Font authorFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Title, 11, FontStyle.Italic );
+			Single authorTextHeight = g.MeasureString( author.Name, authorFont, new SizeF( UsableSpaceWidth, 0 ) ).Height;
+			g.DrawString( author.Name, authorFont, Brushes.Gray, new RectangleF( PhotosetPadding, currentY, UsableSpaceWidth, authorTextHeight ), _horizontalCenterAlignment );
+			currentY += authorTextHeight;
+			currentY += PhotosetPadding;
+		}
 
 		static readonly TumblrClientFactory _clientFactory = new TumblrClientFactory();
 		const Int32 PhotosetPadding = 6;
+		const Int32 MaxNumberTumblrPhotos = 3;
+		const Int32 PhotosetWorkspaceHeight = TumblrPhotosetUtils.TumblrPhotoHeight * MaxNumberTumblrPhotos;
+		const Int32 UsableSpaceWidth = TumblrPhotosetUtils.TumblrPhotoWidth - PhotosetPadding * 2;
+		static readonly StringFormat _horizontalCenterAlignment = new StringFormat
+		{
+			Alignment = StringAlignment.Center,
+			Trimming = StringTrimming.None
+		};
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace Bibliothecary.Core.Publishing
+﻿namespace Bibliothecary.Core.Utils
 {
 	internal enum TumblrPhotosetFont
 	{

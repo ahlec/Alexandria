@@ -83,10 +83,9 @@
     <Compile Include="PublishingInfo.cs" />
     <Compile Include="Publishing\EmailClient.cs" />
     <Compile Include="Publishing\TumblrClient.cs" />
-    <Compile Include="Publishing\TumblrPhotosetFont.cs" />
-    <Compile Include="Publishing\TumblrPhotosetGenerator.cs" />
+    <Compile Include="Utils\TumblrPhotosetFont.cs" />
+    <Compile Include="Utils\TumblrPhotosetUtils.cs" />
     <Compile Include="Publishing\TumblrTagRule.cs" />
-    <Compile Include="Publishing\VerticalBounds.cs" />
     <Compile Include="Schema\SchemaUpdater.cs" />
     <Compile Include="Schema\SchemaVersion.cs" />
     <Compile Include="Schema\Version0.cs" />
