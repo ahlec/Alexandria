@@ -24,6 +24,7 @@ namespace Bibliothecary
 			try
 			{
 				_serviceHost = new ServiceHost( _bibliothecary, Constants.HttpServiceAddress );
+				_serviceHost.AddServiceEndpoint( typeof( IBibliothecaryService ), new BasicHttpBinding(), Constants.ServiceEndpoint );
 				_serviceHost.Open();
 				_timer.Start();
 				_log.Info( $"{nameof( WindowsNativeService )} has started successfully." );
