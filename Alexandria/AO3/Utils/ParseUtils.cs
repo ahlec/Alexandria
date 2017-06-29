@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -71,11 +70,11 @@ namespace Alexandria.AO3.Utils
 			}
 		}
 
-		static readonly ImmutableDictionary<String, ShipType> _shipNameSeparators = new Dictionary<String, ShipType>
+		static readonly IReadOnlyDictionary<String, ShipType> _shipNameSeparators = new Dictionary<String, ShipType>
 		{
 			{ "/", ShipType.Romantic },
 			{ "\\", ShipType.Romantic },
 			{ "&", ShipType.Platonic }
-		}.ToImmutableDictionary();
+		};
 	}
 }

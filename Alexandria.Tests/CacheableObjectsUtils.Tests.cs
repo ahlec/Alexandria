@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Alexandria.Utils;
 
-namespace Alexandria.Base.Tests
+namespace Alexandria.Tests
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.UtilTestsCategory )]

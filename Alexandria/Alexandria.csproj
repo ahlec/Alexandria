@@ -44,6 +44,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AO3\AO3Source.cs" />
+    <Compile Include="AO3\Model\AO3Author.cs" />
+    <Compile Include="AO3\Model\AO3ChapterInfo.cs" />
+    <Compile Include="AO3\Model\AO3Fanfic.cs" />
+    <Compile Include="AO3\Model\AO3QueryResults.cs" />
+    <Compile Include="AO3\Model\AO3Series.cs" />
+    <Compile Include="AO3\Model\AO3SeriesEntry.cs" />
+    <Compile Include="AO3\Model\AO3Ship.cs" />
+    <Compile Include="AO3\Model\AO3Tag.cs" />
+    <Compile Include="AO3\RequestHandles\AO3AuthorRequestHandle.cs" />
+    <Compile Include="AO3\RequestHandles\AO3CharacterRequestHandle.cs" />
+    <Compile Include="AO3\RequestHandles\AO3FanficRequestHandle.cs" />
+    <Compile Include="AO3\RequestHandles\AO3SeriesRequestHandle.cs" />
+    <Compile Include="AO3\RequestHandles\AO3ShipRequestHandle.cs" />
+    <Compile Include="AO3\RequestHandles\AO3TagRequestHandle.cs" />
+    <Compile Include="AO3\Searching\AO3FanficSearchResults.cs" />
+    <Compile Include="AO3\Utils\AO3ContentWarningUtils.cs" />
+    <Compile Include="AO3\Utils\AO3LanguageUtils.cs" />
+    <Compile Include="AO3\Utils\AO3MaturityRatingUtils.cs" />
+    <Compile Include="AO3\Utils\AO3RequestUtils.cs" />
+    <Compile Include="AO3\Utils\ParseUtils.cs" />
     <Compile Include="CacheableObjects.cs" />
     <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="IQueryResultsPage.cs" />

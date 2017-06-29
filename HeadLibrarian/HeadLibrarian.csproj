@@ -258,9 +258,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Alexandria\Alexandria.Base.csproj">
+    <ProjectReference Include="..\Alexandria\Alexandria.csproj">
       <Project>{25a32de3-ce8f-4f48-a111-bedb2a2594d3}</Project>
-      <Name>Alexandria.Base</Name>
+      <Name>Alexandria</Name>
       <Private>False</Private>
     </ProjectReference>
     <ProjectReference Include="..\Bibliothecary.Core\Bibliothecary.Core.csproj">

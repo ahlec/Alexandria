@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Alexandria.Base.Tests
+namespace Alexandria.Tests
 {
 	internal static class UnitTestConstants
 	{

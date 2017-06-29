@@ -7,8 +7,8 @@
     <ProjectGuid>{B5001C46-9952-44E2-9942-D755079DA1F5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Alexandria.Base.Tests</RootNamespace>
-    <AssemblyName>Alexandria.Base.Tests</AssemblyName>
+    <RootNamespace>Alexandria.Tests</RootNamespace>
+    <AssemblyName>Alexandria.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -38,6 +38,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.1.11\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
     </Reference>
@@ -48,6 +51,16 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AO3\AO3Assert.cs" />
+    <Compile Include="AO3\FanficParsing.Tests.cs" />
+    <Compile Include="AO3\FullAuthorParsing.Tests.cs" />
+    <Compile Include="AO3\FullFanficParsing.Tests.cs" />
+    <Compile Include="AO3\FullSeriesParsing.Tests.cs" />
+    <Compile Include="AO3\FullTagParsing.Tests.cs" />
+    <Compile Include="AO3\LanguageUtils.Tests.cs" />
+    <Compile Include="AO3\QueryResults.Tests.cs" />
+    <Compile Include="AO3\RequestUtils.Tests.cs" />
+    <Compile Include="AO3\AO3UnitTestConstants.cs" />
     <Compile Include="CacheableObjectsUtils.Tests.cs" />
     <Compile Include="FlagUtils.Tests.cs" />
     <Compile Include="LanguageUtils.Tests.cs" />
@@ -58,9 +71,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Alexandria\Alexandria.Base.csproj">
+    <ProjectReference Include="..\Alexandria\Alexandria.csproj">
       <Project>{25a32de3-ce8f-4f48-a111-bedb2a2594d3}</Project>
-      <Name>Alexandria.Base</Name>
+      <Name>Alexandria</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
