@@ -83,6 +83,7 @@
     <Compile Include="PublishingInfo.cs" />
     <Compile Include="Publishing\EmailClient.cs" />
     <Compile Include="Publishing\TumblrClient.cs" />
+    <Compile Include="Utils\TumblrPhotosetContentWarning.cs" />
     <Compile Include="Utils\TumblrPhotosetFont.cs" />
     <Compile Include="Utils\TumblrPhotosetUtils.cs" />
     <Compile Include="Publishing\TumblrTagRule.cs" />
@@ -97,12 +98,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Lato-Regular.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="SourceSansPro-Regular.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alexandria\Alexandria.csproj">

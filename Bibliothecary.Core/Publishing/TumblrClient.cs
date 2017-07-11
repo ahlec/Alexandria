@@ -66,6 +66,7 @@ namespace Bibliothecary.Core.Publishing
 					g.CompositingQuality = CompositingQuality.HighQuality;
 
 					DrawPhotosetHeader( g, ref currentY, fanfic, author );
+					DrawPhotosetSummary( g, ref currentY, fanfic );
 				}
 
 				return TumblrPhotosetUtils.SliceForPhotoset( workspace, (Int32) Math.Ceiling( currentY ) ).ToList();
@@ -74,17 +75,46 @@ namespace Bibliothecary.Core.Publishing
 
 		static void DrawPhotosetHeader( Graphics g, ref Single currentY, IFanfic fanfic, IAuthor author )
 		{
+			Brush titleBrush = new SolidBrush( Color.FromArgb( 42, 42, 42 ) );
+			Brush authorBrush = new SolidBrush( Color.FromArgb( 17, 17, 17 ) );
+
 			// Title
-			Font titleFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Title, 24 );
+			Font titleFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Title, 20 );
 			Single titleTextHeight = g.MeasureString( fanfic.Title, titleFont, new SizeF( UsableSpaceWidth, 0 ) ).Height;
-			g.DrawString( fanfic.Title, titleFont, Brushes.Black, new RectangleF( PhotosetPadding, currentY, UsableSpaceWidth, titleTextHeight ), _horizontalCenterAlignment );
+			g.DrawString( fanfic.Title, titleFont, titleBrush, new RectangleF( PhotosetPadding, currentY, UsableSpaceWidth, titleTextHeight ), _horizontalCenterAlignment );
 			currentY += titleTextHeight;
 
 			// Author
-			Font authorFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Title, 11, FontStyle.Italic );
+			Font authorFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Title, 12, FontStyle.Italic );
 			Single authorTextHeight = g.MeasureString( author.Name, authorFont, new SizeF( UsableSpaceWidth, 0 ) ).Height;
-			g.DrawString( author.Name, authorFont, Brushes.Gray, new RectangleF( PhotosetPadding, currentY, UsableSpaceWidth, authorTextHeight ), _horizontalCenterAlignment );
+			g.DrawString( author.Name, authorFont, authorBrush, new RectangleF( PhotosetPadding, currentY, UsableSpaceWidth, authorTextHeight ), _horizontalCenterAlignment );
 			currentY += authorTextHeight;
+			currentY += PhotosetPadding;
+		}
+
+		static void DrawPhotosetSummary( Graphics g, ref Single currentY, IFanfic fanfic )
+		{
+			const Int32 SummaryWidth = UsableSpaceWidth - 100;
+			const Int32 LineLeft = UsableSpaceWidth / 2 - SummaryWidth / 2 + ( TumblrPhotosetUtils.TumblrPhotoWidth - UsableSpaceWidth ) / 2;
+			const Int32 LineRight = LineLeft + SummaryWidth;
+			Brush darkBrush = new SolidBrush( Color.FromArgb( 42, 42, 42 ) );
+			Pen linePen = new Pen( darkBrush, 1 );
+
+			g.DrawLine( linePen, LineLeft, currentY, LineRight, currentY );
+			currentY += PhotosetPadding;
+
+			if ( String.IsNullOrWhiteSpace( fanfic.Summary ) )
+			{
+				return;
+			}
+
+			Font summaryFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Body, 9 );
+			Single summaryHeight = g.MeasureString( fanfic.Summary, summaryFont, new SizeF( SummaryWidth, 0 ) ).Height;
+			g.DrawString( fanfic.Summary, summaryFont, darkBrush, new RectangleF( LineLeft, currentY, SummaryWidth, summaryHeight ), _horizontalCenterAlignment );
+			currentY += summaryHeight;
+			currentY += PhotosetPadding;
+
+			g.DrawLine( linePen, LineLeft, currentY, LineRight, currentY );
 			currentY += PhotosetPadding;
 		}
 

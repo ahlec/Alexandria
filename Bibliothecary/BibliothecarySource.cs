@@ -11,15 +11,12 @@ namespace Bibliothecary
 {
 	public sealed class BibliothecarySource
 	{
-		public BibliothecarySource( LibrarySource source, String databaseHandle )
+		public BibliothecarySource( LibrarySource source )
 		{
 			Source = source;
-			DatabaseHandle = databaseHandle;
 		}
 
 		public LibrarySource Source { get; }
-
-		public String DatabaseHandle { get; }
 
 		public void ProcessProject( Project project, Database database, Logger log, Int32 maxResultsMultiplier )
 		{
@@ -63,7 +60,7 @@ namespace Bibliothecary
 		void ProcessProjectResults( Project project, IQueryResultsPage<IFanfic, IFanficRequestHandle> results, EmailClient emailClient, TumblrClient tumblrClient, Logger log, Int32 maxNumberOfResults, ref Int32 numberFanficsProcessed )
 		{
 			List<IFanficRequestHandle> reportedFanfics = new List<IFanficRequestHandle>();
-			foreach ( IFanficRequestHandle fanficHandle in project.FilterUnreportedQueryResults( results.Results, DatabaseHandle ) )
+			foreach ( IFanficRequestHandle fanficHandle in project.FilterUnreportedQueryResults( results.Results, Source.SourceHandle ) )
 			{
 				if ( numberFanficsProcessed >= maxNumberOfResults )
 				{
@@ -80,13 +77,13 @@ namespace Bibliothecary
 				}
 				catch ( Exception ex )
 				{
-					log.Warn( $"-> Encountered {ex.GetType().Name} exception when processing {DatabaseHandle} fanfic {fanficHandle.Handle}: {ex.Message}" );
+					log.Warn( $"-> Encountered {ex.GetType().Name} exception when processing {Source.SourceHandle} fanfic {fanficHandle.Handle}: {ex.Message}" );
 					didSuccessfullyReport = false;
 				}
 
 				if ( didSuccessfullyReport )
 				{
-					log.Info( $"-> Reported {DatabaseHandle} fanfic {fanficHandle.Handle}: {fanfic.Title}" );
+					log.Info( $"-> Reported {Source.SourceHandle} fanfic {fanficHandle.Handle}: {fanfic.Title}" );
 					reportedFanfics.Add( fanficHandle );
 				}
 
@@ -95,7 +92,7 @@ namespace Bibliothecary
 
 			if ( reportedFanfics.Count > 0 )
 			{
-				project.MarkFanficsAsReported( reportedFanfics, DatabaseHandle );
+				project.MarkFanficsAsReported( reportedFanfics, Source.SourceHandle );
 			}
 		}
 	}

@@ -18,6 +18,9 @@ namespace Alexandria.AO3
 		{
 		}
 
+		/// <inheritdoc />
+		public override String SourceHandle => "ao3";
+
 		public override T MakeRequest<T>( IRequestHandle<T> request )
 		{
 			if ( request == null )

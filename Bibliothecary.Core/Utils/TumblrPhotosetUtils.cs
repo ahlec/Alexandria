@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Drawing.Text;
 using System.IO;
 using System.Runtime.InteropServices;
+using Alexandria.Model;
+using Alexandria.Utils;
 using DontPanic.TumblrSharp;
 
 namespace Bibliothecary.Core.Utils
@@ -42,13 +43,6 @@ namespace Bibliothecary.Core.Utils
 
 			readonly Int32 _emSize;
 			readonly FontStyle _style;
-		}
-
-		static TumblrPhotosetUtils()
-		{
-			_fontCollection = new PrivateFontCollection();
-			_fontCollection.AddFontFile( "Lato-Regular.ttf" );
-			_fontCollection.AddFontFile( "SourceSansPro-Regular.ttf" );
 		}
 
 		public static IEnumerable<BinaryFile> SliceForPhotoset( Bitmap bitmap, Int32 bitmapHeight )
@@ -93,7 +87,7 @@ namespace Bibliothecary.Core.Utils
 						Font drawingFont;
 						if ( !_titleFonts.TryGetValue( key, out drawingFont ) )
 						{
-							drawingFont = new Font( _fontCollection.Families[0], fontSize, fontStyle );
+							drawingFont = new Font( TitleFontFamily, fontSize, fontStyle );
 							_titleFonts.Add( key, drawingFont );
 						}
 						return drawingFont;
@@ -103,7 +97,7 @@ namespace Bibliothecary.Core.Utils
 						Font drawingFont;
 						if ( !_bodyFonts.TryGetValue( key, out drawingFont ) )
 						{
-							drawingFont = new Font( _fontCollection.Families[1], fontSize, fontStyle );
+							drawingFont = new Font( BodyFontFamily, fontSize, fontStyle );
 							_bodyFonts.Add( key, drawingFont );
 						}
 						return drawingFont;
@@ -158,11 +152,45 @@ namespace Bibliothecary.Core.Utils
 			}
 		}
 
+		public static TumblrPhotosetContentWarning GetContentWarningInfo( ContentWarnings warning )
+		{
+			if ( warning == ContentWarnings.None )
+			{
+				throw new ArgumentException();
+			}
+			if ( warning.HasMultipleFlagsSet() )
+			{
+				throw new ArgumentOutOfRangeException( nameof( warning ) );
+			}
+
+			switch ( warning )
+			{
+				case ContentWarnings.Undetermined:
+					return _contentWarningUndetermined;
+				case ContentWarnings.Violence:
+					return _contentWarningViolence;
+				case ContentWarnings.MajorCharacterDeath:
+					return _contentWarningMajorCharacterDeath;
+				case ContentWarnings.Rape:
+					return _contentWarningRape;
+				case ContentWarnings.Underage:
+					return _contentWarningUnderage;
+				default:
+					throw new NotImplementedException();
+			}
+		}
+
 		public const Int32 TumblrPhotoWidth = 500;
 		public const Int32 TumblrPhotoHeight = 750;
 
-		static readonly PrivateFontCollection _fontCollection;
+		const String TitleFontFamily = "Georgia";
+		const String BodyFontFamily = "Lucida Grande";
 		static readonly Dictionary<CreatedFontKey, Font> _titleFonts = new Dictionary<CreatedFontKey, Font>();
 		static readonly Dictionary<CreatedFontKey, Font> _bodyFonts = new Dictionary<CreatedFontKey, Font>();
+		static readonly TumblrPhotosetContentWarning _contentWarningUndetermined = new TumblrPhotosetContentWarning( "Undetermined" );
+		static readonly TumblrPhotosetContentWarning _contentWarningViolence = new TumblrPhotosetContentWarning( "Violence" );
+		static readonly TumblrPhotosetContentWarning _contentWarningMajorCharacterDeath = new TumblrPhotosetContentWarning( "Major Character Death" );
+		static readonly TumblrPhotosetContentWarning _contentWarningRape = new TumblrPhotosetContentWarning( "Rape" );
+		static readonly TumblrPhotosetContentWarning _contentWarningUnderage = new TumblrPhotosetContentWarning( "Underage" );
 	}
 }

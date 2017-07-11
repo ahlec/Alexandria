@@ -145,6 +145,6 @@ namespace Bibliothecary
 		readonly Database _database;
 		readonly Object _projectsLock = new Object();
 		readonly List<LiveProject> _projects = new List<LiveProject>();
-		readonly BibliothecarySource _ao3 = new BibliothecarySource( new AO3Source( LibrarySourceConfig.Default), "ao3" );
+		readonly BibliothecarySource _ao3 = new BibliothecarySource( new AO3Source( LibrarySourceConfig.Default) );
 	}
 }

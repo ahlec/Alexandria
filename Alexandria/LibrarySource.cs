@@ -27,6 +27,8 @@ namespace Alexandria
 			_personalCacheDirectory = Path.Combine( config.CacheBaseDirectory, GetType().Name );
 		}
 
+		public abstract String SourceHandle { get; }
+
 		public abstract T MakeRequest<T>( IRequestHandle<T> request ) where T : IRequestable;
 
 		public abstract IQueryResultsPage<IFanfic, IFanficRequestHandle> Search( LibrarySearch searchCriteria );
