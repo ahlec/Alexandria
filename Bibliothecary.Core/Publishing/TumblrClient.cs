@@ -1,15 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 using Alexandria;
 using Alexandria.Model;
+using Alexandria.Utils;
 using Bibliothecary.Core.Utils;
 using DontPanic.TumblrSharp;
 using DontPanic.TumblrSharp.OAuth;
@@ -19,6 +18,88 @@ namespace Bibliothecary.Core.Publishing
 {
 	public sealed class TumblrClient
 	{
+		class TumblrPhotosetDetail
+		{
+			public TumblrPhotosetDetail( Graphics g, Font font, String text, Boolean isSeparator = false )
+			{
+				Text = text;
+				IsIncluded = !String.IsNullOrWhiteSpace( Text );
+				Font = font;
+				SizeF size = g.MeasureString( text, font );
+				Width = size.Width;
+				Height = size.Height;
+				if ( Width > UsableSpaceWidth )
+				{
+					throw new NotImplementedException( "TODO: The ability to split an individual piece of text across multiple lines is not implemented yet (do we even need it? Maybe for like OT4/OT5/etc)" );
+				}
+				IsSeparator = isSeparator;
+			}
+
+			public String Text { get; }
+
+			public Boolean IsIncluded { get; }
+
+			public Font Font { get; }
+
+			public Single Width { get; }
+
+			public Single Height { get; }
+
+			public Boolean IsSeparator { get; }
+		}
+
+		class TumblrPhotosetDetailLine : IEnumerable<TumblrPhotosetDetail>
+		{
+			public Single Width => _list.Sum( detail => detail.Width );
+
+			public Single Height => _list.Max( detail => detail.Height );
+
+			public Boolean CanAdd( TumblrPhotosetDetail detail )
+			{
+				return ( Width + detail.Width <= UsableSpaceWidth );
+			}
+
+			public void Add( TumblrPhotosetDetail detail )
+			{
+				if ( detail == null )
+				{
+					throw new ArgumentNullException( nameof( detail ) );
+				}
+
+				if ( !CanAdd( detail ) )
+				{
+					throw new InvalidOperationException();
+				}
+
+				_list.Add( detail );
+			}
+
+			public void TrimSeparators()
+			{
+				while ( _list.Count > 0 )
+				{
+					if ( !_list[_list.Count - 1].IsSeparator )
+					{
+						break;
+					}
+
+					_list.RemoveAt( _list.Count - 1 );
+				}
+			}
+
+			public IEnumerator<TumblrPhotosetDetail> GetEnumerator()
+			{
+				return _list.GetEnumerator();
+			}
+
+			IEnumerator IEnumerable.GetEnumerator()
+			{
+				return _list.GetEnumerator();
+			}
+
+			readonly List<TumblrPhotosetDetail> _list = new List<TumblrPhotosetDetail>();
+		}
+
 		public String ConsumerKey { get; set; }
 
 		public String ConsumerSecret { get; set; }
@@ -67,6 +148,7 @@ namespace Bibliothecary.Core.Publishing
 
 					DrawPhotosetHeader( g, ref currentY, fanfic, author );
 					DrawPhotosetSummary( g, ref currentY, fanfic );
+					DrawPhotosetDetails( g, ref currentY, fanfic );
 				}
 
 				return TumblrPhotosetUtils.SliceForPhotoset( workspace, (Int32) Math.Ceiling( currentY ) ).ToList();
@@ -116,6 +198,87 @@ namespace Bibliothecary.Core.Publishing
 
 			g.DrawLine( linePen, LineLeft, currentY, LineRight, currentY );
 			currentY += PhotosetPadding;
+		}
+
+		static void DrawPhotosetDetails( Graphics g, ref Single currentY, IFanfic fanfic )
+		{
+			const Int32 FontSize = 9;
+
+			Font ratingFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Body, FontSize, FontStyle.Bold );
+			Font regularFont = TumblrPhotosetUtils.GetFont( TumblrPhotosetFont.Body, FontSize );
+
+			// Get all of the strings
+			TumblrPhotosetDetail separator = new TumblrPhotosetDetail( g, regularFont, " • ", true );
+			TumblrPhotosetDetail rating = new TumblrPhotosetDetail( g, ratingFont, fanfic.Rating.GetDisplayName() );
+			TumblrPhotosetDetail wordCount = new TumblrPhotosetDetail( g, regularFont,
+				String.Concat( fanfic.NumberWords.ToString( "N0", CultureInfo.CurrentCulture ), " word", ( fanfic.NumberWords != 1 ? "s" : null ) ) );
+			String chapterText = null;
+			if ( fanfic.ChapterInfo != null && fanfic.ChapterInfo.TotalNumberChapters != 1 )
+			{
+				chapterText = String.Concat( fanfic.ChapterInfo.ChapterNumber, "/", fanfic.ChapterInfo.TotalNumberChapters, " chapters" );
+			}
+			TumblrPhotosetDetail chapter = new TumblrPhotosetDetail( g, regularFont, chapterText );
+			TumblrPhotosetDetail mainRelationship = new TumblrPhotosetDetail( g, regularFont, ( fanfic.Ships.Count > 0 ? fanfic.Ships[0].ShipTag : null ) );
+
+			// Create the lines
+			List<TumblrPhotosetDetailLine> lines = new List<TumblrPhotosetDetailLine>
+			{
+				new TumblrPhotosetDetailLine()
+			};
+			AddDetailToLines( lines, rating, separator, false );
+			AddDetailToLines( lines, wordCount, separator );
+			AddDetailToLines( lines, chapter, separator );
+			AddDetailToLines( lines, mainRelationship, separator );
+			foreach ( TumblrPhotosetDetailLine line in lines )
+			{
+				line.TrimSeparators();
+			}
+
+			// Draw the lines
+			Brush darkBrush = new SolidBrush( Color.FromArgb( 42, 42, 42 ) );
+			foreach ( TumblrPhotosetDetailLine line in lines )
+			{
+				Single startX = UsableSpaceWidth / 2.0f - line.Width / 2.0f;
+
+				Single currentX = startX;
+				foreach ( TumblrPhotosetDetail detail in line )
+				{
+					Single yOffset = line.Height - detail.Height;
+					g.DrawString( detail.Text, detail.Font, darkBrush, currentX, currentY + yOffset );
+					currentX += detail.Width;
+				}
+
+				currentY += line.Height;
+			}
+
+			currentY += PhotosetPadding;
+		}
+
+		static void AddDetailToLines( IList<TumblrPhotosetDetailLine> lines, TumblrPhotosetDetail detail, TumblrPhotosetDetail separator, Boolean goToNextLineIfDoesntFit = true )
+		{
+			if ( !detail.IsIncluded )
+			{
+				return;
+			}
+
+			Boolean canAddToLine = lines[lines.Count - 1].CanAdd( detail );
+			if ( canAddToLine )
+			{
+				lines[lines.Count - 1].Add( detail );
+				if ( lines[lines.Count - 1].CanAdd( separator ) )
+				{
+					lines[lines.Count - 1].Add( separator );
+				}
+				return;
+			}
+
+			if ( !goToNextLineIfDoesntFit )
+			{
+				throw new ApplicationException( "Unable to fit a detail into any lines." );
+			}
+
+			lines.Add( new TumblrPhotosetDetailLine() );
+			AddDetailToLines( lines, detail, separator, false );
 		}
 
 		static readonly TumblrClientFactory _clientFactory = new TumblrClientFactory();

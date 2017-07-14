@@ -105,6 +105,7 @@
     <Compile Include="Utils\FlagUtils.cs" />
     <Compile Include="Utils\HtmlUtils.cs" />
     <Compile Include="Utils\LanguageUtils.cs" />
+    <Compile Include="Utils\MaturityRatingUtils.cs" />
     <Compile Include="Utils\NativeLanguageAttribute.cs" />
     <Compile Include="Utils\RenderLanguageNameAttribute.cs" />
     <Compile Include="Utils\StringBuilderExtensions.cs" />
