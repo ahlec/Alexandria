@@ -1,14 +1,15 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Alexandria.AO3;
+using Alexandria.AO3.Tests;
+using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Alexandria.AO3.Tests
+namespace Alexandria.Tests.AO3
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.FullFanficParsingTestsCategory )]
-	public class AO3FanficParsingTests
+	public class Test_AO3FanficParsing
 	{
 		[TestMethod]
 		public void AO3Fanfic_PrinceAmongWolves()
@@ -214,7 +215,8 @@ namespace Alexandria.AO3.Tests
 Derek’s wrist was missing a soulband.
 Every single person in his acquaintance had a soulband, God! Even Greenberg had a soulband.", fanfic.Summary );
 			Assert.AreEqual( @"Thank you Jonjo for the beta work. You are amazing <3", fanfic.AuthorsNote );
-			Assert.AreEqual( @"I am on tumblr - Here - my Sterek blog.", fanfic.Footnote );
+			Assert.AreEqual( @"* Comments/Kudos are gold!! They keeps motivating me to write more
+* I am on tumblr - PencilTrash, where you can get fic updates.", fanfic.Footnote );
 		}
 
 		readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );

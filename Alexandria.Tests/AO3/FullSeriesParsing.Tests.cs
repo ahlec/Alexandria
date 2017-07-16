@@ -1,14 +1,15 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Alexandria.AO3;
+using Alexandria.AO3.Tests;
+using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Alexandria.AO3.Tests
+namespace Alexandria.Tests.AO3
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.FullSeriesParsingTestsCategory )]
-	public class FullSeriesParsing
+	public class Test_FullSeriesParsing
 	{
 		[TestMethod]
 		public void AO3Tag_JanuaryJackrabbitWeek2014()

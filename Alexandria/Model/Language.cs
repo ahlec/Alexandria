@@ -168,9 +168,6 @@ namespace Alexandria.Model
 		[NativeLanguage( "Kiswahili" )]
 		Swahili,
 
-		[NativeLanguage( "so" )]
-		Soko,
-
 		[NativeLanguage( "af Soomaali" )]
 		Somali,
 
@@ -201,6 +198,9 @@ namespace Alexandria.Model
 		Bengali,
 
 		[NativeLanguage( "Bosanski" )]
-		Bosnian
+		Bosnian,
+
+		[NativeLanguage( "Interlingua" )]
+		Interlingua
 	}
 }

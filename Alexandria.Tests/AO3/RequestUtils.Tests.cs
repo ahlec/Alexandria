@@ -1,13 +1,13 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Alexandria.RequestHandles;
 using Alexandria.AO3.Utils;
+using Alexandria.RequestHandles;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Alexandria.AO3.Tests
+namespace Alexandria.Tests.AO3
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.UtilTestsCategory )]
-	public class RequestUtils
+	public class Test_RequestUtils
 	{
 		[TestMethod]
 		[ExpectedException( typeof( ArgumentNullException ) )]

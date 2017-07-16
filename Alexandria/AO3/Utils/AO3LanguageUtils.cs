@@ -42,13 +42,13 @@ namespace Alexandria.AO3.Utils
 		/// </summary>
 		static readonly LanguageJump[] _languageJumps =
 		{
+			new LanguageJump( Language.Interlingua, 84 ),
 			new LanguageJump( Language.Bosnian, 82 ),
 			new LanguageJump( Language.Bengali, 79 ),
 			new LanguageJump( Language.Sindarin, 75 ),
 			new LanguageJump( Language.Slovene, 72 ),
 			new LanguageJump( Language.OldIcelandicMaybeIdk, 69 ),
 			new LanguageJump( Language.Somali, 64 ),
-			new LanguageJump( Language.Soko, 61 ),
 			new LanguageJump( Language.Swahili, 58 ),
 			new LanguageJump( Language.Malaysian, 56 ),
 			new LanguageJump( Language.Slovak, 53 ),

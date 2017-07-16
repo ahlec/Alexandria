@@ -69,6 +69,6 @@ namespace Alexandria.Utils
 		}
 
 		static readonly IReadOnlyList<ILanguageInfo> _info;
-		static readonly IDictionary<String, Language> _languageStrings = new Dictionary<String, Language>();
+		static readonly IDictionary<String, Language> _languageStrings = new Dictionary<String, Language>( StringComparer.InvariantCultureIgnoreCase );
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Alexandria.Model;
 using Alexandria.Utils;
@@ -7,7 +8,7 @@ namespace Alexandria.Tests
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.UtilTestsCategory )]
-	public class LanguageUtilsTests
+	public class Test_LanguageUtils
 	{
 		[TestMethod]
 		[ExpectedException( typeof( ArgumentNullException ), AllowDerivedTypes = false )]
@@ -55,6 +56,16 @@ namespace Alexandria.Tests
 				ILanguageInfo info = LanguageUtils.GetInfo( language );
 				Language parsed = LanguageUtils.Parse( info.NativeName );
 				Assert.AreEqual( language, parsed );
+			}
+		}
+
+		[TestMethod]
+		public void BaseLanguageUtils_AllAO3LanguagesDefined()
+		{
+			IReadOnlyDictionary<String, Int32> ao3Languages = AO3Utils.GetAllLanguages();
+			foreach ( String language in ao3Languages.Keys )
+			{
+				LanguageUtils.Parse( language );
 			}
 		}
 	}

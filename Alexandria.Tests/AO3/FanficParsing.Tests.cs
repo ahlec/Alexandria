@@ -1,13 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Alexandria.AO3;
+using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Alexandria.AO3.Tests
+namespace Alexandria.Tests.AO3
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.FanficParsingTestsCategory )]
-	public class FanficParsingTests
+	public class Test_FanficParsing
 	{
 		[TestMethod]
 		public void AO3Fanfic_AnonymousAuthorIsNull()

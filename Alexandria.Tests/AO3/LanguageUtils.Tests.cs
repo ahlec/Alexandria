@@ -5,9 +5,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Utils;
-using HtmlAgilityPack;
 
-namespace Alexandria.AO3.Tests
+namespace Alexandria.Tests.AO3
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.UtilTestsCategory )]
@@ -21,29 +20,8 @@ namespace Alexandria.AO3.Tests
 				languages.Add( language );
 			}
 			_languageEnumValues = languages;
-		}
 
-		public Test_LanguageUtils()
-		{
-			Dictionary<Language, Int32> languageIds = new Dictionary<Language, Int32>();
-
-			HtmlDocument searchPage = HtmlUtils.GetWebPage( "http://archiveofourown.org/works/search" );
-			HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
-			foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
-			{
-				String idStr = option.GetAttributeValue( "value", null );
-				if ( String.IsNullOrWhiteSpace( idStr ) )
-				{
-					continue;
-				}
-				Int32 languageId = Int32.Parse( idStr );
-
-				String languageStr = option.InnerText;
-				Language language = LanguageUtils.Parse( languageStr );
-				languageIds.Add( language, languageId );
-			}
-
-			_languageIds = languageIds;
+			_ao3LanguageOptions = AO3Utils.GetAllLanguages().ToDictionary( kvp => LanguageUtils.Parse( kvp.Key ), kvp => kvp.Value );
 		}
 
 		[TestMethod]
@@ -52,18 +30,18 @@ namespace Alexandria.AO3.Tests
 			foreach ( Language language in _languageEnumValues )
 			{
 				Int32 id = AO3LanguageUtils.GetId( language );
-				Assert.AreEqual( _languageIds[language], id );
+				Assert.AreEqual( _ao3LanguageOptions[language], id );
 			}
 		}
 
 		[TestMethod]
 		public void AO3LanguageUtils_NoExtraLanguages()
 		{
-			IEnumerable<Language> extraLanguages = _languageEnumValues.Except( _languageIds.Keys );
+			IEnumerable<Language> extraLanguages = _languageEnumValues.Except( _ao3LanguageOptions.Keys );
 			Assert.IsFalse( extraLanguages.Any() );
 		}
 
 		static readonly IReadOnlyList<Language> _languageEnumValues;
-		readonly IReadOnlyDictionary<Language, Int32> _languageIds;
+		static readonly IReadOnlyDictionary<Language, Int32> _ao3LanguageOptions;
 	}
 }

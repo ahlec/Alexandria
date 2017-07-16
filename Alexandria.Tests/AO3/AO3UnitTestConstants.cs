@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Alexandria.AO3.Tests
+namespace Alexandria.Tests.AO3
 {
 	[SuppressMessage( "ReSharper", "InconsistentNaming" )]
 	internal static class UnitTestConstants
@@ -31,16 +31,15 @@ namespace Alexandria.AO3.Tests
 
 		public static readonly String[] Tag_POVJackFrostFanficHandles =
 		{
-				"7367401",
-				"1312102",
-				"8015113",
-				"7860361",
-				"5663545",
-				"5480645",
-				"4084660",
-				"2662784",
-				"1068792",
-				"1068772"
+			"10659105",
+			"7367401",
+			"1312102",
+			"5663545",
+			"5480645",
+			"4084660",
+			"2662784",
+			"1068792",
+			"1068772"
 		};
 	}
 }

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Alexandria.AO3;
+using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.Utils;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Alexandria.AO3.Tests
+namespace Alexandria.Tests.AO3
 {
 	[TestClass]
 	[TestCategory( UnitTestConstants.FullTagParsingTestsCategory )]
-	public class FullTagParsing
+	public class Test_FullTagParsing
 	{
 		[TestMethod]
 		public void AO3Tag_StilesStilinski()
@@ -78,13 +79,15 @@ namespace Alexandria.AO3.Tests
 			Assert.AreEqual( "Guardians of Childhood & Related Fandoms", tag.ParentTags[0].Text );
 
 			Assert.IsNotNull( tag.SynonymousTags );
-			Assert.AreEqual( 3, tag.SynonymousTags.Count );
+			Assert.AreEqual( 4, tag.SynonymousTags.Count );
 			Assert.IsNotNull( tag.SynonymousTags[0] );
 			Assert.AreEqual( "jack's pov (kinda)", tag.SynonymousTags[0].Text );
 			Assert.IsNotNull( tag.SynonymousTags[1] );
-			Assert.AreEqual( "Narrated by Jack", tag.SynonymousTags[1].Text );
+			Assert.AreEqual( "Mainly Jack POV", tag.SynonymousTags[1].Text );
 			Assert.IsNotNull( tag.SynonymousTags[2] );
-			Assert.AreEqual( "POV Jack Frost", tag.SynonymousTags[2].Text );
+			Assert.AreEqual( "Narrated by Jack", tag.SynonymousTags[2].Text );
+			Assert.IsNotNull( tag.SynonymousTags[3] );
+			Assert.AreEqual( "POV Jack Frost", tag.SynonymousTags[3].Text );
 			
 			IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = tag.QueryFanfics();
 			Assert.IsNotNull( fanfics );
