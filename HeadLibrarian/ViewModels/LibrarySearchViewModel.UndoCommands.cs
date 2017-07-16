@@ -450,5 +450,57 @@ namespace HeadLibrarian.ViewModels
 			readonly NumberSearchCriteria _oldCount;
 			readonly NumberSearchCriteria _newCount;
 		}
+
+		class SetSortFieldUndoAction : IUndoRedoAction
+		{
+			public SetSortFieldUndoAction( LibrarySearchViewModel viewModel, SearchField oldSortField, SearchField newSortField )
+			{
+				_viewModel = viewModel;
+				_oldSortField = oldSortField;
+				_newSortField = newSortField;
+			}
+
+			public void Undo()
+			{
+				_viewModel._search.SortField = _oldSortField;
+				_viewModel.InvokeSortFieldChanged();
+			}
+
+			public void Redo()
+			{
+				_viewModel._search.SortField = _newSortField;
+				_viewModel.InvokeSortFieldChanged();
+			}
+
+			readonly LibrarySearchViewModel _viewModel;
+			readonly SearchField _oldSortField;
+			readonly SearchField _newSortField;
+		}
+
+		class SetSortDirectionUndoAction : IUndoRedoAction
+		{
+			public SetSortDirectionUndoAction( LibrarySearchViewModel viewModel, SortDirection oldSortDirection, SortDirection newSortDirection )
+			{
+				_viewModel = viewModel;
+				_oldSortDirection = oldSortDirection;
+				_newSortDirection = newSortDirection;
+			}
+
+			public void Undo()
+			{
+				_viewModel._search.SortDirection = _oldSortDirection;
+				_viewModel.InvokeSortDirectionChanged();
+			}
+
+			public void Redo()
+			{
+				_viewModel._search.SortDirection = _newSortDirection;
+				_viewModel.InvokeSortDirectionChanged();
+			}
+
+			readonly LibrarySearchViewModel _viewModel;
+			readonly SortDirection _oldSortDirection;
+			readonly SortDirection _newSortDirection;
+		}
 	}
 }

@@ -21,7 +21,6 @@ namespace HeadLibrarian.ViewModels
 			_isLanguageEnabled = ( search.Language != null );
 			_areFandomsEnabled = ( search.Fandoms.Count > 0 );
 			_isRatingEnabled = ( search.Rating != null );
-			_areContentWarningsEnabled = ( search.ContentWarnings != Alexandria.Model.ContentWarnings.None );
 			_areCharacterNamesEnabled = ( search.CharacterNames.Count > 0 );
 			_areShipsEnabled = ( search.Ships.Count > 0 );
 			_areTagsEnabled = ( search.Tags.Count > 0 );
@@ -511,6 +510,56 @@ namespace HeadLibrarian.ViewModels
 			NumberComments.InvokeAllPropertiesChanged();
 		}
 
+		public static IEnumerable<SearchField> AllSortFields { get; } = GetAllSearchFields();
+
+		public SearchField SortField
+		{
+			get => _search.SortField;
+			set
+			{
+				SearchField oldSortField = SortField;
+				if ( oldSortField == value )
+				{
+					return;
+				}
+
+				_search.SortField = value;
+				_projectViewModel.UndoStack.Push( new SetSortFieldUndoAction( this, oldSortField, value ) );
+				InvokeSortFieldChanged();
+			}
+		}
+
+		void InvokeSortFieldChanged()
+		{
+			OnPropertyChanged( nameof( SortField ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
+		public static IEnumerable<SortDirection> AllSortDirections { get; } = GetAllSortDirections();
+
+		public SortDirection SortDirection
+		{
+			get => _search.SortDirection;
+			set
+			{
+				SortDirection oldSortDirection = SortDirection;
+				if ( oldSortDirection == value )
+				{
+					return;
+				}
+
+				_search.SortDirection = value;
+				_projectViewModel.UndoStack.Push( new SetSortDirectionUndoAction( this, oldSortDirection, value ) );
+				InvokeSortDirectionChanged();
+			}
+		}
+
+		void InvokeSortDirectionChanged()
+		{
+			OnPropertyChanged( nameof( SortDirection ) );
+			_projectViewModel.RefreshHasSavedChanged();
+		}
+
 		static IEnumerable<MaturityRating?> GetAllMaturityRatings()
 		{
 			foreach ( MaturityRating rating in Enum.GetValues( typeof( MaturityRating ) ) )
@@ -527,6 +576,22 @@ namespace HeadLibrarian.ViewModels
 			}
 		}
 
+		static IEnumerable<SearchField> GetAllSearchFields()
+		{
+			foreach ( SearchField field in Enum.GetValues( typeof( SearchField ) ) )
+			{
+				yield return field;
+			}
+		}
+
+		static IEnumerable<SortDirection> GetAllSortDirections()
+		{
+			foreach ( SortDirection direction in Enum.GetValues( typeof( SortDirection ) ) )
+			{
+				yield return direction;
+			}
+		}
+
 		readonly ProjectViewModel _projectViewModel;
 		readonly LibrarySearch _search;
 
@@ -537,7 +602,6 @@ namespace HeadLibrarian.ViewModels
 		Boolean _isLanguageEnabled;
 		Boolean _areFandomsEnabled;
 		Boolean _isRatingEnabled;
-		Boolean _areContentWarningsEnabled;
 		Boolean _areCharacterNamesEnabled;
 		Boolean _areShipsEnabled;
 		Boolean _areTagsEnabled;

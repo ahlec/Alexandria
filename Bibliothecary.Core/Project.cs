@@ -441,11 +441,7 @@ namespace Bibliothecary.Core
 							deleteFieldCommand.Parameters.AddWithValue( "@projectId", ProjectId );
 							deleteFieldCommand.Parameters.AddWithValue( "@fieldName", removedField.Key );
 							deleteFieldCommand.Parameters.AddWithValue( "@fieldValue", removedField.Value );
-							Int32 numberRowsAffected = deleteFieldCommand.ExecuteNonQuery();
-							if ( numberRowsAffected != 1 )
-							{
-								throw new ApplicationException( $"Unable to delete a project_search_field of key '{removedField.Key}' and value '{removedField.Value}' from project {ProjectId}" );
-							}
+							deleteFieldCommand.ExecuteNonQuery();
 						}
 					}
 

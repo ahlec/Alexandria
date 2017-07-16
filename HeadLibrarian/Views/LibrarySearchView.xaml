@@ -8,19 +8,19 @@
 			 xmlns:model="clr-namespace:Alexandria.Model;assembly=Alexandria"
 			 mc:Ignorable="d"
 			 d:DataContext="{d:DesignInstance viewModels:LibrarySearchViewModel}">
-	<StackPanel>
+	<StackPanel Grid.IsSharedSizeScope="True">
 		<controls:LibrarySearchViewRow FieldName="Title:"
-								 IsFieldEnabled="{Binding IsTitleEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding IsTitleEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Author:"
-								 IsFieldEnabled="{Binding IsAuthorEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding IsAuthorEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<TextBox Text="{Binding Author, UpdateSourceTrigger=PropertyChanged}" />
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Date:"
-								 IsFieldEnabled="{Binding IsDateEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding IsDateEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:DateSearchCriteriaEditor DataContext="{Binding Date}" />
 		</controls:LibrarySearchViewRow>
 
@@ -39,12 +39,12 @@
 		</StackPanel>
 
 		<controls:LibrarySearchViewRow FieldName="Word Count:"
-								 IsFieldEnabled="{Binding IsWordCountEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding IsWordCountEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:NumberSearchCriteriaEditor DataContext="{Binding WordCount}" />
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Language:"
-								 IsFieldEnabled="{Binding IsLanguageEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding IsLanguageEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<ComboBox ItemsSource="{Binding AllLanguages}"
 					  SelectedItem="{Binding Language, UpdateSourceTrigger=PropertyChanged}">
 				<ComboBox.ItemTemplate>
@@ -61,12 +61,12 @@
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Fandoms:"
-								 IsFieldEnabled="{Binding AreFandomsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding AreFandomsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:StringListEditor DataContext="{Binding Fandoms}" />
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Maturity Rating:"
-								 IsFieldEnabled="{Binding IsMaturityRatingEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding IsMaturityRatingEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<ComboBox ItemsSource="{Binding AllMaturityRatings}"
 					  SelectedItem="{Binding MaturityRating, UpdateSourceTrigger=PropertyChanged}" />
 		</controls:LibrarySearchViewRow>
@@ -82,29 +82,50 @@
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Characters:"
-								 IsFieldEnabled="{Binding AreCharacterNamesEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding AreCharacterNamesEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:StringListEditor DataContext="{Binding CharacterNames}" />
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Ships:"
-								 IsFieldEnabled="{Binding AreShipsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding AreShipsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:StringListEditor DataContext="{Binding Ships}" />
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Tags:"
-								 IsFieldEnabled="{Binding AreTagsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding AreTagsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:StringListEditor DataContext="{Binding Tags}" />
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Number Likes:"
-								 IsFieldEnabled="{Binding IsNumberLikesEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding IsNumberLikesEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:NumberSearchCriteriaEditor DataContext="{Binding NumberLikes}" />
 		</controls:LibrarySearchViewRow>
 
 		<controls:LibrarySearchViewRow FieldName="Number Comments:"
-								 IsFieldEnabled="{Binding IsNumberCommentsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+									   IsFieldEnabled="{Binding IsNumberCommentsEnabled, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
 			<controls:NumberSearchCriteriaEditor DataContext="{Binding NumberComments}" />
 		</controls:LibrarySearchViewRow>
+
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="{StaticResource FieldNameWidth}" />
+				<ColumnDefinition Width="{StaticResource FieldSeparatorWidth}" />
+				<ColumnDefinition Width="{StaticResource FieldEditorWidth}" />
+			</Grid.ColumnDefinitions>
+
+			<TextBlock Grid.Column="0"
+					   Style="{StaticResource FieldNameLabel}"
+					   HorizontalAlignment="Right">Sort:</TextBlock>
+
+			<StackPanel Grid.Column="2"
+						Orientation="Horizontal">
+				<ComboBox ItemsSource="{Binding AllSortFields}"
+						  SelectedItem="{Binding SortField, UpdateSourceTrigger=PropertyChanged}" />
+				<ComboBox ItemsSource="{Binding AllSortDirections}"
+						  SelectedItem="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}"
+						  Margin="6,0,0,0" />
+			</StackPanel>
+		</Grid>
 	</StackPanel>
 </UserControl>
 
