@@ -37,7 +37,7 @@ with Tumblr, configuration of email addresses, search query management, and more
 ### Requirements ###
 
 * [Visual Studio 2017](https://www.visualstudio.com/downloads/) (or higher)
-* [Microsoft .NET 4.7](https://www.microsoft.com/en-us/download/details.aspx?id=55168) (C# 7)
+* [Microsoft .NET 4.5.2](https://www.microsoft.com/en-us/download/details.aspx?id=42637)
 
 All libraries used within the suite are obtained via NuGet packages. These are presently:
 
@@ -52,7 +52,3 @@ All libraries used within the suite are obtained via NuGet packages. These are p
 * [PubSub](http://github.com/upta/pubsub)
 
 Not all projects will use all packages.
-
-### Building ###
-
-[MORE COMING SHORTLY]
