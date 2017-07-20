@@ -5,7 +5,7 @@ using HeadLibrarian.WPF;
 
 namespace HeadLibrarian.ViewModels
 {
-	public sealed partial class ProjectViewModel : BaseViewModel
+	public sealed partial class ProjectViewModel : BaseViewModel, ITabViewModel
 	{
 		public ProjectViewModel( Database database, Project project )
 		{
@@ -21,6 +21,8 @@ namespace HeadLibrarian.ViewModels
 
 			SaveCommand = new Command( null, CommandSave );
 		}
+
+		public Boolean IsProject => true;
 
 		#region UndoStack
 

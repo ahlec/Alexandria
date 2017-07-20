@@ -39,6 +39,9 @@
     <ApplicationIcon>Resources\HeadLibrarian.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ControlzEx, Version=2.2.0.4, Culture=neutral, PublicKeyToken=f08b075e934b7045, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.2.2.0.4\lib\net45\ControlzEx.dll</HintPath>
+    </Reference>
     <Reference Include="DontPanic.TumblrSharp, Version=1.0.0.6, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\TumblrSharp.1.0.0.6\lib\net45\DontPanic.TumblrSharp.dll</HintPath>
     </Reference>
@@ -47,6 +50,9 @@
     </Reference>
     <Reference Include="DontPanic.TumblrSharp.Net45, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\TumblrSharp.1.0.0.6\lib\net45\DontPanic.TumblrSharp.Net45.dll</HintPath>
+    </Reference>
+    <Reference Include="Fluent, Version=5.0.2.46, Culture=neutral, PublicKeyToken=3e436e32a8c5546f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Fluent.Ribbon.5.0.2.46\lib\net45\Fluent.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
@@ -67,9 +73,8 @@
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\ControlzEx.2.2.0.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -141,6 +146,8 @@
     <Compile Include="ViewModels\ContentWarningViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\DateSearchCriteriaViewModel.cs" />
     <Compile Include="ViewModels\DateSearchCriteriaViewModel.UndoCommands.cs" />
+    <Compile Include="ViewModels\IntroductionTabViewModel.cs" />
+    <Compile Include="ViewModels\ITabViewModel.cs" />
     <Compile Include="ViewModels\LibrarySearchViewModel.cs" />
     <Compile Include="ViewModels\LibrarySearchViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -165,6 +172,7 @@
       <DependentUpon>PublishingInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPF\Command.cs" />
+    <Compile Include="WPF\TabViewModelTemplateSelector.cs" />
     <Page Include="Controls\DateSearchCriteriaEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -263,7 +271,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Alexandria\Alexandria.csproj">
@@ -294,6 +304,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\HeadLibrarian.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Delete.png" />
+    <Resource Include="Resources\Duplicate.png" />
+    <Resource Include="Resources\New.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ExportData_16x.png" />
+    <Resource Include="Resources\SaveAll_16x.png" />
+    <Resource Include="Resources\Save_32x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

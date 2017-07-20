@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -19,7 +20,9 @@ namespace HeadLibrarian.ViewModels
 			ConnectToDatabaseCommand = new Command( null, CommandConnectToDatabase );
 			CreateProjectCommand = new Command( null, CommandCreateProject );
 			DeleteProjectCommand = new Command( null, CommandDeleteProject );
-			BindingOperations.EnableCollectionSynchronization( Projects, _projectsCollectionLock );
+			OpenLogsCommand = new Command( null, CommandOpenLogs );
+			BindingOperations.EnableCollectionSynchronization( Tabs, _tabsCollectionLock );
+			Tabs.Add( new IntroductionTabViewModel() );
 		}
 
 		#region Database
@@ -66,29 +69,31 @@ namespace HeadLibrarian.ViewModels
 		void FinishDatabaseConnection( Boolean isConnected, IEnumerable<Project> projects )
 		{
 			IsConnectedToDatabase = isConnected;
-			lock ( _projectsCollectionLock )
+			lock ( _tabsCollectionLock )
 			{
-				Projects.Clear();
+				ITabViewModel introductionTab = Tabs.First( tab => tab is IntroductionTabViewModel );
+				Tabs.Clear();
+				Tabs.Add( introductionTab );
 				if ( projects != null )
 				{
 					foreach ( Project project in projects )
 					{
-						Projects.Add( new ProjectViewModel( _database, project ) );
+						Tabs.Add( new ProjectViewModel( _database, project ) );
 					}
 				}
 			}
 			IsAttemptingConnectionToDatabase = false;
-			SelectedProject = Projects.FirstOrDefault();
+			SelectedTab = Tabs.FirstOrDefault();
 		}
 
 		#endregion
 
-		public ObservableCollection<ProjectViewModel> Projects { get; } = new ObservableCollection<ProjectViewModel>();
+		public ObservableCollection<ITabViewModel> Tabs { get; } = new ObservableCollection<ITabViewModel>();
 
-		public ProjectViewModel SelectedProject
+		public ITabViewModel SelectedTab
 		{
-			get => _selectedProject;
-			set => SetProperty( ref _selectedProject, value );
+			get => _selectedTab;
+			set => SetProperty( ref _selectedTab, value );
 		}
 
 		public ICommand CreateProjectCommand { get; }
@@ -97,21 +102,21 @@ namespace HeadLibrarian.ViewModels
 		{
 			Project newProject = Project.Create( _database );
 			ProjectViewModel viewModel = new ProjectViewModel( _database, newProject );
-			lock ( _projectsCollectionLock )
+			lock ( _tabsCollectionLock )
 			{
-				Projects.Add( viewModel );
+				Tabs.Add( viewModel );
 			}
-			SelectedProject = viewModel;
+			SelectedTab = viewModel;
 		}
 
 		public ICommand DeleteProjectCommand { get; }
 
 		void CommandDeleteProject( Object o )
 		{
-			ProjectViewModel project = ( o as ProjectViewModel );
+			ProjectViewModel project = ( SelectedTab as ProjectViewModel );
 			if ( project == null )
 			{
-				throw new ArgumentException( nameof( o ) );
+				return;
 			}
 
 			ConfirmProjectDeletionDialog confirmDialog = new ConfirmProjectDeletionDialog( project );
@@ -132,9 +137,9 @@ namespace HeadLibrarian.ViewModels
 				return;
 			}
 
-			lock ( _projectsCollectionLock )
+			lock ( _tabsCollectionLock )
 			{
-				Projects.Remove( project );
+				Tabs.Remove( project );
 			}
 
 			ProjectDelete?.Invoke( this, project );
@@ -142,10 +147,17 @@ namespace HeadLibrarian.ViewModels
 
 		public event EventHandler<ProjectViewModel> ProjectDelete;
 
-		readonly Object _projectsCollectionLock = new Object();
+		public ICommand OpenLogsCommand { get; }
+
+		static void CommandOpenLogs( Object o )
+		{
+			Process.Start( Constants.LogFilename );
+		}
+
+		readonly Object _tabsCollectionLock = new Object();
 		Boolean _isConnectedToDatabase;
 		Boolean _isAttemptingConnectionToDatabase;
 		Database _database;
-		ProjectViewModel _selectedProject;
+		ITabViewModel _selectedTab;
 	}
 }
