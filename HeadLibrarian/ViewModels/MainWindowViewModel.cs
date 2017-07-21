@@ -21,8 +21,13 @@ namespace HeadLibrarian.ViewModels
 			CreateProjectCommand = new Command( null, CommandCreateProject );
 			DeleteProjectCommand = new Command( null, CommandDeleteProject );
 			OpenLogsCommand = new Command( null, CommandOpenLogs );
-			BindingOperations.EnableCollectionSynchronization( Tabs, _tabsCollectionLock );
-			Tabs.Add( new IntroductionTabViewModel() );
+			GoToAlecCommand = new Command( null, CommandGoToAlec );
+			GoToVisualStudioImageLibraryCommand = new Command( null, CommandGoToVisualStudioImageLibrary );
+			GoToOmmoZoubayrCommand = new Command( null, CommandGoToOmmoZoubayr );
+			GoToRaindropmemoryCommand = new Command( null, CommandGoToRaindropmemory );
+			ViewSourceCodeCommand = new Command( null, CommandViewSourceCode );
+
+			BindingOperations.EnableCollectionSynchronization( Projects, _projectsCollectionLock );
 		}
 
 		#region Database
@@ -69,32 +74,38 @@ namespace HeadLibrarian.ViewModels
 		void FinishDatabaseConnection( Boolean isConnected, IEnumerable<Project> projects )
 		{
 			IsConnectedToDatabase = isConnected;
-			lock ( _tabsCollectionLock )
+			lock ( _projectsCollectionLock )
 			{
-				ITabViewModel introductionTab = Tabs.First( tab => tab is IntroductionTabViewModel );
-				Tabs.Clear();
-				Tabs.Add( introductionTab );
+				Projects.Clear();
 				if ( projects != null )
 				{
 					foreach ( Project project in projects )
 					{
-						Tabs.Add( new ProjectViewModel( _database, project ) );
+						Projects.Add( new ProjectViewModel( _database, project ) );
 					}
 				}
 			}
 			IsAttemptingConnectionToDatabase = false;
-			SelectedTab = Tabs.FirstOrDefault();
+			SelectedProject = Projects.FirstOrDefault();
 		}
 
 		#endregion
 
-		public ObservableCollection<ITabViewModel> Tabs { get; } = new ObservableCollection<ITabViewModel>();
+		public ObservableCollection<ProjectViewModel> Projects { get; } = new ObservableCollection<ProjectViewModel>();
 
-		public ITabViewModel SelectedTab
+		public ProjectViewModel SelectedProject
 		{
-			get => _selectedTab;
-			set => SetProperty( ref _selectedTab, value );
+			get => _selectedProject;
+			set
+			{
+				if ( SetProperty( ref _selectedProject, value ) )
+				{
+					OnPropertyChanged( nameof( IsProjectSelected ) );
+				}
+			}
 		}
+
+		public Boolean IsProjectSelected => ( SelectedProject != null );
 
 		public ICommand CreateProjectCommand { get; }
 
@@ -102,24 +113,33 @@ namespace HeadLibrarian.ViewModels
 		{
 			Project newProject = Project.Create( _database );
 			ProjectViewModel viewModel = new ProjectViewModel( _database, newProject );
-			lock ( _tabsCollectionLock )
+			lock ( _projectsCollectionLock )
 			{
-				Tabs.Add( viewModel );
+				Projects.Add( viewModel );
 			}
-			SelectedTab = viewModel;
+			SelectedProject = viewModel;
 		}
 
 		public ICommand DeleteProjectCommand { get; }
 
 		void CommandDeleteProject( Object o )
 		{
-			ProjectViewModel project = ( SelectedTab as ProjectViewModel );
+			Window mainWindow = ( o as Window );
+			if ( mainWindow == null )
+			{
+				throw new ArgumentNullException( nameof( mainWindow ) );
+			}
+
+			ProjectViewModel project = SelectedProject;
 			if ( project == null )
 			{
 				return;
 			}
 
-			ConfirmProjectDeletionDialog confirmDialog = new ConfirmProjectDeletionDialog( project );
+			ConfirmProjectDeletionDialog confirmDialog = new ConfirmProjectDeletionDialog( project )
+			{
+				Owner = mainWindow
+			};
 			confirmDialog.ShowDialog();
 			if ( confirmDialog.DialogResult != true )
 			{
@@ -137,9 +157,9 @@ namespace HeadLibrarian.ViewModels
 				return;
 			}
 
-			lock ( _tabsCollectionLock )
+			lock ( _projectsCollectionLock )
 			{
-				Tabs.Remove( project );
+				Projects.Remove( project );
 			}
 
 			ProjectDelete?.Invoke( this, project );
@@ -154,10 +174,45 @@ namespace HeadLibrarian.ViewModels
 			Process.Start( Constants.LogFilename );
 		}
 
-		readonly Object _tabsCollectionLock = new Object();
+		public ICommand GoToAlecCommand { get; }
+
+		static void CommandGoToAlec( Object o )
+		{
+			Process.Start( @"http://alec.deitloff.com/" );
+		}
+
+		public ICommand GoToVisualStudioImageLibraryCommand { get; }
+
+		static void CommandGoToVisualStudioImageLibrary( Object o )
+		{
+			Process.Start( @"https://www.microsoft.com/en-us/download/details.aspx?id=35825" );
+		}
+
+		public ICommand GoToOmmoZoubayrCommand { get; }
+
+		static void CommandGoToOmmoZoubayr( Object o )
+		{
+			Process.Start( @"https://www.iconfinder.com/iconsets/free-basic" );
+		}
+
+		public ICommand GoToRaindropmemoryCommand { get; }
+
+		static void CommandGoToRaindropmemory( Object o )
+		{
+			Process.Start( @"https://www.iconfinder.com/icons/88895/library_icon#size=128" );
+		}
+
+		public ICommand ViewSourceCodeCommand { get; }
+
+		static void CommandViewSourceCode( Object o )
+		{
+			Process.Start( @"https://bitbucket.org/ahlec/alexandria/src" );
+		}
+
+		readonly Object _projectsCollectionLock = new Object();
 		Boolean _isConnectedToDatabase;
 		Boolean _isAttemptingConnectionToDatabase;
 		Database _database;
-		ITabViewModel _selectedTab;
+		ProjectViewModel _selectedProject;
 	}
 }

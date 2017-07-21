@@ -8,8 +8,8 @@
 					 xmlns:views="clr-namespace:HeadLibrarian.Views"
 					 xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 					 xmlns:fluent="urn:fluent-ribbon"
-					 xmlns:wpf="clr-namespace:HeadLibrarian.WPF"
 					 mc:Ignorable="d"
+					 x:Name="HeadLibrarianMainWindow"
 					 Title="Head Librarian: An Alexandria Suite Tool"
 					 ResizeMode="CanMinimize"
 					 WindowStartupLocation="CenterScreen"
@@ -21,11 +21,7 @@
 
 	<fluent:RibbonWindow.Resources>
 		<converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
-		<converters:InvertedBooleanConverter x:Key="InvertedBooleanConverter" />
 		<converters:ProjectDisplayNameMultiConverter x:Key="ProjectDisplayNameMultiConverter" />
-		<converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter" />
-		<converters:SaveProjectButtonMultiConverter x:Key="SaveProjectButtonMultiConverter" />
-		<converters:IsNullToVisibilityConverter x:Key="IsNullToVisibilityConverter" />
 
 		<Style x:Key="MajorRibbonButton"
 			   TargetType="fluent:Button">
@@ -41,10 +37,10 @@
 	<fluent:RibbonWindow.InputBindings>
 		<KeyBinding Key="Z"
 					Modifiers="Control"
-					Command="{Binding SelectedTab.UndoCommand}" />
+					Command="{Binding SelectedProject.UndoCommand}" />
 		<KeyBinding Key="Y"
 					Modifiers="Control"
-					Command="{Binding SelectedTab.RedoCommand}" />
+					Command="{Binding SelectedProject.RedoCommand}" />
 	</fluent:RibbonWindow.InputBindings>
 
 	<i:Interaction.Triggers>
@@ -56,7 +52,8 @@
 	<DockPanel>
 		<fluent:Ribbon DockPanel.Dock="Top"
 					   IsQuickAccessToolBarMenuDropDownVisible="False">
-			<fluent:RibbonTabItem Header="Projects">
+			<fluent:RibbonTabItem Header="Projects"
+								  Visibility="{Binding IsAttemptingConnectionToDatabase, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
 				<fluent:RibbonGroupBox Header="Create"
 									   Width="200">
 					<fluent:Button Header="New Project"
@@ -68,18 +65,18 @@
 								   Icon="pack://application:,,,/HeadLibrarian;component/Resources/Duplicate.png"
 								   ToolTip="Duplicate the project that is currently in focus"
 								   SizeDefinition="Middle,Small"
-								   Visibility="{Binding SelectedTab.IsProject, Converter={StaticResource BooleanToVisibilityConverter}}" />
+								   Visibility="{Binding IsProjectSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
 					<fluent:Button Header="Import Project"
 								   ToolTip="Import a project from a previously exported file"
 								   SizeDefinition="Middle,Small" />
 				</fluent:RibbonGroupBox>
 				<fluent:RibbonGroupBox Header="Save"
 									   Width="200"
-									   Visibility="{Binding SelectedTab.IsProject, Converter={StaticResource BooleanToVisibilityConverter}}">
+									   Visibility="{Binding IsProjectSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
 					<fluent:Button Header="Save Project"
 								   ToolTip="Save the current project to the database"
 								   Style="{StaticResource MajorRibbonButton}"
-								   IsEnabled="{Binding SelectedTab.HasUnsavedChanges}"
+								   IsEnabled="{Binding SelectedProject.HasUnsavedChanges}"
 								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Save_32x.png" />
 					<fluent:Button Header="Save all Projects"
 								   Icon="pack://application:,,,/HeadLibrarian;component/Resources/SaveAll_16x.png"
@@ -92,130 +89,69 @@
 				</fluent:RibbonGroupBox>
 				<fluent:RibbonGroupBox Header="Delete"
 									   Width="200"
-									   Visibility="{Binding SelectedTab.IsProject, Converter={StaticResource BooleanToVisibilityConverter}}">
+									   Visibility="{Binding IsProjectSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
 					<fluent:Button Header="Delete"
 								   Style="{StaticResource MajorRibbonButton}"
 								   ToolTip="Delete the current project from the database"
 								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Delete.png"
-								   Command="{Binding DeleteProjectCommand}" />
+								   Command="{Binding DeleteProjectCommand}"
+								   CommandParameter="{Binding ElementName=HeadLibrarianMainWindow}" />
 				</fluent:RibbonGroupBox>
 			</fluent:RibbonTabItem>
 			<fluent:RibbonTabItem Header="Bibliothecary">
 
 			</fluent:RibbonTabItem>
 			<fluent:RibbonTabItem Header="Alexandria">
-
+				<fluent:RibbonGroupBox Header="Credits"
+									   Width="550">
+					<fluent:RibbonGroupBox.Resources>
+						<Style TargetType="TextBlock">
+							<Setter Property="Margin" Value="6,0,6,0" />
+						</Style>
+					</fluent:RibbonGroupBox.Resources>
+					
+					<TextBlock>
+						<Run FontWeight="Bold">HeadLibrarian</Run>
+						<Run>—</Run>
+						<Run FontStyle="Italic">An Alexandria Suite Tool</Run>
+					</TextBlock>
+					<TextBlock>
+						<Run>Programmer, Designer:</Run>
+						<Hyperlink Command="{Binding GoToAlecCommand}">Alec Deitloff</Hyperlink>
+					</TextBlock>
+					<TextBlock>
+						<Run>Ribbon icons are from the</Run>
+						<Hyperlink Command="{Binding GoToVisualStudioImageLibraryCommand}">Visual Studio Image Library 2015</Hyperlink>
+						<Run>. Used appropriately.</Run>
+					</TextBlock>
+					<TextBlock>
+						<Run>Dialog icons are by</Run>
+						<Hyperlink Command="{Binding GoToOmmoZoubayrCommand}">OmmoZoubayr</Hyperlink>
+						<Run>. Application icon by</Run>
+						<Hyperlink Command="{Binding GoToRaindropmemoryCommand}">Raindropmemory</Hyperlink>
+						<Run>.</Run>
+					</TextBlock>
+				</fluent:RibbonGroupBox>
+				<fluent:RibbonGroupBox Header="Code"
+									   Width="200">
+					<fluent:Button Header="View Source"
+								   Style="{StaticResource MajorRibbonButton}"
+								   ToolTip="The Alexandria suite is open source code! You can view all of our code online—and even use it yourself!"
+								   Command="{Binding ViewSourceCodeCommand}" />
+				</fluent:RibbonGroupBox>
 			</fluent:RibbonTabItem>
 		</fluent:Ribbon>
 
 		<fluent:StatusBar DockPanel.Dock="Bottom"
 						  HorizontalAlignment="Stretch" />
 
-		<TabControl ItemsSource="{Binding Tabs}"
-					SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
-					Margin="0,4,0,0">
-			<TabControl.ItemTemplateSelector>
-				<wpf:TabViewModelTemplateSelector>
-					<wpf:TabViewModelTemplateSelector.IntroductionDataTemplate>
-						<DataTemplate>
-							<TextBlock>[ H O M E ]</TextBlock>
-						</DataTemplate>
-					</wpf:TabViewModelTemplateSelector.IntroductionDataTemplate>
-					<wpf:TabViewModelTemplateSelector.ProjectDataTemplate>
-						<DataTemplate DataType="viewModels:ProjectViewModel">
-							<TextBlock VerticalAlignment="Center">
-								<TextBlock.Text>
-									<MultiBinding Converter="{StaticResource ProjectDisplayNameMultiConverter}">
-										<Binding Path="Name" />
-										<Binding Path="HasUnsavedChanges" />
-									</MultiBinding>
-								</TextBlock.Text>
-							</TextBlock>
-						</DataTemplate>
-					</wpf:TabViewModelTemplateSelector.ProjectDataTemplate>
-				</wpf:TabViewModelTemplateSelector>
-			</TabControl.ItemTemplateSelector>
-			<TabControl.ContentTemplateSelector>
-				<wpf:TabViewModelTemplateSelector>
-					<wpf:TabViewModelTemplateSelector.IntroductionDataTemplate>
-						<DataTemplate>
-							<StackPanel Margin="6">
-								<TextBlock TextWrapping="WrapWithOverflow">
-									<Run FontWeight="Bold"
-										 FontSize="18">HeadLibrarian</Run>
-									<Run FontSize="12"
-										 FontStyle="Italic">An Alexandria Suite Tool</Run>
-								</TextBlock>
-								<Separator />
-								<TextBlock TextWrapping="WrapWithOverflow"
-										   Margin="0,0,0,4">
-									<Run>Welcome to</Run>
-									<Run FontWeight="Bold">HeadLibrarian</Run>
-									<Run>! This is a tool used to configure the</Run>
-									<Run FontStyle="Italic">Alexandria</Run>
-									<Run>desktop service</Run>
-									<Run FontWeight="Bold">Bibliothecary</Run>
-									<Run>which collects fanfic stories from various sources and posts them to Tumblr or emails you a report of any new stories that meet your search criteria.</Run>
-								</TextBlock>
-								<TextBlock TextWrapping="WrapWithOverflow">
-									<Run>Using this programme should be very easy!</Run>
-									<Run FontWeight="Bold">Bibliothecary</Run>
-									<Run>is built to allow you to have many different searches active at any given time, each fully customisable and separate from the others. A</Run>
-									<Run TextDecorations="Underline">project</Run>
-									<Run>is a unique search query that will be executed on each of the fanfic source websites that you choose. It can be as simple as targetting a single character or as complex as the impossible intersection of three AUs and a rarepair. You can start by clicking on the</Run>
-									<Image Source="../Resources/add-icon.png"
-										   Width="16"
-										   Height="16" />
-									<Run>icon to the left, which will add your first project. Don't forget to hit</Run>
-									<Image Source="../Resources/disk-icon.png"
-										   Width="16"
-										   Height="16" />
-									<Run>when you're done!</Run>
-								</TextBlock>
-							</StackPanel>
-						</DataTemplate>
-					</wpf:TabViewModelTemplateSelector.IntroductionDataTemplate>
-					<wpf:TabViewModelTemplateSelector.ProjectDataTemplate>
-						<DataTemplate DataType="viewModels:ProjectViewModel">
-							<ScrollViewer HorizontalScrollBarVisibility="Disabled"
-										  VerticalScrollBarVisibility="Auto">
-								<views:ProjectView DataContext="{Binding}"
-												   Margin="6" />
-							</ScrollViewer>
-						</DataTemplate>
-					</wpf:TabViewModelTemplateSelector.ProjectDataTemplate>
-				</wpf:TabViewModelTemplateSelector>
-			</TabControl.ContentTemplateSelector>
-		</TabControl>
-
-		<!--
 		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="*" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="200"
-								  MinWidth="100"
-								  MaxWidth="450" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
-
-			<Label Grid.Row="0"
-				   Grid.Column="0"
-				   FontWeight="Bold">Projects</Label>
-
-			<ListBox x:Name="ProjectsListBox"
-					 Grid.Row="1"
-					 Grid.Column="0"
-					 ItemsSource="{Binding Projects}"
-					 SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
-					 Margin="6,6,11,6">
-				<ListBox.ItemTemplate>
+			<TabControl ItemsSource="{Binding Projects}"
+						SelectedItem="{Binding SelectedProject, Mode=TwoWay}"
+						Margin="0,4,0,0">
+				<TabControl.ItemTemplate>
 					<DataTemplate DataType="viewModels:ProjectViewModel">
-						<TextBlock>
+						<TextBlock VerticalAlignment="Center">
 							<TextBlock.Text>
 								<MultiBinding Converter="{StaticResource ProjectDisplayNameMultiConverter}">
 									<Binding Path="Name" />
@@ -224,119 +160,55 @@
 							</TextBlock.Text>
 						</TextBlock>
 					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
+				</TabControl.ItemTemplate>
+				<TabControl.ContentTemplate>
+					<DataTemplate DataType="viewModels:ProjectViewModel">
+						<ScrollViewer HorizontalScrollBarVisibility="Disabled"
+									  VerticalScrollBarVisibility="Auto">
+							<views:ProjectView DataContext="{Binding}"
+											   Margin="6" />
+						</ScrollViewer>
+					</DataTemplate>
+				</TabControl.ContentTemplate>
+			</TabControl>
 
-			<StackPanel Grid.Row="2"
-						Grid.Column="0"
-						Orientation="Horizontal"
-						HorizontalAlignment="Right"
-						Margin="6,0,11,6">
-				<StackPanel.Resources>
-					<Style TargetType="Button">
-						<Setter Property="Margin"
-								Value="6,0,0,0" />
-					</Style>
-				</StackPanel.Resources>
-
-				<Button Command="{Binding CreateProjectCommand}"
-						ToolTip="Create New Project">
-					<Image Source="../Resources/add-icon.png"
-						   Width="16"
-						   Height="16" />
-				</Button>
-				<Button Command="{Binding SelectedProject.SaveCommand}"
-						ToolTip="Save Selected Project">
-					<Button.IsEnabled>
-						<MultiBinding Converter="{StaticResource SaveProjectButtonMultiConverter}">
-							<Binding Path="SelectedProject" />
-							<Binding Path="SelectedProject.HasUnsavedChanges" />
-						</MultiBinding>
-					</Button.IsEnabled>
-					<Image Source="../Resources/disk-icon.png"
-						   Width="16"
-						   Height="16" />
-				</Button>
-				<Button Command="{Binding DeleteProjectCommand}"
-						CommandParameter="{Binding SelectedItem, ElementName=ProjectsListBox}"
-						ToolTip="Delete Selected Project"
-						IsEnabled="{Binding SelectedProject, Converter={StaticResource NotNullToBooleanConverter}}">
-					<Image Source="../Resources/delete-icon.png"
-						   Width="16"
-						   Height="16" />
-				</Button>
-			</StackPanel>
-
-			<ScrollViewer Grid.Row="1"
-						  Grid.RowSpan="2"
-						  Grid.Column="1"
-						  HorizontalScrollBarVisibility="Disabled"
-						  VerticalScrollBarVisibility="Auto"
-						  IsEnabled="{Binding SelectedProject, Converter={StaticResource NotNullToBooleanConverter}}">
-				<views:ProjectView DataContext="{Binding SelectedItem, ElementName=ProjectsListBox}"
-								   Margin="6" />
-			</ScrollViewer>
-
-			<StackPanel Grid.Row="1"
-						Grid.RowSpan="2"
-						Grid.Column="1"
-						Visibility="{Binding SelectedProject, Converter={StaticResource IsNullToVisibilityConverter}}"
-						Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-						Margin="6">
-				<TextBlock TextWrapping="WrapWithOverflow">
-					<Run FontWeight="Bold"
-						 FontSize="18">HeadLibrarian</Run>
-					<Run FontSize="12"
-						 FontStyle="Italic">An Alexandria Suite Tool</Run>
-				</TextBlock>
-				<Separator />
-				<TextBlock TextWrapping="WrapWithOverflow"
-						   Margin="0,0,0,4">
-					<Run>Welcome to</Run>
-					<Run FontWeight="Bold">HeadLibrarian</Run>
-					<Run>! This is a tool used to configure the</Run>
-					<Run FontStyle="Italic">Alexandria</Run>
-					<Run>desktop service</Run>
-					<Run FontWeight="Bold">Bibliothecary</Run>
-					<Run>which collects fanfic stories from various sources and posts them to Tumblr or emails you a report of any new stories that meet your search criteria.</Run>
-				</TextBlock>
-				<TextBlock TextWrapping="WrapWithOverflow">
-					<Run>Using this programme should be very easy!</Run>
-					<Run FontWeight="Bold">Bibliothecary</Run>
-					<Run>is built to allow you to have many different searches active at any given time, each fully customisable and separate from the others. A</Run>
-					<Run TextDecorations="Underline">project</Run>
-					<Run>is a unique search query that will be executed on each of the fanfic source websites that you choose. It can be as simple as targetting a single character or as complex as the impossible intersection of three AUs and a rarepair. You can start by clicking on the</Run>
-					<Image Source="../Resources/add-icon.png"
-						   Width="16"
-						   Height="16" />
-					<Run>icon to the left, which will add your first project. Don't forget to hit</Run>
-					<Image Source="../Resources/disk-icon.png"
-						   Width="16"
-						   Height="16" />
-					<Run>when you're done!</Run>
-				</TextBlock>
-			</StackPanel>
-
-			<GridSplitter Grid.Row="0"
-						  Grid.RowSpan="3"
-						  Grid.Column="0"
-						  HorizontalAlignment="Right"
-						  VerticalAlignment="Stretch"
-						  Width="5" />
-
-			<StackPanel Grid.Row="0"
-						Grid.RowSpan="3"
-						Grid.Column="0"
-						Grid.ColumnSpan="2"
-						Visibility="{Binding IsConnectedToDatabase, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
-						Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
-				<Button Command="{Binding ConnectToDatabaseCommand}"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Center"
-						IsEnabled="{Binding IsAttemptingConnectionToDatabase, Converter={StaticResource InvertedBooleanConverter}}">Connect to Database</Button>
-			</StackPanel>
+			<Grid Visibility="{Binding IsProjectSelected, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
+				  Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+				<StackPanel Margin="6">
+					<TextBlock TextWrapping="WrapWithOverflow">
+						<Run FontWeight="Bold"
+							 FontSize="18">HeadLibrarian</Run>
+						<Run FontSize="12"
+							 FontStyle="Italic">An Alexandria Suite Tool</Run>
+					</TextBlock>
+					<Separator />
+					<TextBlock TextWrapping="WrapWithOverflow"
+							   Margin="0,0,0,4">
+						<Run>Welcome to</Run>
+						<Run FontWeight="Bold">HeadLibrarian</Run>
+						<Run>! This is a tool used to configure the</Run>
+						<Run FontStyle="Italic">Alexandria</Run>
+						<Run>desktop service</Run>
+						<Run FontWeight="Bold">Bibliothecary</Run>
+						<Run>which collects fanfic stories from various sources and posts them to Tumblr or emails you a report of any new stories that meet your search criteria.</Run>
+					</TextBlock>
+					<TextBlock TextWrapping="WrapWithOverflow">
+						<Run>Using this programme should be very easy!</Run>
+						<Run FontWeight="Bold">Bibliothecary</Run>
+						<Run>is built to allow you to have many different searches active at any given time, each fully customisable and separate from the others. A</Run>
+						<Run TextDecorations="Underline">project</Run>
+						<Run>is a unique search query that will be executed on each of the fanfic source websites that you choose. It can be as simple as targetting a single character or as complex as the impossible intersection of three AUs and a rarepair. You can start by clicking on the</Run>
+						<Image Source="../Resources/add-icon.png"
+							   Width="16"
+							   Height="16" />
+						<Run>icon to the left, which will add your first project. Don't forget to hit</Run>
+						<Image Source="../Resources/disk-icon.png"
+							   Width="16"
+							   Height="16" />
+						<Run>when you're done!</Run>
+					</TextBlock>
+				</StackPanel>
+			</Grid>
 		</Grid>
-		-->
 	</DockPanel>
 </fluent:RibbonWindow>
-

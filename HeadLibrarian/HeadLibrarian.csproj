@@ -146,8 +146,6 @@
     <Compile Include="ViewModels\ContentWarningViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\DateSearchCriteriaViewModel.cs" />
     <Compile Include="ViewModels\DateSearchCriteriaViewModel.UndoCommands.cs" />
-    <Compile Include="ViewModels\IntroductionTabViewModel.cs" />
-    <Compile Include="ViewModels\ITabViewModel.cs" />
     <Compile Include="ViewModels\LibrarySearchViewModel.cs" />
     <Compile Include="ViewModels\LibrarySearchViewModel.UndoCommands.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
@@ -172,7 +170,6 @@
       <DependentUpon>PublishingInfoView.xaml</DependentUpon>
     </Compile>
     <Compile Include="WPF\Command.cs" />
-    <Compile Include="WPF\TabViewModelTemplateSelector.cs" />
     <Page Include="Controls\DateSearchCriteriaEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
