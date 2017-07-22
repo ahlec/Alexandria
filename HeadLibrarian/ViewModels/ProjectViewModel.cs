@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using Bibliothecary.Core;
 using HeadLibrarian.WPF;
+using PubSub;
 
 namespace HeadLibrarian.ViewModels
 {
@@ -159,6 +160,21 @@ namespace HeadLibrarian.ViewModels
 			OnPropertyChanged( nameof( HasUnsavedChanges ) );
 		}
 
+		/// <inheritdoc />
+		protected override void OnPropertyChanged( String propertyName )
+		{
+			base.OnPropertyChanged( propertyName );
+
+			if ( propertyName.Equals( nameof( HasUnsavedChanges ) ) )
+			{
+				if ( _previousHasUnsavedChanges != HasUnsavedChanges )
+				{
+					this.Publish<ProjectHasUnsavedChangesChanged>();
+				}
+				_previousHasUnsavedChanges = HasUnsavedChanges;
+			}
+		}
+
 		public Boolean Delete()
 		{
 			return Project.Delete();
@@ -166,5 +182,6 @@ namespace HeadLibrarian.ViewModels
 
 		Boolean _canUndo;
 		Boolean _canRedo;
+		Boolean _previousHasUnsavedChanges;
 	}
 }

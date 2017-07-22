@@ -41,6 +41,15 @@
 		<KeyBinding Key="Y"
 					Modifiers="Control"
 					Command="{Binding SelectedProject.RedoCommand}" />
+		<KeyBinding Key="N"
+					Modifiers="Control"
+					Command="{Binding CreateProjectCommand}" />
+		<KeyBinding Key="S"
+					Modifiers="Control"
+					Command="{Binding SelectedProject.SaveCommand}" />
+		<KeyBinding Key="S"
+					Modifiers="Control+Shift"
+					Command="{Binding SaveAllCommand}" />
 	</fluent:RibbonWindow.InputBindings>
 
 	<i:Interaction.Triggers>
@@ -52,64 +61,84 @@
 	<DockPanel>
 		<fluent:Ribbon DockPanel.Dock="Top"
 					   IsQuickAccessToolBarMenuDropDownVisible="False">
+			<fluent:Ribbon.Resources>
+				<Style TargetType="fluent:RibbonGroupBox">
+					<Setter Property="MinWidth"
+							Value="200" />
+				</Style>
+			</fluent:Ribbon.Resources>
 			<fluent:RibbonTabItem Header="Projects"
 								  Visibility="{Binding IsAttemptingConnectionToDatabase, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
-				<fluent:RibbonGroupBox Header="Create"
-									   Width="200">
+				<fluent:RibbonGroupBox Header="Create">
 					<fluent:Button Header="New Project"
 								   ToolTip="Create a blank project"
 								   Style="{StaticResource MajorRibbonButton}"
-								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/New.png"
-								   Command="{Binding CreateProjectCommand}" />
+								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Add_32x.png"
+								   Command="{Binding CreateProjectCommand}"
+								   fluent:KeyTip.Keys="N" />
 					<fluent:Button Header="Duplicate Project"
-								   Icon="pack://application:,,,/HeadLibrarian;component/Resources/Duplicate.png"
+								   Icon="pack://application:,,,/HeadLibrarian;component/Resources/Copy_16x.png"
 								   ToolTip="Duplicate the project that is currently in focus"
 								   SizeDefinition="Middle,Small"
 								   Visibility="{Binding IsProjectSelected, Converter={StaticResource BooleanToVisibilityConverter}}" />
 					<fluent:Button Header="Import Project"
+								   Icon="pack://application:,,,/HeadLibrarian;component/Resources/ImportFile_16x.png"
 								   ToolTip="Import a project from a previously exported file"
 								   SizeDefinition="Middle,Small" />
 				</fluent:RibbonGroupBox>
 				<fluent:RibbonGroupBox Header="Save"
-									   Width="200"
 									   Visibility="{Binding IsProjectSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
 					<fluent:Button Header="Save Project"
 								   ToolTip="Save the current project to the database"
 								   Style="{StaticResource MajorRibbonButton}"
 								   IsEnabled="{Binding SelectedProject.HasUnsavedChanges}"
-								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Save_32x.png" />
+								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Save_32x.png"
+								   fluent:KeyTip.Keys="S" />
 					<fluent:Button Header="Save all Projects"
 								   Icon="pack://application:,,,/HeadLibrarian;component/Resources/SaveAll_16x.png"
 								   ToolTip="Save all currently modified projects to the database"
-								   SizeDefinition="Middle,Small" />
+								   IsEnabled="{Binding DoesAnyProjectHaveUnsavedChanges}"
+								   SizeDefinition="Middle,Small"
+								   fluent:KeyTip.Keys="Ctrl + Shift + S" />
 					<fluent:Button Header="Export Project"
-								   Icon="pack://application:,,,/HeadLibrarian;component/Resources/ExportData_16x.png"
+								   Icon="pack://application:,,,/HeadLibrarian;component/Resources/ExportFile_16x.png"
 								   ToolTip="Expore the current project to a JSON file to be imported elsewhere"
 								   SizeDefinition="Middle,Small" />
 				</fluent:RibbonGroupBox>
 				<fluent:RibbonGroupBox Header="Delete"
-									   Width="200"
 									   Visibility="{Binding IsProjectSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-					<fluent:Button Header="Delete"
+					<fluent:Button Header="Delete Project"
 								   Style="{StaticResource MajorRibbonButton}"
 								   ToolTip="Delete the current project from the database"
-								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Delete.png"
+								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Remove_color_32x.png"
 								   Command="{Binding DeleteProjectCommand}"
 								   CommandParameter="{Binding ElementName=HeadLibrarianMainWindow}" />
 				</fluent:RibbonGroupBox>
 			</fluent:RibbonTabItem>
 			<fluent:RibbonTabItem Header="Bibliothecary">
-
+				<fluent:RibbonGroupBox Header="Management">
+					<fluent:Button Header="Open Logs"
+								   Style="{StaticResource MajorRibbonButton}"
+								   ToolTip="Open the log file for Bibliothecary to see the details of its latest runs"
+								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Log_32x.png"
+								   Command="{Binding OpenLogsCommand}" />
+					<fluent:Button Header="Open Working Directory"
+								   Style="{StaticResource MajorRibbonButton}"
+								   ToolTip="Open the directory where the logs, binaries, and database are located."
+								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Folder_32x.png"
+								   Command="{Binding OpenWorkingDirectoryCommand}" />
+				</fluent:RibbonGroupBox>
 			</fluent:RibbonTabItem>
 			<fluent:RibbonTabItem Header="Alexandria">
 				<fluent:RibbonGroupBox Header="Credits"
 									   Width="550">
 					<fluent:RibbonGroupBox.Resources>
 						<Style TargetType="TextBlock">
-							<Setter Property="Margin" Value="6,0,6,0" />
+							<Setter Property="Margin"
+									Value="6,0,6,0" />
 						</Style>
 					</fluent:RibbonGroupBox.Resources>
-					
+
 					<TextBlock>
 						<Run FontWeight="Bold">HeadLibrarian</Run>
 						<Run>—</Run>
@@ -132,10 +161,10 @@
 						<Run>.</Run>
 					</TextBlock>
 				</fluent:RibbonGroupBox>
-				<fluent:RibbonGroupBox Header="Code"
-									   Width="200">
+				<fluent:RibbonGroupBox Header="Code">
 					<fluent:Button Header="View Source"
 								   Style="{StaticResource MajorRibbonButton}"
+								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Library_32x.png"
 								   ToolTip="The Alexandria suite is open source code! You can view all of our code online—and even use it yourself!"
 								   Command="{Binding ViewSourceCodeCommand}" />
 				</fluent:RibbonGroupBox>
@@ -198,13 +227,7 @@
 						<Run>is built to allow you to have many different searches active at any given time, each fully customisable and separate from the others. A</Run>
 						<Run TextDecorations="Underline">project</Run>
 						<Run>is a unique search query that will be executed on each of the fanfic source websites that you choose. It can be as simple as targetting a single character or as complex as the impossible intersection of three AUs and a rarepair. You can start by clicking on the</Run>
-						<Image Source="../Resources/add-icon.png"
-							   Width="16"
-							   Height="16" />
 						<Run>icon to the left, which will add your first project. Don't forget to hit</Run>
-						<Image Source="../Resources/disk-icon.png"
-							   Width="16"
-							   Height="16" />
 						<Run>when you're done!</Run>
 					</TextBlock>
 				</StackPanel>

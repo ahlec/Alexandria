@@ -36,7 +36,7 @@ namespace HeadLibrarian.ViewModels
 			return true;
 		}
 
-		protected void OnPropertyChanged( String propertyName )
+		protected virtual void OnPropertyChanged( String propertyName )
 		{
 			PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
 		}

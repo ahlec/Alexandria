@@ -8,8 +8,10 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using Bibliothecary.Core;
+using Bibliothecary.Core.Utils;
 using HeadLibrarian.Dialogs;
 using HeadLibrarian.WPF;
+using PubSub;
 
 namespace HeadLibrarian.ViewModels
 {
@@ -17,10 +19,14 @@ namespace HeadLibrarian.ViewModels
 	{
 		public MainWindowViewModel()
 		{
+			this.Subscribe<ProjectHasUnsavedChangesChanged>( OnProjectHasUnsavedChangesChanged );
+
 			ConnectToDatabaseCommand = new Command( null, CommandConnectToDatabase );
 			CreateProjectCommand = new Command( null, CommandCreateProject );
+			SaveAllCommand = new Command( null, CommandSaveAll );
 			DeleteProjectCommand = new Command( null, CommandDeleteProject );
 			OpenLogsCommand = new Command( null, CommandOpenLogs );
+			OpenWorkingDirectoryCommand = new Command( null, CommandOpenWorkingDirectory );
 			GoToAlecCommand = new Command( null, CommandGoToAlec );
 			GoToVisualStudioImageLibraryCommand = new Command( null, CommandGoToVisualStudioImageLibrary );
 			GoToOmmoZoubayrCommand = new Command( null, CommandGoToOmmoZoubayr );
@@ -87,6 +93,7 @@ namespace HeadLibrarian.ViewModels
 			}
 			IsAttemptingConnectionToDatabase = false;
 			SelectedProject = Projects.FirstOrDefault();
+			RefreshDoesAnyProjectHaveUnsavedChanges();
 		}
 
 		#endregion
@@ -107,6 +114,22 @@ namespace HeadLibrarian.ViewModels
 
 		public Boolean IsProjectSelected => ( SelectedProject != null );
 
+		public Boolean DoesAnyProjectHaveUnsavedChanges { get; private set; }
+
+		void RefreshDoesAnyProjectHaveUnsavedChanges()
+		{
+			lock( _projectsCollectionLock )
+			{
+				DoesAnyProjectHaveUnsavedChanges = Projects.Any( project => project.HasUnsavedChanges );
+				OnPropertyChanged( nameof( DoesAnyProjectHaveUnsavedChanges ) );
+			}
+		}
+
+		void OnProjectHasUnsavedChangesChanged( ProjectHasUnsavedChangesChanged e )
+		{
+			RefreshDoesAnyProjectHaveUnsavedChanges();
+		}
+
 		public ICommand CreateProjectCommand { get; }
 
 		void CommandCreateProject( Object o )
@@ -118,6 +141,20 @@ namespace HeadLibrarian.ViewModels
 				Projects.Add( viewModel );
 			}
 			SelectedProject = viewModel;
+			RefreshDoesAnyProjectHaveUnsavedChanges();
+		}
+
+		public ICommand SaveAllCommand { get; }
+
+		void CommandSaveAll( Object o )
+		{
+			lock ( _projectsCollectionLock )
+			{
+				foreach ( ProjectViewModel project in Projects )
+				{
+					project.SaveCommand.Execute( null );
+				}
+			}
 		}
 
 		public ICommand DeleteProjectCommand { get; }
@@ -163,6 +200,8 @@ namespace HeadLibrarian.ViewModels
 			}
 
 			ProjectDelete?.Invoke( this, project );
+
+			RefreshDoesAnyProjectHaveUnsavedChanges();
 		}
 
 		public event EventHandler<ProjectViewModel> ProjectDelete;
@@ -172,6 +211,13 @@ namespace HeadLibrarian.ViewModels
 		static void CommandOpenLogs( Object o )
 		{
 			Process.Start( Constants.LogFilename );
+		}
+
+		public ICommand OpenWorkingDirectoryCommand { get; }
+
+		static void CommandOpenWorkingDirectory( Object o )
+		{
+			Process.Start( BibliothecaryUtils.AlexandriaDirectory );
 		}
 
 		public ICommand GoToAlecCommand { get; }

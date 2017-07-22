@@ -83,6 +83,7 @@
     <Compile Include="PublishingInfo.cs" />
     <Compile Include="Publishing\EmailClient.cs" />
     <Compile Include="Publishing\TumblrClient.cs" />
+    <Compile Include="Utils\BibliothecaryUtils.cs" />
     <Compile Include="Utils\TumblrPhotosetContentWarning.cs" />
     <Compile Include="Utils\TumblrPhotosetFont.cs" />
     <Compile Include="Utils\TumblrPhotosetUtils.cs" />

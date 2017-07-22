@@ -140,6 +140,7 @@
       <DependentUpon>ProvideEmailCredentialsDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="IUndoRedoAction.cs" />
+    <Compile Include="PubSubEvents.cs" />
     <Compile Include="UndoRedoStack.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\ContentWarningViewModel.cs" />
@@ -284,12 +285,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\delete-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\add-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\confirmation.png" />
   </ItemGroup>
   <ItemGroup>
@@ -297,20 +292,29 @@
     <Resource Include="Resources\arrow-undo-icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\disk-icon.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\HeadLibrarian.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Delete.png" />
-    <Resource Include="Resources\Duplicate.png" />
-    <Resource Include="Resources\New.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\ExportData_16x.png" />
     <Resource Include="Resources\SaveAll_16x.png" />
     <Resource Include="Resources\Save_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Library_32x.png" />
+    <Resource Include="Resources\Log_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Folder_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\ExportFile_16x.png" />
+    <Resource Include="Resources\ImportFile_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Add_32x.png" />
+    <Resource Include="Resources\Remove_color_32x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Copy_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
