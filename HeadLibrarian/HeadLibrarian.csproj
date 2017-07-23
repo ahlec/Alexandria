@@ -133,6 +133,9 @@
     <Compile Include="Dialogs\AuthenticateTumblrDialog.xaml.cs">
       <DependentUpon>AuthenticateTumblrDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ConfirmSaveBeforeCloseDialog.xaml.cs">
+      <DependentUpon>ConfirmSaveBeforeCloseDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ConfirmProjectDeletionDialog.xaml.cs">
       <DependentUpon>ConfirmProjectDeletionDialog.xaml</DependentUpon>
     </Compile>
@@ -208,6 +211,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\AuthenticateTumblrDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ConfirmSaveBeforeCloseDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -315,6 +322,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Copy_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\notice.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

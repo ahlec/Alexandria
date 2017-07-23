@@ -130,6 +130,33 @@ namespace HeadLibrarian.ViewModels
 			RefreshDoesAnyProjectHaveUnsavedChanges();
 		}
 
+		/// <returns>If true, the window should close; if false, the window should remain open.</returns>
+		public Boolean ShouldPreventWindowClosing( Window mainWindow )
+		{
+			if ( !DoesAnyProjectHaveUnsavedChanges )
+			{
+				return false;
+			}
+
+			ConfirmSaveBeforeCloseDialog dialog = new ConfirmSaveBeforeCloseDialog()
+			{
+				Owner = mainWindow
+			};
+			Boolean? dialogResult = dialog.ShowDialog();
+
+			if ( dialogResult != true || dialog.Result == ConfirmSaveBeforeCloseResults.Cancel )
+			{
+				return true;
+			}
+
+			if ( dialog.Result == ConfirmSaveBeforeCloseResults.SaveThenClose )
+			{
+				CommandSaveAll( null );
+			}
+
+			return false;
+		}
+
 		public ICommand CreateProjectCommand { get; }
 
 		void CommandCreateProject( Object o )
@@ -155,6 +182,7 @@ namespace HeadLibrarian.ViewModels
 					project.SaveCommand.Execute( null );
 				}
 			}
+			RefreshDoesAnyProjectHaveUnsavedChanges();
 		}
 
 		public ICommand DeleteProjectCommand { get; }

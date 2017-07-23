@@ -13,6 +13,7 @@
 					 Title="Head Librarian: An Alexandria Suite Tool"
 					 ResizeMode="CanMinimize"
 					 WindowStartupLocation="CenterScreen"
+					 Closing="OnClosing"
 					 Height="750"
 					 Width="900">
 	<fluent:RibbonWindow.DataContext>
