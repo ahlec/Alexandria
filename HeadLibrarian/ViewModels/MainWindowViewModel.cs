@@ -20,6 +20,7 @@ namespace HeadLibrarian.ViewModels
 		public MainWindowViewModel()
 		{
 			this.Subscribe<ProjectHasUnsavedChangesChanged>( OnProjectHasUnsavedChangesChanged );
+			this.Subscribe<BibliothecaryServiceStatusChanged>( OnBibliothecaryStatusChanged );
 
 			ConnectToDatabaseCommand = new Command( null, CommandConnectToDatabase );
 			CreateProjectCommand = new Command( null, CommandCreateProject );
@@ -128,6 +129,13 @@ namespace HeadLibrarian.ViewModels
 		void OnProjectHasUnsavedChangesChanged( ProjectHasUnsavedChangesChanged e )
 		{
 			RefreshDoesAnyProjectHaveUnsavedChanges();
+		}
+
+		public Boolean IsBibliothecaryRunning => BibliothecaryBridge.IsServiceRunning;
+
+		void OnBibliothecaryStatusChanged( BibliothecaryServiceStatusChanged e )
+		{
+			OnPropertyChanged( nameof( IsBibliothecaryRunning ) );
 		}
 
 		/// <returns>If true, the window should close; if false, the window should remain open.</returns>

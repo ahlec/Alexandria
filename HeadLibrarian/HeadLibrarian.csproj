@@ -73,6 +73,7 @@
       <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.2.2.0.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -124,6 +125,8 @@
     <Compile Include="Controls\TumblrTagRuleListEditor.xaml.cs">
       <DependentUpon>TumblrTagRuleListEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToImageSourceConverter.cs" />
+    <Compile Include="Converters\BooleanToStringConverter.cs" />
     <Compile Include="Converters\InvertedBooleanConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\IsNullToVisibilityConverter.cs" />
@@ -325,6 +328,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\notice.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\StatusCriticalError_32x.png" />
+    <Resource Include="Resources\StatusRun_32x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

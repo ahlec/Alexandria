@@ -23,6 +23,12 @@
 	<fluent:RibbonWindow.Resources>
 		<converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter" />
 		<converters:ProjectDisplayNameMultiConverter x:Key="ProjectDisplayNameMultiConverter" />
+		<converters:BooleanToImageSourceConverter x:Key="ServiceStatusImageConverter"
+												  TrueImage="pack://application:,,,/HeadLibrarian;component/Resources/StatusRun_32x.png"
+												  FalseImage="pack://application:,,,/HeadLibrarian;component/Resources/StatusCriticalError_32x.png" />
+		<converters:BooleanToStringConverter x:Key="ServiceStatusTextConverter"
+											 TrueString="Running"
+											 FalseString="Stopped" />
 
 		<Style x:Key="MajorRibbonButton"
 			   TargetType="fluent:Button">
@@ -117,13 +123,24 @@
 				</fluent:RibbonGroupBox>
 			</fluent:RibbonTabItem>
 			<fluent:RibbonTabItem Header="Bibliothecary">
+				<fluent:RibbonGroupBox Header="Bibliothecary">
+					<StackPanel Orientation="Vertical"
+								Margin="10,5,10,5"
+								VerticalAlignment="Center"
+								HorizontalAlignment="Center">
+						<Image Source="{Binding IsBibliothecaryRunning, Converter={StaticResource ServiceStatusImageConverter}}"
+							   Width="32"
+							   Height="32" />
+						<Label Content="{Binding IsBibliothecaryRunning, Converter={StaticResource ServiceStatusTextConverter}}" />
+					</StackPanel>
+				</fluent:RibbonGroupBox>
 				<fluent:RibbonGroupBox Header="Management">
 					<fluent:Button Header="Open Logs"
 								   Style="{StaticResource MajorRibbonButton}"
 								   ToolTip="Open the log file for Bibliothecary to see the details of its latest runs"
 								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Log_32x.png"
 								   Command="{Binding OpenLogsCommand}" />
-					<fluent:Button Header="Open Working Directory"
+					<fluent:Button Header="Open Directory"
 								   Style="{StaticResource MajorRibbonButton}"
 								   ToolTip="Open the directory where the logs, binaries, and database are located."
 								   LargeIcon="pack://application:,,,/HeadLibrarian;component/Resources/Folder_32x.png"

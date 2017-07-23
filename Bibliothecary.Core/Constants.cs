@@ -9,5 +9,6 @@ namespace Bibliothecary.Core
 		public static readonly Uri HttpServiceAddress = new Uri( "http://localhost:1700" );
 		public const String ServiceEndpoint = "Bibliothecary";
 		public const String LogFilename = "bibliothecary.log";
+		public const String ServiceName = "Bibliothecary";
 	}
 }
