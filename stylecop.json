@@ -1,0 +1,17 @@
+﻿{
+  // ACTION REQUIRED: This file was automatically added to your project, but it
+  // will not take effect until additional steps are taken to enable it. See the
+  // following page for additional information:
+  //
+  // https://github.com/DotNetAnalyzers/StyleCopAnalyzers/blob/master/documentation/EnableConfiguration.md
+
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "documentationRules": {
+      "companyName": "Alec Deitloff",
+      "copyrightText": "-----------------------------------------------------------------------\nThis code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).\nWritten and maintained by Alec Deitloff.\nArchive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).\n-----------------------------------------------------------------------",
+      "xmlHeader": false,
+      "headerDecoration": "-----------------------------------------------------------------------"
+    }
+  }
+}

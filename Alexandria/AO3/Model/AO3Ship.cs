@@ -1,39 +1,35 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.RequestHandles;
-using Alexandria.AO3.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-	internal sealed class AO3Ship : IShip
-	{
-		AO3Ship( Uri url )
-		{
-			Url = url;
-		}
+    internal sealed class AO3Ship : IShip
+    {
+        AO3Ship( Uri url )
+        {
+            Url = url;
+        }
 
-		#region IRequestable
+        public Uri Url { get; }
 
-		public Uri Url { get; }
+        public string Name { get; private set; }
 
-		#endregion
+        public ShipType Type { get; private set; }
 
-		#region IShip
+        public IReadOnlyList<ICharacterRequestHandle> Characters { get; private set; }
 
-		public String Name { get; private set; }
-
-		public ShipType Type { get; private set; }
-
-		public IReadOnlyList<ICharacterRequestHandle> Characters { get; private set; }
-
-		#endregion
-
-		internal static AO3Ship Parse( Uri url, HtmlDocument document )
-		{
-			throw new NotImplementedException(); ;
-		}
-	}
+        internal static AO3Ship Parse( Uri url, HtmlDocument document )
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

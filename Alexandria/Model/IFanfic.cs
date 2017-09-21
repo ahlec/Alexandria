@@ -1,47 +1,53 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {
-	public interface IFanfic : IRequestable
-	{
-		String Title { get; }
+    public interface IFanfic : IRequestable
+    {
+        string Title { get; }
 
-		IAuthorRequestHandle Author { get; }
+        IAuthorRequestHandle Author { get; }
 
-		MaturityRating Rating { get; }
+        MaturityRating Rating { get; }
 
-		ContentWarnings ContentWarnings { get; }
+        ContentWarnings ContentWarnings { get; }
 
-		IReadOnlyList<IShipRequestHandle> Ships { get; }
+        IReadOnlyList<IShipRequestHandle> Ships { get; }
 
-		IReadOnlyList<ICharacterRequestHandle> Characters { get; }
+        IReadOnlyList<ICharacterRequestHandle> Characters { get; }
 
-		IReadOnlyList<ITagRequestHandle> Tags { get; }
+        IReadOnlyList<ITagRequestHandle> Tags { get; }
 
-		Int32 NumberWords { get; }
+        int NumberWords { get; }
 
-		DateTime DateStarted { get; }
+        DateTime DateStarted { get; }
 
-		DateTime DateLastUpdated { get; }
+        DateTime DateLastUpdated { get; }
 
-		Int32 NumberLikes { get; }
+        int NumberLikes { get; }
 
-		Int32 NumberComments { get; }
+        int NumberComments { get; }
 
-		ISeriesEntry SeriesInfo { get; }
+        ISeriesEntry SeriesInfo { get; }
 
-		IChapterInfo ChapterInfo { get; }
+        IChapterInfo ChapterInfo { get; }
 
-		Language Language { get; }
+        Language Language { get; }
 
-		String Summary { get; }
+        string Summary { get; }
 
-		String AuthorsNote { get; }
+        string AuthorsNote { get; }
 
-		String Footnote { get; }
+        string Footnote { get; }
 
-		String Text { get; }
-	}
+        string Text { get; }
+    }
 }

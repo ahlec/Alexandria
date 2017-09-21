@@ -1,38 +1,44 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Alexandria.AO3.Tests
 {
-	internal static class AO3Assert
-	{
-		public static void IsDate( Int32 expectedYear, Int32 expectedMonth, Int32 expectedDay, DateTime actualDate )
-		{
-			Assert.AreEqual( expectedYear, actualDate.Year );
-			Assert.AreEqual( expectedMonth, actualDate.Month );
-			Assert.AreEqual( expectedDay, actualDate.Day );
-			Assert.AreEqual( 0, actualDate.Hour );
-			Assert.AreEqual( 0, actualDate.Minute );
-			Assert.AreEqual( 0, actualDate.Second );
-			Assert.AreEqual( 0, actualDate.Millisecond );
-		}
+    internal static class AO3Assert
+    {
+        public static void IsDate( int expectedYear, int expectedMonth, int expectedDay, DateTime actualDate )
+        {
+            Assert.AreEqual( expectedYear, actualDate.Year );
+            Assert.AreEqual( expectedMonth, actualDate.Month );
+            Assert.AreEqual( expectedDay, actualDate.Day );
+            Assert.AreEqual( 0, actualDate.Hour );
+            Assert.AreEqual( 0, actualDate.Minute );
+            Assert.AreEqual( 0, actualDate.Second );
+            Assert.AreEqual( 0, actualDate.Millisecond );
+        }
 
-		public static void IsFanficRequest( String expectedHandle, IFanficRequestHandle requestHandle )
-		{
-			Assert.IsNotNull( requestHandle );
-			Assert.AreEqual( expectedHandle, requestHandle.Handle );
-		}
+        public static void IsFanficRequest( string expectedHandle, IFanficRequestHandle requestHandle )
+        {
+            Assert.IsNotNull( requestHandle );
+            Assert.AreEqual( expectedHandle, requestHandle.Handle );
+        }
 
-		public static void IsShipSterek( IShip ship, Boolean isDerekFirst = true )
-		{
-			Assert.IsNotNull( ship );
-			Assert.AreEqual( ( isDerekFirst ? "Derek Hale/Stiles Stilinski" : "Stiles Stilinski/Derek Hale" ), ship.Name );
-			Assert.AreEqual( ShipType.Romantic, ship.Type );
-			Assert.IsNotNull( ship.Characters );
-			Assert.AreEqual( 2, ship.Characters.Count );
-			Assert.AreEqual( ( isDerekFirst ? "Derek Hale" : "Stiles Stilinski" ), ship.Characters[0].FullName );
-			Assert.AreEqual( ( isDerekFirst ? "Stiles Stilinski" : "Derek Hale" ), ship.Characters[1].FullName );
-		}
-	}
+        public static void IsShipSterek( IShip ship, bool isDerekFirst = true )
+        {
+            Assert.IsNotNull( ship );
+            Assert.AreEqual( ( isDerekFirst ? "Derek Hale/Stiles Stilinski" : "Stiles Stilinski/Derek Hale" ), ship.Name );
+            Assert.AreEqual( ShipType.Romantic, ship.Type );
+            Assert.IsNotNull( ship.Characters );
+            Assert.AreEqual( 2, ship.Characters.Count );
+            Assert.AreEqual( ( isDerekFirst ? "Derek Hale" : "Stiles Stilinski" ), ship.Characters[0].FullName );
+            Assert.AreEqual( ( isDerekFirst ? "Stiles Stilinski" : "Derek Hale" ), ship.Characters[1].FullName );
+        }
+    }
 }

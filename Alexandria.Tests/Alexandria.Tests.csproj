@@ -57,6 +57,9 @@
     <None Include="..\Alexandria.ruleset">
       <Link>Alexandria.ruleset</Link>
     </None>
+    <AdditionalFiles Include="..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
     <Compile Include="AO3Utils.cs" />
     <Compile Include="AO3\AO3Assert.cs" />
     <Compile Include="AO3\FanficParsing.Tests.cs" />

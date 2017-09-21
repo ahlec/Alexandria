@@ -1,75 +1,81 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
 using System.Linq;
-using Alexandria.RequestHandles;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.Utils
 {
-	public static class AO3RequestUtils
-	{
-		public static IFanficRequestHandle MakeFanficRequest( String handle )
-		{
-			if ( String.IsNullOrEmpty( handle ) )
-			{
-				throw new ArgumentNullException( nameof( handle ) );
-			}
+    public static class AO3RequestUtils
+    {
+        public static IFanficRequestHandle MakeFanficRequest( string handle )
+        {
+            if ( string.IsNullOrEmpty( handle ) )
+            {
+                throw new ArgumentNullException( nameof( handle ) );
+            }
 
-			if ( handle.Any( character => !Char.IsDigit( character ) ) )
-			{
-				throw new ArgumentException( "Handles to fanfics on AO3 may only consist of numbers.", nameof( handle ) );
-			}
+            if ( handle.Any( character => !char.IsDigit( character ) ) )
+            {
+                throw new ArgumentException( "Handles to fanfics on AO3 may only consist of numbers.", nameof( handle ) );
+            }
 
-			return new AO3FanficRequestHandle( handle );
-		}
+            return new AO3FanficRequestHandle( handle );
+        }
 
-		public static IAuthorRequestHandle MakeAuthorRequest( String username, String pseud = null )
-		{
-			if ( String.IsNullOrEmpty( username ) )
-			{
-				throw new ArgumentNullException( nameof( username ) );
-			}
+        public static IAuthorRequestHandle MakeAuthorRequest( string username, string pseud = null )
+        {
+            if ( string.IsNullOrEmpty( username ) )
+            {
+                throw new ArgumentNullException( nameof( username ) );
+            }
 
-			if ( String.IsNullOrWhiteSpace( pseud ) )
-			{
-				pseud = null;
-			}
+            if ( string.IsNullOrWhiteSpace( pseud ) )
+            {
+                pseud = null;
+            }
 
-			return new AO3AuthorRequestHandle( username, pseud );
-		}
+            return new AO3AuthorRequestHandle( username, pseud );
+        }
 
-		public static ITagRequestHandle MakeTagRequest( String tag )
-		{
-			if ( String.IsNullOrEmpty( tag ) )
-			{
-				throw new ArgumentNullException( nameof( tag ) );
-			}
+        public static ITagRequestHandle MakeTagRequest( string tag )
+        {
+            if ( string.IsNullOrEmpty( tag ) )
+            {
+                throw new ArgumentNullException( nameof( tag ) );
+            }
 
-			return new AO3TagRequestHandle( tag );
-		}
+            return new AO3TagRequestHandle( tag );
+        }
 
-		public static IShipRequestHandle MakeShipRequest( String tag )
-		{
-			if ( String.IsNullOrEmpty( tag ) )
-			{
-				throw new ArgumentNullException( nameof( tag ) );
-			}
+        public static IShipRequestHandle MakeShipRequest( string tag )
+        {
+            if ( string.IsNullOrEmpty( tag ) )
+            {
+                throw new ArgumentNullException( nameof( tag ) );
+            }
 
-			return new AO3ShipRequestHandle( tag );
-		}
+            return new AO3ShipRequestHandle( tag );
+        }
 
-		public static ISeriesRequestHandle MakeSeriesRequest( String handle )
-		{
-			if ( String.IsNullOrEmpty( handle ) )
-			{
-				throw new ArgumentNullException( nameof( handle ) );
-			}
+        public static ISeriesRequestHandle MakeSeriesRequest( string handle )
+        {
+            if ( string.IsNullOrEmpty( handle ) )
+            {
+                throw new ArgumentNullException( nameof( handle ) );
+            }
 
-			if ( handle.Any( character => !Char.IsDigit( character ) ) )
-			{
-				throw new ArgumentException( "Handles for series on AO3 may only consist of numbers.", nameof( handle ) );
-			}
+            if ( handle.Any( character => !char.IsDigit( character ) ) )
+            {
+                throw new ArgumentException( "Handles for series on AO3 may only consist of numbers.", nameof( handle ) );
+            }
 
-			return new AO3SeriesRequestHandle( handle );
-		}
-	}
+            return new AO3SeriesRequestHandle( handle );
+        }
+    }
 }

@@ -1,4 +1,9 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3;
@@ -9,97 +14,97 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Alexandria.Tests.AO3
 {
-	[TestClass]
-	[TestCategory( UnitTestConstants.FullTagParsingTestsCategory )]
-	public class Test_FullTagParsing
-	{
-		[TestMethod]
-		public void AO3Tag_StilesStilinski()
-		{
-			ITagRequestHandle request = AO3RequestUtils.MakeTagRequest( UnitTestConstants.Tag_StilesStilinski );
-			ITag tag = _source.MakeRequest( request );
+    [TestClass]
+    [TestCategory( UnitTestConstants.FullTagParsingTestsCategory )]
+    public class Test_FullTagParsing
+    {
+        [TestMethod]
+        public void AO3Tag_StilesStilinski()
+        {
+            ITagRequestHandle request = AO3RequestUtils.MakeTagRequest( UnitTestConstants.TagStilesStilinski );
+            ITag tag = _source.MakeRequest( request );
 
-			Assert.IsNotNull( tag );
-			Assert.AreEqual( TagType.Character, tag.Type );
-			Assert.AreEqual( UnitTestConstants.Tag_StilesStilinski, tag.Text );
+            Assert.IsNotNull( tag );
+            Assert.AreEqual( TagType.Character, tag.Type );
+            Assert.AreEqual( UnitTestConstants.TagStilesStilinski, tag.Text );
 
-			Assert.IsNotNull( tag.ParentTags );
-			Assert.AreEqual( 1, tag.ParentTags.Count );
-			Assert.IsNotNull( tag.ParentTags[0] );
-			Assert.AreEqual( "Teen Wolf (TV)", tag.ParentTags[0].Text );
+            Assert.IsNotNull( tag.ParentTags );
+            Assert.AreEqual( 1, tag.ParentTags.Count );
+            Assert.IsNotNull( tag.ParentTags[0] );
+            Assert.AreEqual( "Teen Wolf (TV)", tag.ParentTags[0].Text );
 
-			Assert.IsNotNull( tag.SynonymousTags );
-			Assert.IsTrue( tag.SynonymousTags.Count >= 261 );
+            Assert.IsNotNull( tag.SynonymousTags );
+            Assert.IsTrue( tag.SynonymousTags.Count >= 261 );
 
-			HashSet<String> synonymousTags = new HashSet<String>( tag.SynonymousTags.Select( synonym => synonym.Text.ToLowerInvariant() ) );
-			Assert.AreEqual( tag.SynonymousTags.Count, synonymousTags.Count );
+            HashSet<string> synonymousTags = new HashSet<string>( tag.SynonymousTags.Select( synonym => synonym.Text.ToLowerInvariant() ) );
+            Assert.AreEqual( tag.SynonymousTags.Count, synonymousTags.Count );
 
-			String[] selectSynonymousTags = 
-			{
-				"Drunk Stiles - Character",
-				"Stiles Stilinski (wolf)",
-				"Stiles - Teen Wolf",
-				"temporarily-a-cat!Stiles",
-				"omega!stiles - Character",
-				"fox!Stiles - Character",
-				"blushing stiles",
-				"Omega Stiles Stilinski - Character",
-				"Alpha Stiles Stilinski - Character",
-				"BAMF Stiles Stilinski - Character"
-			};
+            string[] selectSynonymousTags =
+            {
+                "Drunk Stiles - Character",
+                "Stiles Stilinski (wolf)",
+                "Stiles - Teen Wolf",
+                "temporarily-a-cat!Stiles",
+                "omega!stiles - Character",
+                "fox!Stiles - Character",
+                "blushing stiles",
+                "Omega Stiles Stilinski - Character",
+                "Alpha Stiles Stilinski - Character",
+                "BAMF Stiles Stilinski - Character"
+            };
 
-			foreach ( String synonym in selectSynonymousTags )
-			{
-				Assert.IsTrue( synonymousTags.Contains( synonym.ToLowerInvariant() ) );
-			}
+            foreach ( string synonym in selectSynonymousTags )
+            {
+                Assert.IsTrue( synonymousTags.Contains( synonym.ToLowerInvariant() ) );
+            }
 
-			IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = tag.QueryFanfics();
-			Assert.IsNotNull( fanfics );
-			Assert.IsTrue( fanfics.HasMoreResults );
-			Assert.AreEqual( 20, fanfics.Results.Count );
-			fanfics = fanfics.RetrieveNextPage();
-			Assert.IsNotNull( fanfics );
-			Assert.IsTrue( fanfics.HasMoreResults );
-			Assert.AreEqual( 20, fanfics.Results.Count );
-		}
+            IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = tag.QueryFanfics();
+            Assert.IsNotNull( fanfics );
+            Assert.IsTrue( fanfics.HasMoreResults );
+            Assert.AreEqual( 20, fanfics.Results.Count );
+            fanfics = fanfics.RetrieveNextPage();
+            Assert.IsNotNull( fanfics );
+            Assert.IsTrue( fanfics.HasMoreResults );
+            Assert.AreEqual( 20, fanfics.Results.Count );
+        }
 
-		[TestMethod]
-		public void AO3Tag_POVJackFrost()
-		{
-			ITagRequestHandle request = AO3RequestUtils.MakeTagRequest( UnitTestConstants.Tag_POVJackFrost );
-			ITag tag = _source.MakeRequest( request );
+        [TestMethod]
+        public void AO3Tag_POVJackFrost()
+        {
+            ITagRequestHandle request = AO3RequestUtils.MakeTagRequest( UnitTestConstants.TagPOVJackFrost );
+            ITag tag = _source.MakeRequest( request );
 
-			Assert.IsNotNull( tag );
-			Assert.AreEqual( TagType.Miscellaneous, tag.Type );
-			Assert.AreEqual( UnitTestConstants.Tag_POVJackFrost, tag.Text );
+            Assert.IsNotNull( tag );
+            Assert.AreEqual( TagType.Miscellaneous, tag.Type );
+            Assert.AreEqual( UnitTestConstants.TagPOVJackFrost, tag.Text );
 
-			Assert.IsNotNull( tag.ParentTags );
-			Assert.AreEqual( 1, tag.ParentTags.Count );
-			Assert.IsNotNull( tag.ParentTags[0] );
-			Assert.AreEqual( "Guardians of Childhood & Related Fandoms", tag.ParentTags[0].Text );
+            Assert.IsNotNull( tag.ParentTags );
+            Assert.AreEqual( 1, tag.ParentTags.Count );
+            Assert.IsNotNull( tag.ParentTags[0] );
+            Assert.AreEqual( "Guardians of Childhood & Related Fandoms", tag.ParentTags[0].Text );
 
-			Assert.IsNotNull( tag.SynonymousTags );
-			Assert.AreEqual( 4, tag.SynonymousTags.Count );
-			Assert.IsNotNull( tag.SynonymousTags[0] );
-			Assert.AreEqual( "jack's pov (kinda)", tag.SynonymousTags[0].Text );
-			Assert.IsNotNull( tag.SynonymousTags[1] );
-			Assert.AreEqual( "Mainly Jack POV", tag.SynonymousTags[1].Text );
-			Assert.IsNotNull( tag.SynonymousTags[2] );
-			Assert.AreEqual( "Narrated by Jack", tag.SynonymousTags[2].Text );
-			Assert.IsNotNull( tag.SynonymousTags[3] );
-			Assert.AreEqual( "POV Jack Frost", tag.SynonymousTags[3].Text );
-			
-			IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = tag.QueryFanfics();
-			Assert.IsNotNull( fanfics );
-			Assert.IsFalse( fanfics.HasMoreResults );
-			Assert.AreEqual( UnitTestConstants.Tag_POVJackFrostFanficHandles.Length, fanfics.Results.Count );
-			for ( Int32 index = 0; index < fanfics.Results.Count; ++index )
-			{
-				Assert.IsNotNull( fanfics.Results[index] );
-				Assert.AreEqual( UnitTestConstants.Tag_POVJackFrostFanficHandles[index], fanfics.Results[index].Handle );
-			}
-		}
+            Assert.IsNotNull( tag.SynonymousTags );
+            Assert.AreEqual( 4, tag.SynonymousTags.Count );
+            Assert.IsNotNull( tag.SynonymousTags[0] );
+            Assert.AreEqual( "jack's pov (kinda)", tag.SynonymousTags[0].Text );
+            Assert.IsNotNull( tag.SynonymousTags[1] );
+            Assert.AreEqual( "Mainly Jack POV", tag.SynonymousTags[1].Text );
+            Assert.IsNotNull( tag.SynonymousTags[2] );
+            Assert.AreEqual( "Narrated by Jack", tag.SynonymousTags[2].Text );
+            Assert.IsNotNull( tag.SynonymousTags[3] );
+            Assert.AreEqual( "POV Jack Frost", tag.SynonymousTags[3].Text );
 
-		readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
-	}
+            IQueryResultsPage<IFanfic, IFanficRequestHandle> fanfics = tag.QueryFanfics();
+            Assert.IsNotNull( fanfics );
+            Assert.IsFalse( fanfics.HasMoreResults );
+            Assert.AreEqual( UnitTestConstants.TagPOVJackFrostFanficHandles.Length, fanfics.Results.Count );
+            for ( int index = 0; index < fanfics.Results.Count; ++index )
+            {
+                Assert.IsNotNull( fanfics.Results[index] );
+                Assert.AreEqual( UnitTestConstants.TagPOVJackFrostFanficHandles[index], fanfics.Results[index].Handle );
+            }
+        }
+
+        readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
+    }
 }

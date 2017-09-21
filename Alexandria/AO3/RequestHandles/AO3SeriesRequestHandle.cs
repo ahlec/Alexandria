@@ -1,15 +1,20 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
 using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	internal sealed class AO3SeriesRequestHandle : ISeriesRequestHandle
-	{
-		public AO3SeriesRequestHandle( String handle )
-		{
-			Handle = handle;
-		}
+    internal sealed class AO3SeriesRequestHandle : ISeriesRequestHandle
+    {
+        public AO3SeriesRequestHandle( string handle )
+        {
+            Handle = handle;
+        }
 
-		public String Handle { get; }
-	}
+        public string Handle { get; }
+    }
 }

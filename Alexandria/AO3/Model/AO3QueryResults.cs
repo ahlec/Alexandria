@@ -1,70 +1,72 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using HtmlAgilityPack;
+using Alexandria.AO3.RequestHandles;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.RequestHandles;
+using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-	internal sealed class AO3QueryResults : IQueryResultsPage<IFanfic, IFanficRequestHandle>
-	{
-		AO3QueryResults( AO3Source source, CacheableObjects objectType, String endpointCategory, String endpointTag, Int32 page )
-		{
-			_source = source;
-			_objectType = objectType;
-			_endpointCategory = endpointCategory;
-			_endpointQuery = endpointTag;
-			_page = page;
-		}
+    internal sealed class AO3QueryResults : IQueryResultsPage<IFanfic, IFanficRequestHandle>
+    {
+        AO3QueryResults( AO3Source source, CacheableObjects objectType, string endpointCategory, string endpointTag, int page )
+        {
+            _source = source;
+            _objectType = objectType;
+            _endpointCategory = endpointCategory;
+            _endpointQuery = endpointTag;
+            _page = page;
+        }
 
-		#region IQueryResultsPage<IFanfic, IFanficRequestHandle>
+        public IReadOnlyList<IFanficRequestHandle> Results { get; private set; }
 
-		public IReadOnlyList<IFanficRequestHandle> Results { get; private set; }
+        public bool HasMoreResults { get; private set; }
 
-		public Boolean HasMoreResults { get; private set; }
+        public IQueryResultsPage<IFanfic, IFanficRequestHandle> RetrieveNextPage()
+        {
+            if ( !HasMoreResults )
+            {
+                throw new InvalidOperationException();
+            }
 
-		public IQueryResultsPage<IFanfic, IFanficRequestHandle> RetrieveNextPage()
-		{
-			if ( !HasMoreResults )
-			{
-				throw new InvalidOperationException();
-			}
+            return Retrieve( _source, _objectType, _endpointCategory, _endpointQuery, _page + 1 );
+        }
 
-			return Retrieve( _source, _objectType, _endpointCategory, _endpointQuery, _page + 1 );
-		}
+        internal static AO3QueryResults Retrieve( AO3Source source, CacheableObjects objectType, string endpointCategory, string endpointTag, int page )
+        {
+            AO3QueryResults results = new AO3QueryResults( source, objectType, endpointCategory, endpointTag, page );
+            string endpoint = $"http://archiveofourown.org/{endpointCategory}/{endpointTag}/works";
+            string cacheHandle = endpointTag;
+            if ( page > 1 )
+            {
+                endpoint += $"?page={page}";
+                cacheHandle += page.ToString();
+            }
 
-		#endregion
+            HtmlDocument document = source.RetrieveEndpoint( objectType, cacheHandle, endpoint );
+            HtmlNode worksIndexDiv = document.DocumentNode.SelectSingleNode( "//div[contains(@class, 'works-index')]" );
 
-		internal static AO3QueryResults Retrieve( AO3Source source, CacheableObjects objectType, String endpointCategory, String endpointTag, Int32 page )
-		{
-			AO3QueryResults results = new AO3QueryResults( source, objectType, endpointCategory, endpointTag, page );
-			String endpoint = $"http://archiveofourown.org/{endpointCategory}/{endpointTag}/works";
-			String cacheHandle = endpointTag;
-			if ( page > 1 )
-			{
-				endpoint += $"?page={page}";
-				cacheHandle += page.ToString();
-			}
+            HtmlNode paginationOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='pagination actions']" );
+            HtmlNode nextA = paginationOl?.SelectSingleNode( ".//a[@rel='next']" );
+            results.HasMoreResults = ( nextA != null );
 
-			HtmlDocument document = source.RetrieveEndpoint( objectType, cacheHandle, endpoint );
-			HtmlNode worksIndexDiv = document.DocumentNode.SelectSingleNode( "//div[contains(@class, 'works-index')]" );
+            HtmlNode worksOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='work index group']" );
+            results.Results = worksOl.Elements( "li" ).Select( AO3FanficRequestHandle.ParseFromWorkLi ).Cast<IFanficRequestHandle>().ToList();
 
-			HtmlNode paginationOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='pagination actions']" );
-			HtmlNode nextA = paginationOl?.SelectSingleNode( ".//a[@rel='next']" );
-			results.HasMoreResults = ( nextA != null );
+            return results;
+        }
 
-			HtmlNode worksOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='work index group']" );
-			results.Results = worksOl.Elements( "li" ).Select( AO3FanficRequestHandle.ParseFromWorkLi ).Cast<IFanficRequestHandle>().ToList();
-
-			return results;
-		}
-
-		readonly AO3Source _source;
-		readonly CacheableObjects _objectType;
-		readonly String _endpointCategory;
-		readonly String _endpointQuery;
-		readonly Int32 _page;
-	}
+        readonly AO3Source _source;
+        readonly CacheableObjects _objectType;
+        readonly string _endpointCategory;
+        readonly string _endpointQuery;
+        readonly int _page;
+    }
 }

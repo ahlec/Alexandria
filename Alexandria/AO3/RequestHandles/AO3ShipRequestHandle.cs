@@ -1,20 +1,25 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
 using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-	internal sealed class AO3ShipRequestHandle : IShipRequestHandle
-	{
-		public AO3ShipRequestHandle( String shipTag )
-		{
-			ShipTag = shipTag;
-		}
+    internal sealed class AO3ShipRequestHandle : IShipRequestHandle
+    {
+        public AO3ShipRequestHandle( string shipTag )
+        {
+            ShipTag = shipTag;
+        }
 
-		public String ShipTag { get; }
+        public string ShipTag { get; }
 
-		public override string ToString()
-		{
-			return ShipTag;
-		}
-	}
+        public override string ToString()
+        {
+            return ShipTag;
+        }
+    }
 }

@@ -1,29 +1,36 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
 using System.Collections.Generic;
 using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.Tests
 {
-	public static class AO3Utils
-	{
-		public static IReadOnlyDictionary<String, Int32> GetAllLanguages()
-		{
-			HtmlDocument searchPage = HtmlUtils.GetWebPage( "http://archiveofourown.org/works/search" );
-			HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
-			Dictionary<String, Int32> ao3Options = new Dictionary<String, Int32>();
-			foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
-			{
-				String idStr = option.GetAttributeValue( "value", null );
-				if ( String.IsNullOrWhiteSpace( idStr ) )
-				{
-					continue;
-				}
-				Int32 languageId = Int32.Parse( idStr );
+    public static class AO3Utils
+    {
+        public static IReadOnlyDictionary<string, int> GetAllLanguages()
+        {
+            HtmlDocument searchPage = HtmlUtils.GetWebPage( "http://archiveofourown.org/works/search" );
+            HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
+            Dictionary<string, int> ao3Options = new Dictionary<string, int>();
+            foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
+            {
+                string idStr = option.GetAttributeValue( "value", null );
+                if ( string.IsNullOrWhiteSpace( idStr ) )
+                {
+                    continue;
+                }
 
-				ao3Options.Add( option.InnerText, languageId );
-			}
-			return ao3Options;
-		}
-	}
+                int languageId = int.Parse( idStr );
+
+                ao3Options.Add( option.InnerText, languageId );
+            }
+
+            return ao3Options;
+        }
+    }
 }

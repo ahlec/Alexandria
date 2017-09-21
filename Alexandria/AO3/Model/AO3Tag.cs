@@ -1,106 +1,108 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using HtmlAgilityPack;
+using Alexandria.AO3.RequestHandles;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.RequestHandles;
-using Alexandria.AO3.Utils;
 using Alexandria.Utils;
+using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-	internal sealed class AO3Tag : ITag
-	{
-		AO3Tag( AO3Source source, Uri url )
-		{
-			_source = source;
-			Url = url;
-		}
+    internal sealed class AO3Tag : ITag
+    {
+        AO3Tag( AO3Source source, Uri url )
+        {
+            _source = source;
+            Url = url;
+        }
 
-		#region IRequestable
+        public Uri Url { get; }
 
-		public Uri Url { get; }
+        public TagType Type { get; private set; }
 
-		#endregion
+        public string Text { get; private set; }
 
-		#region ITag
+        public IReadOnlyList<ITagRequestHandle> ParentTags { get; private set; }
 
-		public TagType Type { get; private set; }
+        public IReadOnlyList<ITagRequestHandle> SynonymousTags { get; private set; }
 
-		public String Text { get; private set; }
+        public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
+        {
+            string endpointTag = Text.Replace( "/", "*s*" );
+            return AO3QueryResults.Retrieve( _source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
+        }
 
-		public IReadOnlyList<ITagRequestHandle> ParentTags { get; private set; }
+        internal static AO3Tag Parse( AO3Source source, Uri url, HtmlDocument document )
+        {
+            AO3Tag parsed = new AO3Tag( source, url );
 
-		public IReadOnlyList<ITagRequestHandle> SynonymousTags { get; private set; }
+            HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@class='tags-show region']" );
 
-		public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
-		{
-			String endpointTag = Text.Replace( "/", "*s*" );
-			return AO3QueryResults.Retrieve( _source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
-		}
+            string mainContentPText = mainDiv.SelectSingleNode( "div[@class='tag home profile']/p" ).InnerText;
+            string mainContentPFirstSentence = mainContentPText.Substring( 0, mainContentPText.IndexOf( '.' ) );
+            int mainContentSentenceStartLength = "This tag belongs to the ".Length;
+            string textCategory = mainContentPFirstSentence.Substring( mainContentSentenceStartLength, mainContentPText.LastIndexOf( " Category", StringComparison.InvariantCultureIgnoreCase ) - mainContentSentenceStartLength );
+            switch ( textCategory )
+            {
+                case "Character":
+                    {
+                        parsed.Type = TagType.Character;
+                        break;
+                    }
 
-		#endregion
+                case "Relationship":
+                    {
+                        parsed.Type = TagType.Relationship;
+                        break;
+                    }
 
-		internal static AO3Tag Parse( AO3Source source, Uri url, HtmlDocument document )
-		{
-			AO3Tag parsed = new AO3Tag( source, url );
+                case "Additional Tags":
+                    {
+                        parsed.Type = TagType.Miscellaneous;
+                        break;
+                    }
 
-			HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@class='tags-show region']" );
+                default:
+                    {
+                        throw new NotImplementedException();
+                    }
+            }
 
-			String mainContentPText = mainDiv.SelectSingleNode( "div[@class='tag home profile']/p" ).InnerText;
-			String mainContentPFirstSentence = mainContentPText.Substring( 0, mainContentPText.IndexOf( '.' ) );
-			Int32 mainContentSentenceStartLength = "This tag belongs to the ".Length;
-			String textCategory = mainContentPFirstSentence.Substring( mainContentSentenceStartLength, mainContentPText.LastIndexOf( " Category", StringComparison.InvariantCultureIgnoreCase ) - mainContentSentenceStartLength );
-			switch ( textCategory )
-			{
-				case "Character":
-					{
-						parsed.Type = TagType.Character;
-						break;
-					}
-				case "Relationship":
-					{
-						parsed.Type = TagType.Relationship;
-						break;
-					}
-				case "Additional Tags":
-					{
-						parsed.Type = TagType.Miscellaneous;
-						break;
-					}
-				default:
-					{
-						throw new NotImplementedException();
-					}
-			}
+            parsed.Text = mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ).ReadableInnerText().Trim();
 
-			parsed.Text = mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ).ReadableInnerText().Trim();
+            List<ITagRequestHandle> parentTags = new List<ITagRequestHandle>();
+            HtmlNode parentUl = mainDiv.SelectSingleNode( ".//div[@class='parent listbox group']/ul" );
+            if ( parentUl != null )
+            {
+                foreach ( HtmlNode li in parentUl.Elements( "li" ) )
+                {
+                    parentTags.Add( new AO3TagRequestHandle( li.ReadableInnerText().Trim() ) );
+                }
+            }
 
-			List<ITagRequestHandle> parentTags = new List<ITagRequestHandle>();
-			HtmlNode parentUl = mainDiv.SelectSingleNode( ".//div[@class='parent listbox group']/ul" );
-			if ( parentUl != null )
-			{
-				foreach ( HtmlNode li in parentUl.Elements( "li" ) )
-				{
-					parentTags.Add( new AO3TagRequestHandle( li.ReadableInnerText().Trim() ) );
-				}
-			}
-			parsed.ParentTags = parentTags;
+            parsed.ParentTags = parentTags;
 
-			List<ITagRequestHandle> synonymousTags = new List<ITagRequestHandle>();
-			HtmlNode synonymUl = mainDiv.SelectSingleNode( ".//div[@class='synonym listbox group']/ul" );
-			if ( synonymUl != null )
-			{
-				foreach ( HtmlNode li in synonymUl.Elements( "li" ) )
-				{
-					synonymousTags.Add( new AO3TagRequestHandle( li.ReadableInnerText().Trim() ) );
-				}
-			}
-			parsed.SynonymousTags = synonymousTags;
+            List<ITagRequestHandle> synonymousTags = new List<ITagRequestHandle>();
+            HtmlNode synonymUl = mainDiv.SelectSingleNode( ".//div[@class='synonym listbox group']/ul" );
+            if ( synonymUl != null )
+            {
+                foreach ( HtmlNode li in synonymUl.Elements( "li" ) )
+                {
+                    synonymousTags.Add( new AO3TagRequestHandle( li.ReadableInnerText().Trim() ) );
+                }
+            }
 
-			return parsed;
-		}
+            parsed.SynonymousTags = synonymousTags;
 
-		readonly AO3Source _source;
-	}
+            return parsed;
+        }
+
+        readonly AO3Source _source;
+    }
 }

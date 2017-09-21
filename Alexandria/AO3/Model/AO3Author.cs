@@ -1,126 +1,126 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using HtmlAgilityPack;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.Utils;
 using Alexandria.Utils;
+using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-	internal sealed class AO3Author : IAuthor
-	{
-		AO3Author( AO3Source source, Uri url )
-		{
-			_source = source;
-			Url = url;
-		}
+    internal sealed class AO3Author : IAuthor
+    {
+        AO3Author( AO3Source source, Uri url )
+        {
+            _source = source;
+            Url = url;
+        }
 
-		#region IRequestable
+        public Uri Url { get; }
 
-		public Uri Url { get; }
+        public string Name { get; private set; }
 
-		#endregion
+        public IReadOnlyList<string> Nicknames { get; private set; }
 
-		#region IAuthor
+        public DateTime DateJoined { get; private set; }
 
-		public String Name { get; private set; }
+        public string Location { get; private set; }
 
-		public IReadOnlyList<String> Nicknames { get; private set; }
+        public DateTime? Birthday { get; private set; }
 
-		public DateTime DateJoined { get; private set; }
+        public string Biography { get; private set; }
 
-		public String Location { get; private set; }
+        public int NumberFanfics { get; private set; }
 
-		public DateTime? Birthday { get; private set; }
+        public static AO3Author Parse( AO3Source source, Uri url, HtmlDocument profileDocument )
+        {
+            AO3Author parsed = new AO3Author( source, url );
 
-		public String Biography { get; private set; }
+            HtmlNode userHomeProfile = profileDocument.DocumentNode.SelectSingleNode( "//div[@class='user home profile']" );
+            parsed.Name = userHomeProfile.SelectSingleNode( "div[@class='primary header module']/h2[@class='heading']/a" ).ReadableInnerText().Trim();
 
-		public Int32 NumberFanfics { get; private set; }
+            HtmlNode metaDl = userHomeProfile.SelectSingleNode( ".//dl[@class='meta']" );
+            string lastDtText = null;
+            foreach ( HtmlNode child in metaDl.ChildNodes )
+            {
+                if ( child.Name.Equals( "dt" ) )
+                {
+                    lastDtText = child.InnerText.Trim();
+                    continue;
+                }
 
-		public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
-		{
-			return AO3QueryResults.Retrieve( _source, CacheableObjects.AuthorFanficsHtml, "users", Name, 1 );
-		}
+                if ( !child.Name.Equals( "dd" ) )
+                {
+                    continue;
+                }
 
-		#endregion IAuthor
+                switch ( lastDtText )
+                {
+                    case "My pseuds:":
+                    {
+                        parsed.Nicknames = CollectPseuds( child ).ToList();
+                        break;
+                    }
 
-		static IEnumerable<String> CollectPseuds( HtmlNode pseudsDd )
-		{
-			foreach ( HtmlNode pseudA in pseudsDd.Elements( "a" ) )
-			{
-				yield return pseudA.ReadableInnerText().Trim();
-			}
-		}
+                    case "I joined on:":
+                    {
+                        parsed.DateJoined = DateTime.Parse( child.InnerText );
+                        break;
+                    }
 
-		public static AO3Author Parse( AO3Source source, Uri url, HtmlDocument profileDocument )
-		{
-			AO3Author parsed = new AO3Author( source, url );
+                    case "I live in:":
+                    {
+                        parsed.Location = child.ReadableInnerText().Trim();
+                        break;
+                    }
 
-			HtmlNode userHomeProfile = profileDocument.DocumentNode.SelectSingleNode( "//div[@class='user home profile']" );
-			parsed.Name = userHomeProfile.SelectSingleNode( "div[@class='primary header module']/h2[@class='heading']/a" ).ReadableInnerText().Trim();
+                    case "My birthday:":
+                    {
+                        parsed.Birthday = DateTime.Parse( child.InnerText );
+                        break;
+                    }
+                }
+            }
 
-			HtmlNode metaDl = userHomeProfile.SelectSingleNode( ".//dl[@class='meta']" );
-			String lastDtText = null;
-			foreach ( HtmlNode child in metaDl.ChildNodes )
-			{
-				if ( child.Name.Equals( "dt" ) )
-				{
-					lastDtText = child.InnerText.Trim();
-					continue;
-				}
+            parsed.Biography = userHomeProfile.SelectSingleNode( "div[@class='bio module']/blockquote" )?.ReadableInnerText().Trim();
 
-				if ( !child.Name.Equals( "dd" ) )
-				{
-					continue;
-				}
+            HtmlNode dashboardDiv = profileDocument.DocumentNode.SelectSingleNode( "//div[@id='dashboard']" );
+            foreach ( HtmlNode dashboardA in dashboardDiv.SelectNodes( ".//a" ) )
+            {
+                if ( !dashboardA.InnerText.StartsWith( "Work" ) )
+                {
+                    continue;
+                }
 
-				switch ( lastDtText )
-				{
-					case "My pseuds:":
-						{
-							parsed.Nicknames = CollectPseuds( child ).ToList();
-							break;
-						}
-					case "I joined on:":
-						{
-							parsed.DateJoined = DateTime.Parse( child.InnerText );
-							break;
-						}
-					case "I live in:":
-						{
-							parsed.Location = child.ReadableInnerText().Trim();
-							break;
-						}
-					case "My birthday:":
-						{
-							parsed.Birthday = DateTime.Parse( child.InnerText );
-							break;
-						}
-				}
-			}
+                int startIndex = dashboardA.InnerText.IndexOf( '(' );
+                int endIndex = dashboardA.InnerText.IndexOf( ')' );
 
-			parsed.Biography = userHomeProfile.SelectSingleNode( "div[@class='bio module']/blockquote" )?.ReadableInnerText().Trim();
+                parsed.NumberFanfics = int.Parse( dashboardA.InnerText.Substring( startIndex + 1, endIndex - startIndex - 1 ) );
+                break;
+            }
 
-			HtmlNode dashboardDiv = profileDocument.DocumentNode.SelectSingleNode( "//div[@id='dashboard']" );
-			foreach ( HtmlNode dashboardA in dashboardDiv.SelectNodes( ".//a" ) )
-			{
-				if ( !dashboardA.InnerText.StartsWith( "Work" ) )
-				{
-					continue;
-				}
+            return parsed;
+        }
 
-				Int32 startIndex = dashboardA.InnerText.IndexOf( '(' );
-				Int32 endIndex = dashboardA.InnerText.IndexOf( ')' );
+        public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
+        {
+            return AO3QueryResults.Retrieve( _source, CacheableObjects.AuthorFanficsHtml, "users", Name, 1 );
+        }
 
-				parsed.NumberFanfics = Int32.Parse( dashboardA.InnerText.Substring( startIndex + 1, endIndex - startIndex - 1 ) );
-				break;
-			}
+        static IEnumerable<string> CollectPseuds( HtmlNode pseudsDd )
+        {
+            foreach ( HtmlNode pseudA in pseudsDd.Elements( "a" ) )
+            {
+                yield return pseudA.ReadableInnerText().Trim();
+            }
+        }
 
-			return parsed;
-		}
-
-		readonly AO3Source _source;
-	}
+        readonly AO3Source _source;
+    }
 }

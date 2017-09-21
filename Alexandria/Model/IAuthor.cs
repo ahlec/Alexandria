@@ -1,25 +1,31 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {
-	public interface IAuthor : IRequestable
-	{
-		String Name { get; }
+    public interface IAuthor : IRequestable
+    {
+        string Name { get; }
 
-		IReadOnlyList<String> Nicknames { get; }
+        IReadOnlyList<string> Nicknames { get; }
 
-		DateTime DateJoined { get; }
+        DateTime DateJoined { get; }
 
-		String Location { get; }
+        string Location { get; }
 
-		DateTime? Birthday { get; }
+        DateTime? Birthday { get; }
 
-		String Biography { get; }
+        string Biography { get; }
 
-		Int32 NumberFanfics { get; }
+        int NumberFanfics { get; }
 
-		IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics();
-	}
+        IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics();
+    }
 }

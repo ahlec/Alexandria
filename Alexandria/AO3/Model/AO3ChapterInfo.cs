@@ -1,76 +1,81 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
 using System.Collections.Generic;
-using HtmlAgilityPack;
+using Alexandria.AO3.RequestHandles;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.AO3.RequestHandles;
-using Alexandria.AO3.Utils;
 using Alexandria.Utils;
+using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-	internal sealed class AO3ChapterInfo : IChapterInfo
-	{
-		AO3ChapterInfo()
-		{
-		}
+    internal sealed class AO3ChapterInfo : IChapterInfo
+    {
+        AO3ChapterInfo()
+        {
+        }
 
-		public String ChapterTitle { get; private set; }
+        public string ChapterTitle { get; private set; }
 
-		public Int32 ChapterNumber { get; private set; }
+        public int ChapterNumber { get; private set; }
 
-		public Int32? TotalNumberChapters { get; private set; }
+        public int? TotalNumberChapters { get; private set; }
 
-		public IReadOnlyList<IFanficRequestHandle> Chapters { get; private set; }
+        public IReadOnlyList<IFanficRequestHandle> Chapters { get; private set; }
 
-		internal static AO3ChapterInfo Parse( HtmlDocument document, HtmlNode workMetaGroup )
-		{
-			HtmlNode chapterDropdownSelect = document.DocumentNode.SelectSingleNode( "//ul[@id='chapter_index']//select" );
-			if ( chapterDropdownSelect == null )
-			{
-				return null;
-			}
+        internal static AO3ChapterInfo Parse( HtmlDocument document, HtmlNode workMetaGroup )
+        {
+            HtmlNode chapterDropdownSelect = document.DocumentNode.SelectSingleNode( "//ul[@id='chapter_index']//select" );
+            if ( chapterDropdownSelect == null )
+            {
+                return null;
+            }
 
-			AO3ChapterInfo parsed = new AO3ChapterInfo();
-			List<IFanficRequestHandle> chapters = new List<IFanficRequestHandle>( chapterDropdownSelect.ChildNodes.Count );
-			Int32 chapterNumber = 1;
-			foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
-			{
-				String fanficHandle = chapterOption.GetAttributeValue( "value", null );
-				chapters.Add( new AO3FanficRequestHandle( fanficHandle ) );
+            AO3ChapterInfo parsed = new AO3ChapterInfo();
+            List<IFanficRequestHandle> chapters = new List<IFanficRequestHandle>( chapterDropdownSelect.ChildNodes.Count );
+            int chapterNumber = 1;
+            foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
+            {
+                string fanficHandle = chapterOption.GetAttributeValue( "value", null );
+                chapters.Add( new AO3FanficRequestHandle( fanficHandle ) );
 
-				if ( chapterOption.GetAttributeValue( "selected", null ) != null )
-				{
-					parsed.ChapterNumber = chapterNumber;
-				}
+                if ( chapterOption.GetAttributeValue( "selected", null ) != null )
+                {
+                    parsed.ChapterNumber = chapterNumber;
+                }
 
-				++chapterNumber;
-			}
-			parsed.Chapters = chapters;
+                ++chapterNumber;
+            }
 
-			HtmlNode chaptersDd = workMetaGroup.SelectSingleNode( ".//dd[@class='chapters']" );
-			String[] chaptersInfo = chaptersDd.InnerText.Trim().Split( '/' );
-			if ( chaptersInfo[1] == "?" )
-			{
-				parsed.TotalNumberChapters = null;
-			}
-			else
-			{
-				parsed.TotalNumberChapters = Int32.Parse( chaptersInfo[1] );
-			}
+            parsed.Chapters = chapters;
 
-			HtmlNode chapterPrefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='chapter preface group']" );
-			HtmlNode chapterTitleTextNode = chapterPrefaceGroup.LastChild;
-			if ( chapterTitleTextNode.Name != "a" && chapterTitleTextNode.Name != "A" )
-			{
-				String tentativeTitle = chapterTitleTextNode.ReadableInnerText();
-				if ( !String.IsNullOrWhiteSpace( tentativeTitle ) )
-				{
-					parsed.ChapterTitle = tentativeTitle.Trim();
-				}
-			}
+            HtmlNode chaptersDd = workMetaGroup.SelectSingleNode( ".//dd[@class='chapters']" );
+            string[] chaptersInfo = chaptersDd.InnerText.Trim().Split( '/' );
+            if ( chaptersInfo[1] == "?" )
+            {
+                parsed.TotalNumberChapters = null;
+            }
+            else
+            {
+                parsed.TotalNumberChapters = int.Parse( chaptersInfo[1] );
+            }
 
-			return parsed;
-		}
-	}
+            HtmlNode chapterPrefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='chapter preface group']" );
+            HtmlNode chapterTitleTextNode = chapterPrefaceGroup.LastChild;
+            if ( chapterTitleTextNode.Name != "a" && chapterTitleTextNode.Name != "A" )
+            {
+                string tentativeTitle = chapterTitleTextNode.ReadableInnerText();
+                if ( !string.IsNullOrWhiteSpace( tentativeTitle ) )
+                {
+                    parsed.ChapterTitle = tentativeTitle.Trim();
+                }
+            }
+
+            return parsed;
+        }
+    }
 }

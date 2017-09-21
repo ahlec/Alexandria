@@ -1,45 +1,50 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
 using System.Diagnostics.CodeAnalysis;
 
 namespace Alexandria.Tests.AO3
 {
-	[SuppressMessage( "ReSharper", "InconsistentNaming" )]
-	internal static class UnitTestConstants
-	{
-		public const String FullFanficParsingTestsCategory = "AO3 - Full Fanfic Parsing";
-		public const String FullAuthorParsingTestsCategory = "AO3 - Full Author Parsing";
-		public const String FullTagParsingTestsCategory = "AO3 - Full Tag Parsing";
-		public const String FullSeriesParsingTestsCategory = "AO3 - Full Series Parsing";
-		public const String FanficParsingTestsCategory = "AO3 - Fanfic Parsing";
-		public const String UtilTestsCategory = "AO3 - Utils";
-		public const String QueryResultsTestsCategory = "AO3 - Query Results";
+    [SuppressMessage( "ReSharper", "InconsistentNaming", Justification = "Allowing variable names of tags to break naming convention but keep the variable as close to canonical tag text as possible for readibility." )]
+    internal static class UnitTestConstants
+    {
+        public const string FullFanficParsingTestsCategory = "AO3 - Full Fanfic Parsing";
+        public const string FullAuthorParsingTestsCategory = "AO3 - Full Author Parsing";
+        public const string FullTagParsingTestsCategory = "AO3 - Full Tag Parsing";
+        public const string FullSeriesParsingTestsCategory = "AO3 - Full Series Parsing";
+        public const string FanficParsingTestsCategory = "AO3 - Fanfic Parsing";
+        public const string UtilTestsCategory = "AO3 - Utils";
+        public const string QueryResultsTestsCategory = "AO3 - Query Results";
 
-		public const String FicHandle_PrinceAmongWolves = "538425";
-		public const String FicHandle_PossibilityOfSilence = "3592305";
-		public const String FicHandle_ItsNotMyLovestory = "6598738";
-		public const String FicHandle_Homesick = "10317524";
+        public const string FicHandlePrinceAmongWolves = "538425";
+        public const string FicHandlePossibilityOfSilence = "3592305";
+        public const string FicHandleItsNotMyLovestory = "6598738";
+        public const string FicHandleHomesick = "10317524";
 
-		public const String AuthorUsername_Crossroadswrite = "crossroadswrite";
+        public const string AuthorUsernameCrossroadswrite = "crossroadswrite";
 
-		public const String Tag_StilesStilinski = "Stiles Stilinski";
-		public const String Tag_POVJackFrost = "POV Jack Frost (Guardians of Childhood)";
+        public const string TagStilesStilinski = "Stiles Stilinski";
+        public const string TagPOVJackFrost = "POV Jack Frost (Guardians of Childhood)";
 
-		public const String Ship_Sterek = "Derek Hale/Stiles Stilinski";
+        public const string ShipSterek = "Derek Hale/Stiles Stilinski";
 
-		public const String SeriesHandle_BodiceRipperVerse = "100664";
-		public const String SeriesHandle_JanuaryJackrabbitWeek2014 = "69272";
+        public const string SeriesHandleBodiceRipperVerse = "100664";
+        public const string SeriesHandleJanuaryJackrabbitWeek2014 = "69272";
 
-		public static readonly String[] Tag_POVJackFrostFanficHandles =
-		{
-			"10659105",
-			"7367401",
-			"1312102",
-			"5663545",
-			"5480645",
-			"4084660",
-			"2662784",
-			"1068792",
-			"1068772"
-		};
-	}
+        public static readonly string[] TagPOVJackFrostFanficHandles =
+        {
+            "10659105",
+            "7367401",
+            "1312102",
+            "5663545",
+            "5480645",
+            "4084660",
+            "2662784",
+            "1068792",
+            "1068772"
+        };
+    }
 }
