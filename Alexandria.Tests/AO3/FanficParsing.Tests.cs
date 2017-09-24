@@ -24,6 +24,6 @@ namespace Alexandria.Tests.AO3
             Assert.IsNull( fanfic.Author );
         }
 
-        readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
+        readonly LibrarySource _source = new AO3Source( null );
     }
 }

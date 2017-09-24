@@ -10,6 +10,7 @@ using Alexandria.AO3.Model;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Searching;
 using Alexandria.AO3.Utils;
+using Alexandria.Caching;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
@@ -20,8 +21,8 @@ namespace Alexandria.AO3
 {
     public class AO3Source : LibrarySource
     {
-        public AO3Source( LibrarySourceConfig config )
-            : base( config )
+        public AO3Source( Cache cache )
+            : base( cache )
         {
         }
 

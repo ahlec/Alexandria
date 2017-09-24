@@ -1,0 +1,52 @@
+﻿// -----------------------------------------------------------------------
+// This code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).
+// Written and maintained by Alec Deitloff.
+// Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
+// -----------------------------------------------------------------------
+
+using System;
+using System.IO;
+using Alexandria.Documents;
+
+namespace Alexandria.Caching
+{
+    public abstract class Cache
+    {
+        internal abstract bool Contains<TDocument>( string handle )
+            where TDocument : CacheableDocument;
+
+        internal bool TryReadFromCache<TDocument>( string handle, out TDocument document )
+            where TDocument : CacheableDocument
+        {
+            if ( !Contains<TDocument>( handle ) )
+            {
+                document = default( TDocument );
+                return false;
+            }
+
+            document = ReadFromCache<TDocument>( handle );
+            return true;
+        }
+
+        internal abstract void WriteToCache<TDocument>( TDocument document )
+            where TDocument : CacheableDocument;
+
+        internal abstract Stream GetCachedDocumentStream<TDocument>( string handle )
+            where TDocument : CacheableDocument;
+
+        // TODO: Come back here and figure out a way to handle this function better without so much casting
+        TDocument ReadFromCache<TDocument>( string handle )
+            where TDocument : CacheableDocument
+        {
+            using ( Stream cacheStream = GetCachedDocumentStream<TDocument>( handle ) )
+            {
+                if ( typeof( TDocument ) == typeof( HtmlCacheableDocument ) )
+                {
+                    return (TDocument) (CacheableDocument) HtmlCacheableDocument.ReadFromStream( handle, cacheStream );
+                }
+
+                throw new NotSupportedException( $"Unrecognized {nameof( CacheableDocument )}: {typeof( TDocument )}" );
+            }
+        }
+    }
+}

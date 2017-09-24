@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.IO;
-using System.Text;
+using Alexandria.Caching;
+using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
@@ -17,20 +17,9 @@ namespace Alexandria
 {
     public abstract class LibrarySource
     {
-        protected LibrarySource( LibrarySourceConfig config )
+        protected LibrarySource( Cache cache )
         {
-            if ( config == null )
-            {
-                throw new ArgumentNullException( nameof( config ) );
-            }
-
-            if ( !config.IsSealed )
-            {
-                throw new ArgumentException( $"You can only construct new {nameof( LibrarySource )} instances with a sealed {nameof( LibrarySourceConfig )}" );
-            }
-
-            _config = config;
-            _personalCacheDirectory = Path.Combine( config.CacheBaseDirectory, GetType().Name );
+            _cache = cache;
         }
 
         public abstract string SourceHandle { get; }
@@ -40,14 +29,18 @@ namespace Alexandria
 
         public abstract IQueryResultsPage<IFanfic, IFanficRequestHandle> Search( LibrarySearch searchCriteria );
 
-        public bool IsCachingObjectType( CacheableObjects objectType )
+        internal TDocument GetWebPage<TDocument>( string handle, string endpoint )
+            where TDocument : CacheableDocument
         {
-            if ( objectType.HasMultipleFlagsSet() )
+            if ( _cache != null )
             {
-                throw new ArgumentException( $"The provided {nameof( CacheableObjects )} must only have a single flag set!", nameof( objectType ) );
+                if ( _cache.TryReadFromCache( handle, out TDocument document ) )
+                {
+                    return document;
+                }
             }
 
-            return _config.CachedObjects.HasFlag( objectType );
+            throw new NotImplementedException();
         }
 
         protected HtmlDocument GetWebPage( CacheableObjects objectType, string cacheHandle, string endpoint, bool ignoreCache, out Uri responseUrl )
@@ -59,51 +52,10 @@ namespace Alexandria
                 throw new ArgumentException( "Only HTML objects can be requested by this function", nameof( objectType ) );
             }
 
-            if ( IsCachingObjectType( objectType ) && !ignoreCache )
-            {
-                string cacheFilename = GetCacheFileName( objectType, cacheHandle );
-                if ( File.Exists( cacheFilename ) )
-                {
-                    document = new HtmlDocument();
-                    document.Load( cacheFilename, Encoding.UTF8 );
-                    responseUrl = new Uri( endpoint );
-                    return document;
-                }
-            }
-
             document = HtmlUtils.GetWebPage( endpoint, out responseUrl );
-
-            if ( IsCachingObjectType( objectType ) )
-            {
-                WriteToCache( objectType, cacheHandle, document );
-            }
-
             return document;
         }
 
-        string GetCacheFileName( CacheableObjects objectType, string cacheHandle )
-        {
-            return Path.Combine( _personalCacheDirectory, objectType.ToString(), cacheHandle + ".htm" );
-        }
-
-        void WriteToCache( CacheableObjects objectType, string cacheHandle, HtmlDocument document )
-        {
-            string cacheFilename = GetCacheFileName( objectType, cacheHandle );
-            string directoryPath = Path.GetDirectoryName( cacheFilename );
-            if ( directoryPath == null )
-            {
-                throw new ApplicationException();
-            }
-
-            Directory.CreateDirectory( directoryPath );
-
-            using ( Stream cacheFileStream = File.OpenWrite( cacheFilename ) )
-            {
-                document.Save( cacheFileStream, Encoding.UTF8 );
-            }
-        }
-
-        readonly LibrarySourceConfig _config;
-        readonly string _personalCacheDirectory;
+        readonly Cache _cache;
     }
 }

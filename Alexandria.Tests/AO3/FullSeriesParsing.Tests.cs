@@ -41,6 +41,6 @@ namespace Alexandria.Tests.AO3
             AO3Assert.IsFanficRequest( "1169503", series.Fanfics[5] );
         }
 
-        readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
+        readonly LibrarySource _source = new AO3Source( null );
     }
 }

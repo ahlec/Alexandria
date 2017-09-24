@@ -32,11 +32,14 @@
     <CodeAnalysisRuleSet>..\Alexandria.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack, Version=1.5.1.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.5.1\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.5.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.5.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Abstractions, Version=2.0.0.144, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Abstractions.2.0.0.144\lib\net40\System.IO.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -73,11 +76,15 @@
     <Compile Include="AO3\Utils\AO3MaturityRatingUtils.cs" />
     <Compile Include="AO3\Utils\AO3RequestUtils.cs" />
     <Compile Include="AO3\Utils\ParseUtils.cs" />
-    <Compile Include="CacheableObjects.cs" />
+    <Compile Include="Documents\CacheableDocument.cs" />
+    <Compile Include="Documents\HtmlCacheableDocument.cs" />
+    <Compile Include="Caching\CacheableObjects.cs" />
+    <Compile Include="Caching\Cache.cs" />
+    <Compile Include="Caching\FilesystemCache.cs" />
+    <Compile Include="Caching\MemoryCache.cs" />
     <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="IQueryResultsPage.cs" />
     <Compile Include="IRequestable.cs" />
-    <Compile Include="LibrarySourceConfig.cs" />
     <Compile Include="Model\IChapterInfo.cs" />
     <Compile Include="Model\ILanguageInfo.cs" />
     <Compile Include="Model\TagType.cs" />

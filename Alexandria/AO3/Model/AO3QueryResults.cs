@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.Caching;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;

@@ -39,6 +39,6 @@ namespace Alexandria.Tests.AO3
             results.RetrieveNextPage();
         }
 
-        readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
+        readonly LibrarySource _source = new AO3Source( null );
     }
 }

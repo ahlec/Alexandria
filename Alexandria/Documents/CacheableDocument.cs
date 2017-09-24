@@ -5,24 +5,24 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.IO;
 
-namespace Alexandria
+namespace Alexandria.Documents
 {
-    [Flags]
-    public enum CacheableObjects
+    internal abstract class CacheableDocument
     {
-        None = 0,
-        FanficHtml = 1,
-        FanficJson = 2,
-        AuthorHtml = 4,
-        AuthorJson = 8,
-        AuthorFanficsHtml = 16,
-        TagHtml = 32,
-        TagJson = 64,
-        TagFanficsHtml = 128,
-        SeriesHtml = 256,
-        SeriesJson = 512,
+        protected CacheableDocument( string handle )
+        {
+            if ( string.IsNullOrWhiteSpace( handle ) )
+            {
+                throw new ArgumentNullException( nameof( handle ) );
+            }
 
-        All = ~0
+            Handle = handle;
+        }
+
+        public string Handle { get; }
+
+        public abstract void Write( Stream stream );
     }
 }

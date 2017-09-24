@@ -4,6 +4,8 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
+using Alexandria.Caching;
+
 namespace Alexandria.Utils
 {
     public static class CacheableObjectsUtils

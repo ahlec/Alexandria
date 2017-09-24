@@ -105,6 +105,6 @@ namespace Alexandria.Tests.AO3
             }
         }
 
-        readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
+        readonly LibrarySource _source = new AO3Source( null );
     }
 }

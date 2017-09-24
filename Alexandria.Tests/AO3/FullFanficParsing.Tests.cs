@@ -228,6 +228,6 @@ Every single person in his acquaintance had a soulband, God! Even Greenberg had 
 * I am on tumblr - PencilTrash, where you can get fic updates.", fanfic.Footnote );
         }
 
-        readonly LibrarySource _source = new AO3Source( LibrarySourceConfig.Default );
+        readonly LibrarySource _source = new AO3Source( null );
     }
 }

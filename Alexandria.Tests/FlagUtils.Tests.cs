@@ -4,6 +4,7 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
+using Alexandria.Caching;
 using Alexandria.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
