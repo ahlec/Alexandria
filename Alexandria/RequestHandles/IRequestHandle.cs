@@ -6,9 +6,9 @@
 
 namespace Alexandria.RequestHandles
 {
-    // ReSharper disable once UnusedTypeParameter
-    public interface IRequestHandle<T>
-        where T : IRequestable
+    public interface IRequestHandle<out TModel>
+        where TModel : IRequestable
     {
+        TModel Request();
     }
 }

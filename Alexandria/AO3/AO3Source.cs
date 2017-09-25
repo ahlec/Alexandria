@@ -5,24 +5,24 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Text;
-using Alexandria.AO3.Model;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Searching;
 using Alexandria.AO3.Utils;
 using Alexandria.Caching;
 using Alexandria.Model;
+using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3
 {
     public class AO3Source : LibrarySource
     {
-        public AO3Source( Cache cache )
-            : base( cache )
+        public AO3Source( IWebClient webClient, Cache cache )
+            : base( webClient, cache )
         {
         }
 
@@ -39,93 +39,98 @@ namespace Alexandria.AO3
 
             string searchUrl = CreateSearchUrl( searchCriteria );
 
-            HtmlDocument document = HtmlUtils.GetWebPage( searchUrl );
+            HtmlDocument document = GetHtmlWebPage( searchUrl );
 
-            return AO3FanficSearchResults.Parse( searchUrl, 1, document );
+            return AO3FanficSearchResults.Parse( this, searchUrl, 1, document );
         }
 
-        public override T MakeRequest<T>( IRequestHandle<T> request )
+        /// <inheritdoc />
+        public override IAuthorRequestHandle MakeAuthorRequest( string username )
         {
-            if ( request == null )
-            {
-                throw new ArgumentNullException( nameof( request ) );
-            }
-
-#pragma warning disable IDE0019 // Use pattern matching
-            AO3FanficRequestHandle fanficRequest = request as AO3FanficRequestHandle;
-            if ( fanficRequest != null )
-            {
-                string endpoint = $"http://www.archiveofourown.org/works/{fanficRequest.Handle}?view_adult=true";
-                return (T) GetFanficInternal( fanficRequest.Handle, endpoint, true );
-            }
-
-            AO3AuthorRequestHandle authorRequest = request as AO3AuthorRequestHandle;
-            if ( authorRequest != null )
-            {
-                return (T) GetAuthor( authorRequest.Username, authorRequest.Pseud );
-            }
-
-            AO3TagRequestHandle tagRequest = request as AO3TagRequestHandle;
-            if ( tagRequest != null )
-            {
-                return (T) (object) GetTag( tagRequest.Text );
-            }
-
-            AO3SeriesRequestHandle seriesRequest = request as AO3SeriesRequestHandle;
-            if ( seriesRequest != null )
-            {
-                return (T) GetSeries( seriesRequest.Handle );
-            }
-#pragma warning restore IDE0019 // Use pattern matching
-
-            throw new NotSupportedException( $"Unable to support {nameof( IRequestHandle<T> )} with an input `{nameof( request )}` of type {request.GetType().Name}" );
+            return MakeAuthorRequest( username, null );
         }
 
-        internal HtmlDocument RetrieveEndpoint( CacheableObjects objectType, string cacheHandle, string endpoint )
+        public IAuthorRequestHandle MakeAuthorRequest( string username, string pseud )
         {
-            return GetWebPage( objectType, cacheHandle, endpoint, false, out Uri responseUrl );
-        }
-
-        IAuthor GetAuthor( string username, string pseud )
-        {
-            string endpoint = $"http://archiveofourown.org/users/{username}/profile";
-            HtmlDocument document = GetWebPage( CacheableObjects.AuthorHtml, username, endpoint, false, out Uri responseUrl );
-            return AO3Author.Parse( this, responseUrl, document );
-        }
-
-        IFanfic GetFanficInternal( string handle, string endpoint, bool isRetryingOnResponseUrl )
-        {
-            HtmlDocument document = GetWebPage( CacheableObjects.FanficHtml, handle, endpoint, !isRetryingOnResponseUrl, out Uri responseUrl );
-
-            if ( document.DocumentNode.SelectSingleNode( "//div[@id='workskin']" ) != null )
+            if ( string.IsNullOrEmpty( username ) )
             {
-                return AO3Fanfic.Parse( responseUrl, document );
+                throw new ArgumentNullException( nameof( username ) );
             }
 
-            if ( isRetryingOnResponseUrl )
+            if ( string.IsNullOrWhiteSpace( pseud ) )
             {
-                return GetFanficInternal( handle, responseUrl + "?view_adult=true", false );
+                pseud = null;
             }
 
-            throw new ApplicationException( "Could not get past the adult content wall!" );
+            return new AO3AuthorRequestHandle( this, username, pseud );
         }
 
-        AO3Tag GetTag( string tag )
+        /// <inheritdoc />
+        public override ICharacterRequestHandle MakeCharacterRequest( string fullName )
         {
-            tag = tag.Replace( "/", "*s*" );
-            string endpoint = $"http://archiveofourown.org/tags/{tag}";
-            HtmlDocument document = GetWebPage( CacheableObjects.TagHtml, tag, endpoint, false, out Uri responseUrl );
-            return AO3Tag.Parse( this, responseUrl, document );
+            if ( string.IsNullOrEmpty( fullName ) )
+            {
+                throw new ArgumentNullException( nameof( fullName ) );
+            }
+
+            return new AO3CharacterRequestHandle( this, fullName );
         }
 
-        ISeries GetSeries( string handle )
+        /// <inheritdoc />
+        public override IFanficRequestHandle MakeFanficRequest( string handle )
         {
-            string endpoint = $"http://archiveofourown.org/series/{handle}";
-            HtmlDocument document = GetWebPage( CacheableObjects.SeriesHtml, handle, endpoint, false, out Uri responseUrl );
-            return AO3Series.Parse( responseUrl, document );
+            if ( string.IsNullOrEmpty( handle ) )
+            {
+                throw new ArgumentNullException( nameof( handle ) );
+            }
+
+            if ( handle.Any( character => !char.IsDigit( character ) ) )
+            {
+                throw new ArgumentException( "Handles to fanfics on AO3 may only consist of numbers.", nameof( handle ) );
+            }
+
+            return new AO3FanficRequestHandle( this, handle );
         }
 
-        string CreateSearchUrl( LibrarySearch searchCriteria )
+        /// <inheritdoc />
+        public override ISeriesRequestHandle MakeSeriesRequest( string handle )
+        {
+            if ( string.IsNullOrEmpty( handle ) )
+            {
+                throw new ArgumentNullException( nameof( handle ) );
+            }
+
+            if ( handle.Any( character => !char.IsDigit( character ) ) )
+            {
+                throw new ArgumentException( "Handles for series on AO3 may only consist of numbers.", nameof( handle ) );
+            }
+
+            return new AO3SeriesRequestHandle( this, handle );
+        }
+
+        /// <inheritdoc />
+        public override IShipRequestHandle MakeShipRequest( string tag )
+        {
+            if ( string.IsNullOrEmpty( tag ) )
+            {
+                throw new ArgumentNullException( nameof( tag ) );
+            }
+
+            return new AO3ShipRequestHandle( this, tag );
+        }
+
+        /// <inheritdoc />
+        public override ITagRequestHandle MakeTagRequest( string tag )
+        {
+            if ( string.IsNullOrEmpty( tag ) )
+            {
+                throw new ArgumentNullException( nameof( tag ) );
+            }
+
+            return new AO3TagRequestHandle( this, tag );
+        }
+
+        static string CreateSearchUrl( LibrarySearch searchCriteria )
         {
             StringBuilder searchUrl = new StringBuilder( "http://www.archiveofourown.org/works/search?utf8=✓&commit=Search" );
 
@@ -315,16 +320,16 @@ namespace Alexandria.AO3
             switch ( searchCriteria.SortDirection )
             {
                 case SortDirection.Ascending:
-                {
-                    searchUrl.Append( "asc" );
-                    break;
-                }
+                    {
+                        searchUrl.Append( "asc" );
+                        break;
+                    }
 
                 case SortDirection.Descending:
-                {
-                    searchUrl.Append( "desc" );
-                    break;
-                }
+                    {
+                        searchUrl.Append( "desc" );
+                        break;
+                    }
 
                 default:
                     throw new NotImplementedException();

@@ -15,7 +15,7 @@ namespace Alexandria.AO3.Utils
 {
     internal static class ParseUtils
     {
-        public static IReadOnlyList<ICharacterRequestHandle> ParseShipCharacters( string shipTag, out ShipType type )
+        public static IReadOnlyList<ICharacterRequestHandle> ParseShipCharacters( AO3Source source, string shipTag, out ShipType type )
         {
             foreach ( KeyValuePair<string, ShipType> separator in _shipNameSeparators )
             {
@@ -31,14 +31,14 @@ namespace Alexandria.AO3.Utils
                 while ( nextSeparatorIndex >= 0 )
                 {
                     string character = shipTag.Substring( currentStartIndex, nextSeparatorIndex - currentStartIndex );
-                    characters.Add( new AO3CharacterRequestHandle( character.Trim() ) );
+                    characters.Add( new AO3CharacterRequestHandle( source, character.Trim() ) );
                     currentStartIndex = nextSeparatorIndex + separator.Key.Length;
                     nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex, StringComparison.InvariantCultureIgnoreCase );
                 }
 
                 if ( currentStartIndex < shipTag.Length - 1 )
                 {
-                    characters.Add( new AO3CharacterRequestHandle( shipTag.Substring( currentStartIndex ).Trim() ) );
+                    characters.Add( new AO3CharacterRequestHandle( source, shipTag.Substring( currentStartIndex ).Trim() ) );
                 }
 
                 type = separator.Value;

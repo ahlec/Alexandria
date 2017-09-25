@@ -7,6 +7,7 @@
 using Alexandria.AO3;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
+using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -19,11 +20,11 @@ namespace Alexandria.Tests.AO3
         [TestMethod]
         public void AO3Fanfic_AnonymousAuthorIsNull()
         {
-            IFanficRequestHandle request = AO3RequestUtils.MakeFanficRequest( UnitTestConstants.FicHandleHomesick );
-            IFanfic fanfic = _source.MakeRequest( request );
+            IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandleHomesick );
+            IFanfic fanfic = request.Request();
             Assert.IsNull( fanfic.Author );
         }
 
-        readonly LibrarySource _source = new AO3Source( null );
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

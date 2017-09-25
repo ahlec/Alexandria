@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.Caching;
+using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
@@ -39,11 +40,11 @@ namespace Alexandria.AO3.Model
 
         public int NumberFanfics { get; private set; }
 
-        public static AO3Author Parse( AO3Source source, Uri url, HtmlDocument profileDocument )
+        public static AO3Author Parse( AO3Source source, HtmlCacheableDocument profileDocument )
         {
-            AO3Author parsed = new AO3Author( source, url );
+            AO3Author parsed = new AO3Author( source, profileDocument.Url );
 
-            HtmlNode userHomeProfile = profileDocument.DocumentNode.SelectSingleNode( "//div[@class='user home profile']" );
+            HtmlNode userHomeProfile = profileDocument.Html.SelectSingleNode( "//div[@class='user home profile']" );
             parsed.Name = userHomeProfile.SelectSingleNode( "div[@class='primary header module']/h2[@class='heading']/a" ).ReadableInnerText().Trim();
 
             HtmlNode metaDl = userHomeProfile.SelectSingleNode( ".//dl[@class='meta']" );
@@ -91,7 +92,7 @@ namespace Alexandria.AO3.Model
 
             parsed.Biography = userHomeProfile.SelectSingleNode( "div[@class='bio module']/blockquote" )?.ReadableInnerText().Trim();
 
-            HtmlNode dashboardDiv = profileDocument.DocumentNode.SelectSingleNode( "//div[@id='dashboard']" );
+            HtmlNode dashboardDiv = profileDocument.Html.SelectSingleNode( "//div[@id='dashboard']" );
             foreach ( HtmlNode dashboardA in dashboardDiv.SelectNodes( ".//a" ) )
             {
                 if ( !dashboardA.InnerText.StartsWith( "Work" ) )

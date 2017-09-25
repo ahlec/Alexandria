@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
+using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -34,11 +35,11 @@ namespace Alexandria.AO3.Model
 
         public IReadOnlyList<IFanficRequestHandle> Fanfics { get; private set; }
 
-        public static AO3Series Parse( Uri url, HtmlDocument document )
+        public static AO3Series Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            AO3Series parsed = new AO3Series( url );
+            AO3Series parsed = new AO3Series( document.Url );
 
-            HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@id='main']" );
+            HtmlNode mainDiv = document.Html.SelectSingleNode( "//div[@id='main']" );
 
             HtmlNode seriesMetaGroupDl = mainDiv.SelectSingleNode( ".//dl[@class='series meta group']" );
             bool hasDateLastUpdated = false;
@@ -48,7 +49,7 @@ namespace Alexandria.AO3.Model
                 {
                     case "Creator":
                         {
-                            parsed.Author = AO3AuthorRequestHandle.Parse( row.Item2.Element( "a" ) );
+                            parsed.Author = AO3AuthorRequestHandle.Parse( source, row.Item2.Element( "a" ) );
                             break;
                         }
 
@@ -80,7 +81,7 @@ namespace Alexandria.AO3.Model
             }
 
             HtmlNode seriesWorkUl = mainDiv.SelectSingleNode( ".//ul[contains(@class, 'series work' )]" );
-            parsed.Fanfics = seriesWorkUl.Elements( "li" ).Select( AO3FanficRequestHandle.ParseFromWorkLi ).Cast<IFanficRequestHandle>().ToList();
+            parsed.Fanfics = seriesWorkUl.Elements( "li" ).Select( li => AO3FanficRequestHandle.ParseFromWorkLi( source, li ) ).Cast<IFanficRequestHandle>().ToList();
 
             return parsed;
         }

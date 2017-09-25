@@ -8,6 +8,7 @@ using System;
 using Alexandria.Caching;
 using Alexandria.Documents;
 using Alexandria.Model;
+using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
 using Alexandria.Utils;
@@ -17,45 +18,63 @@ namespace Alexandria
 {
     public abstract class LibrarySource
     {
-        protected LibrarySource( Cache cache )
+        protected LibrarySource( IWebClient webClient, Cache cache )
         {
+            _webClient = webClient ?? throw new ArgumentNullException( nameof( webClient ) );
             _cache = cache;
         }
 
         public abstract string SourceHandle { get; }
 
-        public abstract T MakeRequest<T>( IRequestHandle<T> request )
-            where T : IRequestable;
-
         public abstract IQueryResultsPage<IFanfic, IFanficRequestHandle> Search( LibrarySearch searchCriteria );
 
-        internal TDocument GetWebPage<TDocument>( string handle, string endpoint )
-            where TDocument : CacheableDocument
+        public abstract IAuthorRequestHandle MakeAuthorRequest( string username );
+
+        public abstract ICharacterRequestHandle MakeCharacterRequest( string fullName );
+
+        public abstract IFanficRequestHandle MakeFanficRequest( string handle );
+
+        public abstract ISeriesRequestHandle MakeSeriesRequest( string handle );
+
+        public abstract IShipRequestHandle MakeShipRequest( string tag );
+
+        public abstract ITagRequestHandle MakeTagRequest( string tag );
+
+        internal void PurgeHandleFromCache( string handle )
         {
+            _cache?.RemoveItem<HtmlCacheableDocument>( handle );
+        }
+
+        internal HtmlCacheableDocument GetCacheableHtmlWebPage( string handle, string uri )
+        {
+            HtmlCacheableDocument document;
             if ( _cache != null )
             {
-                if ( _cache.TryReadFromCache( handle, out TDocument document ) )
+                if ( _cache.TryReadFromCache( handle, out document ) )
                 {
                     return document;
                 }
             }
 
-            throw new NotImplementedException();
-        }
-
-        protected HtmlDocument GetWebPage( CacheableObjects objectType, string cacheHandle, string endpoint, bool ignoreCache, out Uri responseUrl )
-        {
-            HtmlDocument document;
-
-            if ( !CacheableObjectsUtils.IsHtmlObject( objectType ) )
+            using ( WebResult webResult = _webClient.Get( uri ) )
             {
-                throw new ArgumentException( "Only HTML objects can be requested by this function", nameof( objectType ) );
+                HtmlDocument html = HtmlUtils.ParseHtmlDocument( webResult.ResponseText );
+                document = new HtmlCacheableDocument( handle, webResult.ResponseUri, html );
             }
 
-            document = HtmlUtils.GetWebPage( endpoint, out responseUrl );
+            _cache?.WriteToCache( document );
             return document;
         }
 
+        internal HtmlDocument GetHtmlWebPage( string uri )
+        {
+            using ( WebResult webResult = _webClient.Get( uri ) )
+            {
+                return HtmlUtils.ParseHtmlDocument( webResult.ResponseText );
+            }
+        }
+
+        readonly IWebClient _webClient;
         readonly Cache _cache;
     }
 }

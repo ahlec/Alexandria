@@ -8,6 +8,7 @@ using Alexandria.AO3;
 using Alexandria.AO3.Tests;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
+using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,9 +21,8 @@ namespace Alexandria.Tests.AO3
         [TestMethod]
         public void AO3Fanfic_PrinceAmongWolves()
         {
-            IFanficRequestHandle request = AO3RequestUtils.MakeFanficRequest( UnitTestConstants.FicHandlePrinceAmongWolves );
-
-            IFanfic fanfic = _source.MakeRequest( request );
+            IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandlePrinceAmongWolves );
+            IFanfic fanfic = request.Request();
 
             Assert.IsNotNull( fanfic );
             Assert.AreEqual( "Prince Among Wolves", fanfic.Title );
@@ -102,9 +102,8 @@ namespace Alexandria.Tests.AO3
         [TestMethod]
         public void AO3Fanfic_PossibilityOfSilence()
         {
-            IFanficRequestHandle request = AO3RequestUtils.MakeFanficRequest( UnitTestConstants.FicHandlePossibilityOfSilence );
-
-            IFanfic fanfic = _source.MakeRequest( request );
+            IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandlePossibilityOfSilence );
+            IFanfic fanfic = request.Request();
 
             Assert.IsNotNull( fanfic );
             Assert.AreEqual( "The Possibility of Silence and the Reality of Sound", fanfic.Title );
@@ -169,9 +168,8 @@ namespace Alexandria.Tests.AO3
         [TestMethod]
         public void AO3Fanfic_ItsNotMyLovestory()
         {
-            IFanficRequestHandle request = AO3RequestUtils.MakeFanficRequest( UnitTestConstants.FicHandleItsNotMyLovestory );
-
-            IFanfic fanfic = _source.MakeRequest( request );
+            IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandleItsNotMyLovestory );
+            IFanfic fanfic = request.Request();
 
             Assert.IsNotNull( fanfic );
             Assert.AreEqual( "It's Not My Lovestory", fanfic.Title );
@@ -228,6 +226,6 @@ Every single person in his acquaintance had a soulband, God! Even Greenberg had 
 * I am on tumblr - PencilTrash, where you can get fic updates.", fanfic.Footnote );
         }
 
-        readonly LibrarySource _source = new AO3Source( null );
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

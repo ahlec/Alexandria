@@ -8,6 +8,7 @@ using Alexandria.AO3;
 using Alexandria.AO3.Tests;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
+using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,9 +21,9 @@ namespace Alexandria.Tests.AO3
         [TestMethod]
         public void AO3Author_Crossroadswrite()
         {
-            IAuthorRequestHandle request = AO3RequestUtils.MakeAuthorRequest( UnitTestConstants.AuthorUsernameCrossroadswrite );
+            IAuthorRequestHandle request = _source.MakeAuthorRequest( UnitTestConstants.AuthorUsernameCrossroadswrite );
+            IAuthor author = request.Request();
 
-            IAuthor author = _source.MakeRequest( request );
             Assert.IsNotNull( author );
             Assert.AreEqual( "crossroadswrite", author.Name );
             Assert.IsNotNull( author.Nicknames );
@@ -44,6 +45,6 @@ I do not, however, give permition for these works of fiction to be re-published 
             Assert.AreEqual( 20, fanfics.Results.Count );
         }
 
-        readonly LibrarySource _source = new AO3Source( null );
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
+using System.Text;
 using Alexandria.Documents;
 
 namespace Alexandria.Caching
@@ -31,6 +32,37 @@ namespace Alexandria.Caching
             _cacheDirectory = cacheDirectory;
         }
 
+        internal static void WriteCacheFilePrefix( Stream stream, Uri url )
+        {
+            byte[] urlBytes = Encoding.UTF8.GetBytes( url.AbsoluteUri );
+
+            byte[] urlLengthBytes = BitConverter.GetBytes( urlBytes.Length );
+            stream.Write( urlLengthBytes, 0, 4 ); // The length of `urlLengthBytes` is guaranteed to be 4
+
+            stream.Write( urlBytes, 0, urlBytes.Length );
+        }
+
+        internal static Uri ReadCacheFilePrefix( Stream stream )
+        {
+            byte[] urlLengthBytes = new byte[4];
+            int numBytesRead = stream.Read( urlLengthBytes, 0, 4 );
+            if ( numBytesRead != 4 )
+            {
+                throw new InvalidDataException( $"Was only able to read {numBytesRead} byte(s) from the prefix header when reading the url length." );
+            }
+
+            int urlLength = BitConverter.ToInt32( urlLengthBytes, 0 );
+            byte[] urlBytes = new byte[urlLength];
+            numBytesRead = stream.Read( urlBytes, 0, urlLength );
+            if ( numBytesRead != urlLength )
+            {
+                throw new InvalidDataException( $"Was only able to read {numBytesRead} byte(s) when expecting to read {urlLength} byte(s) of url from prefix header." );
+            }
+
+            string url = Encoding.UTF8.GetString( urlBytes );
+            return new Uri( url );
+        }
+
         /// <inheritdoc />
         internal override bool Contains<TDocument>( string handle )
         {
@@ -39,20 +71,30 @@ namespace Alexandria.Caching
         }
 
         /// <inheritdoc />
+        internal override void RemoveItem<TDocument>( string handle )
+        {
+            string filename = ConstructFileName<TDocument>( handle );
+            _filesystem.File.Delete( filename );
+        }
+
+        /// <inheritdoc />
         internal override void WriteToCache<TDocument>( TDocument document )
         {
             string filename = ConstructFileName<TDocument>( document.Handle );
             using ( Stream stream = _filesystem.File.Create( filename ) )
             {
+                WriteCacheFilePrefix( stream, document.Url );
                 document.Write( stream );
             }
         }
 
         /// <inheritdoc />
-        internal override Stream GetCachedDocumentStream<TDocument>( string handle )
+        internal override CachedDocument GetCachedDocument<TDocument>( string handle )
         {
             string filename = ConstructFileName<TDocument>( handle );
-            return _filesystem.File.OpenRead( filename );
+            Stream documentStream = _filesystem.File.OpenRead( filename );
+            Uri url = ReadCacheFilePrefix( documentStream );
+            return new CachedDocument( url, documentStream );
         }
 
         string ConstructFileName<TDocument>( string handle )

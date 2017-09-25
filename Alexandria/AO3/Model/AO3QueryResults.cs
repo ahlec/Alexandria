@@ -44,14 +44,12 @@ namespace Alexandria.AO3.Model
         {
             AO3QueryResults results = new AO3QueryResults( source, objectType, endpointCategory, endpointTag, page );
             string endpoint = $"http://archiveofourown.org/{endpointCategory}/{endpointTag}/works";
-            string cacheHandle = endpointTag;
             if ( page > 1 )
             {
                 endpoint += $"?page={page}";
-                cacheHandle += page.ToString();
             }
 
-            HtmlDocument document = source.RetrieveEndpoint( objectType, cacheHandle, endpoint );
+            HtmlDocument document = source.GetHtmlWebPage( endpoint );
             HtmlNode worksIndexDiv = document.DocumentNode.SelectSingleNode( "//div[contains(@class, 'works-index')]" );
 
             HtmlNode paginationOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='pagination actions']" );
@@ -59,7 +57,7 @@ namespace Alexandria.AO3.Model
             results.HasMoreResults = ( nextA != null );
 
             HtmlNode worksOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='work index group']" );
-            results.Results = worksOl.Elements( "li" ).Select( AO3FanficRequestHandle.ParseFromWorkLi ).Cast<IFanficRequestHandle>().ToList();
+            results.Results = worksOl.Elements( "li" ).Select( li => AO3FanficRequestHandle.ParseFromWorkLi( source, li ) ).Cast<IFanficRequestHandle>().ToList();
 
             return results;
         }

@@ -9,6 +9,7 @@ using System.Linq;
 using Alexandria.AO3;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
+using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,8 +22,8 @@ namespace Alexandria.Tests.AO3
         [TestMethod]
         public void AO3Tag_StilesStilinski()
         {
-            ITagRequestHandle request = AO3RequestUtils.MakeTagRequest( UnitTestConstants.TagStilesStilinski );
-            ITag tag = _source.MakeRequest( request );
+            ITagRequestHandle request = _source.MakeTagRequest( UnitTestConstants.TagStilesStilinski );
+            ITag tag = request.Request();
 
             Assert.IsNotNull( tag );
             Assert.AreEqual( TagType.Character, tag.Type );
@@ -71,8 +72,8 @@ namespace Alexandria.Tests.AO3
         [TestMethod]
         public void AO3Tag_POVJackFrost()
         {
-            ITagRequestHandle request = AO3RequestUtils.MakeTagRequest( UnitTestConstants.TagPOVJackFrost );
-            ITag tag = _source.MakeRequest( request );
+            ITagRequestHandle request = _source.MakeTagRequest( UnitTestConstants.TagPOVJackFrost );
+            ITag tag = request.Request();
 
             Assert.IsNotNull( tag );
             Assert.AreEqual( TagType.Miscellaneous, tag.Type );
@@ -105,6 +106,6 @@ namespace Alexandria.Tests.AO3
             }
         }
 
-        readonly LibrarySource _source = new AO3Source( null );
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

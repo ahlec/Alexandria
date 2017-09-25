@@ -15,6 +15,9 @@ namespace Alexandria.Caching
         internal abstract bool Contains<TDocument>( string handle )
             where TDocument : CacheableDocument;
 
+        internal abstract void RemoveItem<TDocument>( string handle )
+            where TDocument : CacheableDocument;
+
         internal bool TryReadFromCache<TDocument>( string handle, out TDocument document )
             where TDocument : CacheableDocument
         {
@@ -31,18 +34,18 @@ namespace Alexandria.Caching
         internal abstract void WriteToCache<TDocument>( TDocument document )
             where TDocument : CacheableDocument;
 
-        internal abstract Stream GetCachedDocumentStream<TDocument>( string handle )
+        internal abstract CachedDocument GetCachedDocument<TDocument>( string handle )
             where TDocument : CacheableDocument;
 
         // TODO: Come back here and figure out a way to handle this function better without so much casting
         TDocument ReadFromCache<TDocument>( string handle )
             where TDocument : CacheableDocument
         {
-            using ( Stream cacheStream = GetCachedDocumentStream<TDocument>( handle ) )
+            using ( CachedDocument cachedDocument = GetCachedDocument<TDocument>( handle ) )
             {
                 if ( typeof( TDocument ) == typeof( HtmlCacheableDocument ) )
                 {
-                    return (TDocument) (CacheableDocument) HtmlCacheableDocument.ReadFromStream( handle, cacheStream );
+                    return (TDocument) (CacheableDocument) HtmlCacheableDocument.ReadFromStream( handle, cachedDocument.Url, cachedDocument.Stream );
                 }
 
                 throw new NotSupportedException( $"Unrecognized {nameof( CacheableDocument )}: {typeof( TDocument )}" );

@@ -8,6 +8,7 @@ using Alexandria.AO3;
 using Alexandria.AO3.Tests;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
+using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,8 +21,8 @@ namespace Alexandria.Tests.AO3
         [TestMethod]
         public void AO3Tag_JanuaryJackrabbitWeek2014()
         {
-            ISeriesRequestHandle request = AO3RequestUtils.MakeSeriesRequest( UnitTestConstants.SeriesHandleJanuaryJackrabbitWeek2014 );
-            ISeries series = _source.MakeRequest( request );
+            ISeriesRequestHandle request = _source.MakeSeriesRequest( UnitTestConstants.SeriesHandleJanuaryJackrabbitWeek2014 );
+            ISeries series = request.Request();
 
             Assert.IsNotNull( series );
 
@@ -41,6 +42,6 @@ namespace Alexandria.Tests.AO3
             AO3Assert.IsFanficRequest( "1169503", series.Fanfics[5] );
         }
 
-        readonly LibrarySource _source = new AO3Source( null );
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

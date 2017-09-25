@@ -27,7 +27,7 @@ namespace Alexandria.AO3.Model
 
         public IFanficRequestHandle NextEntry { get; private set; }
 
-        public static AO3SeriesEntry Parse( HtmlNode seriesSpan )
+        public static AO3SeriesEntry Parse( AO3Source source, HtmlNode seriesSpan )
         {
             AO3SeriesEntry parsed = new AO3SeriesEntry();
 
@@ -38,20 +38,20 @@ namespace Alexandria.AO3.Model
             parsed.EntryNumber = int.Parse( entryNumberText );
             HtmlNode seriesA = positionSpan.Element( "a" );
             string[] seriesHrefPieces = seriesA.GetAttributeValue( "href", null ).Split( '/', '\\' );
-            parsed.Series = new AO3SeriesRequestHandle( seriesHrefPieces[seriesHrefPieces.Length - 1] );
+            parsed.Series = new AO3SeriesRequestHandle( source, seriesHrefPieces[seriesHrefPieces.Length - 1] );
 
             HtmlNode previousLink = seriesSpan.SelectSingleNode( "a[@class='previous']" );
             if ( previousLink != null )
             {
                 string[] hrefPieces = previousLink.GetAttributeValue( "href", null ).Split( '/', '\\' );
-                parsed.PreviousEntry = new AO3FanficRequestHandle( hrefPieces.Last() );
+                parsed.PreviousEntry = new AO3FanficRequestHandle( source, hrefPieces.Last() );
             }
 
             HtmlNode nextLink = seriesSpan.SelectSingleNode( "a[@class='next']" );
             if ( nextLink != null )
             {
                 string[] hrefPieces = nextLink.GetAttributeValue( "href", null ).Split( '/', '\\' );
-                parsed.NextEntry = new AO3FanficRequestHandle( hrefPieces.Last() );
+                parsed.NextEntry = new AO3FanficRequestHandle( source, hrefPieces.Last() );
             }
 
             return parsed;

@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
@@ -27,9 +28,9 @@ namespace Alexandria.AO3.Model
 
         public IReadOnlyList<IFanficRequestHandle> Chapters { get; private set; }
 
-        internal static AO3ChapterInfo Parse( HtmlDocument document, HtmlNode workMetaGroup )
+        internal static AO3ChapterInfo Parse( AO3Source source, HtmlCacheableDocument document, HtmlNode workMetaGroup )
         {
-            HtmlNode chapterDropdownSelect = document.DocumentNode.SelectSingleNode( "//ul[@id='chapter_index']//select" );
+            HtmlNode chapterDropdownSelect = document.Html.SelectSingleNode( "//ul[@id='chapter_index']//select" );
             if ( chapterDropdownSelect == null )
             {
                 return null;
@@ -41,7 +42,7 @@ namespace Alexandria.AO3.Model
             foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
             {
                 string fanficHandle = chapterOption.GetAttributeValue( "value", null );
-                chapters.Add( new AO3FanficRequestHandle( fanficHandle ) );
+                chapters.Add( new AO3FanficRequestHandle( source, fanficHandle ) );
 
                 if ( chapterOption.GetAttributeValue( "selected", null ) != null )
                 {
@@ -64,7 +65,7 @@ namespace Alexandria.AO3.Model
                 parsed.TotalNumberChapters = int.Parse( chaptersInfo[1] );
             }
 
-            HtmlNode chapterPrefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='chapter preface group']" );
+            HtmlNode chapterPrefaceGroup = document.Html.SelectSingleNode( "//div[@class='chapter preface group']" );
             HtmlNode chapterTitleTextNode = chapterPrefaceGroup.LastChild;
             if ( chapterTitleTextNode.Name != "a" && chapterTitleTextNode.Name != "A" )
             {

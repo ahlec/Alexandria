@@ -7,25 +7,31 @@
 using System;
 using System.IO;
 
-namespace Alexandria.Documents
+namespace Alexandria.Caching
 {
-    internal abstract class CacheableDocument
+    internal sealed class CachedDocument : IDisposable
     {
-        protected CacheableDocument( string handle, Uri url )
+        public CachedDocument( Uri url, Stream stream )
         {
-            if ( string.IsNullOrWhiteSpace( handle ) )
-            {
-                throw new ArgumentNullException( nameof( handle ) );
-            }
-
-            Handle = handle;
             Url = url ?? throw new ArgumentNullException( nameof( url ) );
+            Stream = stream ?? throw new ArgumentNullException( nameof( stream ) );
         }
-
-        public string Handle { get; }
 
         public Uri Url { get; }
 
-        public abstract void Write( Stream stream );
+        public Stream Stream { get; }
+
+        public void Dispose()
+        {
+            if ( _isDisposed )
+            {
+                return;
+            }
+
+            _isDisposed = true;
+            Stream.Dispose();
+        }
+
+        bool _isDisposed;
     }
 }

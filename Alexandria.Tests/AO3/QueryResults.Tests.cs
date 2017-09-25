@@ -8,6 +8,7 @@ using System;
 using Alexandria.AO3;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
+using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -24,8 +25,8 @@ namespace Alexandria.Tests.AO3
             IQueryResultsPage<IFanfic, IFanficRequestHandle> results = null;
             try
             {
-                ITagRequestHandle requestHandle = AO3RequestUtils.MakeTagRequest( UnitTestConstants.TagPOVJackFrost );
-                ITag tag = _source.MakeRequest( requestHandle );
+                ITagRequestHandle request = _source.MakeTagRequest( UnitTestConstants.TagPOVJackFrost );
+                ITag tag = request.Request();
                 results = tag.QueryFanfics();
             }
             catch
@@ -39,6 +40,6 @@ namespace Alexandria.Tests.AO3
             results.RetrieveNextPage();
         }
 
-        readonly LibrarySource _source = new AO3Source( null );
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

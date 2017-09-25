@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
+using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
@@ -64,11 +65,11 @@ namespace Alexandria.AO3.Model
 
         public string Text { get; private set; }
 
-        public static AO3Fanfic Parse( Uri url, HtmlDocument document )
+        public static AO3Fanfic Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            AO3Fanfic parsed = new AO3Fanfic( url );
+            AO3Fanfic parsed = new AO3Fanfic( document.Url );
 
-            HtmlNode workMetaGroup = document.DocumentNode.SelectSingleNode( "//dl[@class='work meta group']" );
+            HtmlNode workMetaGroup = document.Html.SelectSingleNode( "//dl[@class='work meta group']" );
             parsed.Rating = AO3MaturityRatingUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='rating tags']//a" ).InnerText );
             parsed.ContentWarnings = AO3ContentWarningUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='warning tags']/ul" ) );
 
@@ -79,7 +80,7 @@ namespace Alexandria.AO3.Model
                 foreach ( HtmlNode li in relationshipsUl.Elements( "li" ) )
                 {
                     string shipTag = li.Element( "a" ).ReadableInnerText().Trim();
-                    ships.Add( new AO3ShipRequestHandle( shipTag ) );
+                    ships.Add( new AO3ShipRequestHandle( source, shipTag ) );
                 }
             }
 
@@ -92,7 +93,7 @@ namespace Alexandria.AO3.Model
                 foreach ( HtmlNode li in charactersUl.Elements( "li" ) )
                 {
                     string characterName = li.Element( "a" ).ReadableInnerText().Trim();
-                    characters.Add( new AO3CharacterRequestHandle( characterName ) );
+                    characters.Add( new AO3CharacterRequestHandle( source, characterName ) );
                 }
             }
 
@@ -105,7 +106,7 @@ namespace Alexandria.AO3.Model
                 foreach ( HtmlNode li in freeformTagsUl.Elements( "li" ) )
                 {
                     string tag = li.Element( "a" ).ReadableInnerText().Trim();
-                    tags.Add( new AO3TagRequestHandle( tag ) );
+                    tags.Add( new AO3TagRequestHandle( source, tag ) );
                 }
             }
 
@@ -162,17 +163,17 @@ namespace Alexandria.AO3.Model
             HtmlNode seriesSpan = workMetaGroup.SelectSingleNode( "dd[@class='series']/span" );
             if ( seriesSpan != null )
             {
-                parsed.SeriesInfo = AO3SeriesEntry.Parse( seriesSpan );
+                parsed.SeriesInfo = AO3SeriesEntry.Parse( source, seriesSpan );
             }
 
-            parsed.ChapterInfo = AO3ChapterInfo.Parse( document, workMetaGroup );
+            parsed.ChapterInfo = AO3ChapterInfo.Parse( source, document, workMetaGroup );
 
-            HtmlNode prefaceGroup = document.DocumentNode.SelectSingleNode( "//div[@class='preface group']" );
+            HtmlNode prefaceGroup = document.Html.SelectSingleNode( "//div[@class='preface group']" );
             parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();
             HtmlNode authorA = prefaceGroup.SelectSingleNode( ".//a[@rel='author']" );
             if ( authorA != null )
             {
-                parsed.Author = AO3AuthorRequestHandle.Parse( authorA );
+                parsed.Author = AO3AuthorRequestHandle.Parse( source, authorA );
             }
 
             HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='summary module']/blockquote" );
@@ -187,14 +188,14 @@ namespace Alexandria.AO3.Model
                 parsed.AuthorsNote = notesBlockquote.ReadableInnerText().Trim();
             }
 
-            HtmlNode workEndnotesBlockquote = document.DocumentNode.SelectSingleNode( "//div[@id='work_endnotes']/blockquote" );
+            HtmlNode workEndnotesBlockquote = document.Html.SelectSingleNode( "//div[@id='work_endnotes']/blockquote" );
             if ( workEndnotesBlockquote != null )
             {
                 parsed.Footnote = workEndnotesBlockquote.ReadableInnerText().Trim();
             }
 
-            HtmlNode userstuffModuleDiv = document.DocumentNode.SelectSingleNode( "//div[@class='userstuff module']" ) ??
-                                          document.DocumentNode.SelectSingleNode( "//div[@id='chapters']/div[contains( @class, 'userstuff' )]" );
+            HtmlNode userstuffModuleDiv = document.Html.SelectSingleNode( "//div[@class='userstuff module']" ) ??
+                                          document.Html.SelectSingleNode( "//div[@id='chapters']/div[contains( @class, 'userstuff' )]" );
             userstuffModuleDiv.Element( "h3" )?.Remove();
             parsed.Text = userstuffModuleDiv.ReadableInnerText().Trim();
 

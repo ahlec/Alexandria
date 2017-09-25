@@ -13,17 +13,19 @@ namespace Alexandria.Documents
 {
     internal sealed class HtmlCacheableDocument : CacheableDocument
     {
-        public HtmlCacheableDocument( string handle, HtmlDocument document )
-            : base( handle )
+        public HtmlCacheableDocument( string handle, Uri url, HtmlDocument document )
+            : base( handle, url )
         {
             _htmlDocument = document ?? throw new ArgumentNullException( nameof( document ) );
         }
 
-        public static HtmlCacheableDocument ReadFromStream( string handle, Stream stream )
+        public HtmlNode Html => _htmlDocument.DocumentNode;
+
+        public static HtmlCacheableDocument ReadFromStream( string handle, Uri url, Stream stream )
         {
             HtmlDocument htmlDocument = new HtmlDocument();
             htmlDocument.Load( stream, Encoding.UTF8 );
-            return new HtmlCacheableDocument( handle, htmlDocument );
+            return new HtmlCacheableDocument( handle, url, htmlDocument );
         }
 
         /// <inheritdoc />

@@ -5,27 +5,23 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.IO;
+using Alexandria.Documents;
+using Alexandria.Model;
 
-namespace Alexandria.Documents
+namespace Alexandria.AO3.Model
 {
-    internal abstract class CacheableDocument
+    internal sealed class AO3Character : ICharacter
     {
-        protected CacheableDocument( string handle, Uri url )
+        AO3Character( Uri uri )
         {
-            if ( string.IsNullOrWhiteSpace( handle ) )
-            {
-                throw new ArgumentNullException( nameof( handle ) );
-            }
-
-            Handle = handle;
-            Url = url ?? throw new ArgumentNullException( nameof( url ) );
+            Url = uri;
         }
-
-        public string Handle { get; }
 
         public Uri Url { get; }
 
-        public abstract void Write( Stream stream );
+        public static AO3Character Parse( HtmlCacheableDocument document )
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -58,6 +58,7 @@
     <Compile Include="AO3\AO3Source.cs" />
     <Compile Include="AO3\Model\AO3Author.cs" />
     <Compile Include="AO3\Model\AO3ChapterInfo.cs" />
+    <Compile Include="AO3\Model\AO3Character.cs" />
     <Compile Include="AO3\Model\AO3Fanfic.cs" />
     <Compile Include="AO3\Model\AO3QueryResults.cs" />
     <Compile Include="AO3\Model\AO3Series.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="AO3\Utils\AO3MaturityRatingUtils.cs" />
     <Compile Include="AO3\Utils\AO3RequestUtils.cs" />
     <Compile Include="AO3\Utils\ParseUtils.cs" />
+    <Compile Include="Caching\CachedDocument.cs" />
     <Compile Include="Documents\CacheableDocument.cs" />
     <Compile Include="Documents\HtmlCacheableDocument.cs" />
     <Compile Include="Caching\CacheableObjects.cs" />
@@ -88,10 +90,15 @@
     <Compile Include="Model\IChapterInfo.cs" />
     <Compile Include="Model\ILanguageInfo.cs" />
     <Compile Include="Model\TagType.cs" />
+    <Compile Include="Net\HttpWebClient.cs" />
+    <Compile Include="Net\IWebClient.cs" />
+    <Compile Include="Net\WebException.cs" />
+    <Compile Include="Net\WebResult.cs" />
     <Compile Include="RequestHandles\IAuthorRequestHandle.cs" />
-    <Compile Include="RequestHandles\ICharacterRequestHandle.cs" />
     <Compile Include="RequestHandles\IFanficRequestHandle.cs" />
+    <Compile Include="RequestHandles\ICharacterRequestHandle.cs" />
     <Compile Include="RequestHandles\IRequestHandle.cs" />
+    <Compile Include="RequestHandles\RequestHandleBase.cs" />
     <Compile Include="Model\ContentWarnings.cs" />
     <Compile Include="Model\IAuthor.cs" />
     <Compile Include="Model\ICharacter.cs" />

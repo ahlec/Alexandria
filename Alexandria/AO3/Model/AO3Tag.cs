@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.Caching;
+using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
@@ -39,11 +40,11 @@ namespace Alexandria.AO3.Model
             return AO3QueryResults.Retrieve( _source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
         }
 
-        internal static AO3Tag Parse( AO3Source source, Uri url, HtmlDocument document )
+        internal static AO3Tag Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            AO3Tag parsed = new AO3Tag( source, url );
+            AO3Tag parsed = new AO3Tag( source, document.Url );
 
-            HtmlNode mainDiv = document.DocumentNode.SelectSingleNode( "//div[@class='tags-show region']" );
+            HtmlNode mainDiv = document.Html.SelectSingleNode( "//div[@class='tags-show region']" );
 
             string mainContentPText = mainDiv.SelectSingleNode( "div[@class='tag home profile']/p" ).InnerText;
             string mainContentPFirstSentence = mainContentPText.Substring( 0, mainContentPText.IndexOf( '.' ) );
@@ -83,7 +84,7 @@ namespace Alexandria.AO3.Model
             {
                 foreach ( HtmlNode li in parentUl.Elements( "li" ) )
                 {
-                    parentTags.Add( new AO3TagRequestHandle( li.ReadableInnerText().Trim() ) );
+                    parentTags.Add( new AO3TagRequestHandle( source, li.ReadableInnerText().Trim() ) );
                 }
             }
 
@@ -95,7 +96,7 @@ namespace Alexandria.AO3.Model
             {
                 foreach ( HtmlNode li in synonymUl.Elements( "li" ) )
                 {
-                    synonymousTags.Add( new AO3TagRequestHandle( li.ReadableInnerText().Trim() ) );
+                    synonymousTags.Add( new AO3TagRequestHandle( source, li.ReadableInnerText().Trim() ) );
                 }
             }
 

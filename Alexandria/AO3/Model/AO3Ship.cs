@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -27,7 +28,7 @@ namespace Alexandria.AO3.Model
 
         public IReadOnlyList<ICharacterRequestHandle> Characters { get; private set; }
 
-        internal static AO3Ship Parse( Uri url, HtmlDocument document )
+        internal static AO3Ship Parse( HtmlCacheableDocument document )
         {
             throw new NotImplementedException();
         }
