@@ -22,7 +22,7 @@ namespace Alexandria.Tests.AO3
         public const string FicHandlePrinceAmongWolves = "538425";
         public const string FicHandlePossibilityOfSilence = "3592305";
         public const string FicHandleItsNotMyLovestory = "6598738";
-        public const string FicHandleHomesick = "10317524";
+        public const string FicHandleTwoWeeksSleepIsADistantDream = "1050114";
 
         public const string AuthorUsernameCrossroadswrite = "crossroadswrite";
 

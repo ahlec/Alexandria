@@ -15,12 +15,12 @@ namespace Alexandria.Tests.AO3
 {
     [TestFixture]
     [Category( UnitTestConstants.FanficParsingTestsCategory )]
-    public class Test_FanficParsing
+    public class FanficParsingTests
     {
         [Test]
         public void AO3Fanfic_AnonymousAuthorIsNull()
         {
-            IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandleHomesick );
+            IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandleTwoWeeksSleepIsADistantDream );
             IFanfic fanfic = request.Request();
             Assert.IsNull( fanfic.Author );
         }

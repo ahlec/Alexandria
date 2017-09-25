@@ -48,6 +48,8 @@ namespace Alexandria.AO3.Utils
         /// </summary>
         static readonly LanguageJump[] _languageJumps =
         {
+            new LanguageJump( Language.Tamil, 90 ),
+            new LanguageJump( Language.Luxembourgish, 87 ),
             new LanguageJump( Language.Interlingua, 84 ),
             new LanguageJump( Language.Bosnian, 82 ),
             new LanguageJump( Language.Bengali, 79 ),
@@ -58,6 +60,7 @@ namespace Alexandria.AO3.Utils
             new LanguageJump( Language.Swahili, 58 ),
             new LanguageJump( Language.Malaysian, 56 ),
             new LanguageJump( Language.Slovak, 53 ),
+            new LanguageJump( Language.Chinese, 40 ),
             new LanguageJump( Language.English, 1 )
         };
     }

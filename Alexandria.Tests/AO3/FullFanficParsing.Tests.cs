@@ -220,9 +220,7 @@ namespace Alexandria.Tests.AO3
 Derek’s wrist was missing a soulband.
 Every single person in his acquaintance had a soulband, God! Even Greenberg had a soulband.", fanfic.Summary );
             Assert.AreEqual( @"Thank you Jonjo for the beta work. You are amazing <3", fanfic.AuthorsNote );
-            Assert.AreEqual(
-                @"* Comments/Kudos are gold!! They keeps motivating me to write more
-* I am on tumblr - PencilTrash, where you can get fic updates.", fanfic.Footnote );
+            Assert.AreEqual( @"* Comments/Kudos are gold!! They keeps motivating me to write more", fanfic.Footnote );
         }
 
         readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );

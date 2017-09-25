@@ -125,9 +125,6 @@ namespace Alexandria.Model
         [NativeLanguage( "Bahasa Indonesia" )]
         Indonesian,
 
-        [NativeLanguage( "بهاس ملايو" )]
-        Malay,
-
         [NativeLanguage( "中文" )]
         Chinese,
 
@@ -207,6 +204,12 @@ namespace Alexandria.Model
         Bosnian,
 
         [NativeLanguage( "Interlingua" )]
-        Interlingua
+        Interlingua,
+
+        [NativeLanguage( "Lëtzebuergesch" )]
+        Luxembourgish,
+
+        [NativeLanguage( "தமிழ்" )]
+        Tamil
     }
 }
