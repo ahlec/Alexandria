@@ -11,13 +11,13 @@ namespace Alexandria.Tests.AO3
     [SuppressMessage( "ReSharper", "InconsistentNaming", Justification = "Allowing variable names of tags to break naming convention but keep the variable as close to canonical tag text as possible for readibility." )]
     internal static class UnitTestConstants
     {
-        public const string FullFanficParsingTestsCategory = "AO3 - Full Fanfic Parsing";
-        public const string FullAuthorParsingTestsCategory = "AO3 - Full Author Parsing";
-        public const string FullTagParsingTestsCategory = "AO3 - Full Tag Parsing";
-        public const string FullSeriesParsingTestsCategory = "AO3 - Full Series Parsing";
-        public const string FanficParsingTestsCategory = "AO3 - Fanfic Parsing";
-        public const string UtilTestsCategory = "AO3 - Utils";
-        public const string QueryResultsTestsCategory = "AO3 - Query Results";
+        public const string FullFanficParsingTestsCategory = "Full Fanfic Parsing (AO3)";
+        public const string FullAuthorParsingTestsCategory = "Full Author Parsing (AO3)";
+        public const string FullTagParsingTestsCategory = "Full Tag Parsing (AO3)";
+        public const string FullSeriesParsingTestsCategory = "Full Series Parsing (AO3)";
+        public const string FanficParsingTestsCategory = "Fanfic Parsing (AO3)";
+        public const string UtilTestsCategory = "Utils (AO3)";
+        public const string QueryResultsTestsCategory = "Query Results (AO3)";
 
         public const string FicHandlePrinceAmongWolves = "538425";
         public const string FicHandlePossibilityOfSilence = "3592305";

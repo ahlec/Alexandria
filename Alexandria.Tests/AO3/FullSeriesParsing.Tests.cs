@@ -5,20 +5,19 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3;
-using Alexandria.AO3.Tests;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.FullSeriesParsingTestsCategory )]
+    [TestFixture]
+    [Category( UnitTestConstants.FullSeriesParsingTestsCategory )]
     public class Test_FullSeriesParsing
     {
-        [TestMethod]
+        [Test]
         public void AO3Tag_JanuaryJackrabbitWeek2014()
         {
             ISeriesRequestHandle request = _source.MakeSeriesRequest( UnitTestConstants.SeriesHandleJanuaryJackrabbitWeek2014 );

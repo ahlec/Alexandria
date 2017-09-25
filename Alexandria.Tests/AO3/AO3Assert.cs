@@ -7,9 +7,9 @@
 using System;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace Alexandria.AO3.Tests
+namespace Alexandria.Tests.AO3
 {
     internal static class AO3Assert
     {

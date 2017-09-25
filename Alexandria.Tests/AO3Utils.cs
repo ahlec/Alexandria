@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Alexandria.Net;
 using Alexandria.Utils;
 using HtmlAgilityPack;
 
@@ -14,7 +15,13 @@ namespace Alexandria.Tests
     {
         public static IReadOnlyDictionary<string, int> GetAllLanguages()
         {
-            HtmlDocument searchPage = HtmlUtils.GetWebPage( "http://archiveofourown.org/works/search" );
+            IWebClient webClient = new HttpWebClient();
+            HtmlDocument searchPage;
+            using ( WebResult result = webClient.Get( "http://archiveofourown.org/works/search" ) )
+            {
+                searchPage = HtmlUtils.ParseHtmlDocument( result.ResponseText );
+            }
+
             HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
             Dictionary<string, int> ao3Options = new Dictionary<string, int>();
             foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )

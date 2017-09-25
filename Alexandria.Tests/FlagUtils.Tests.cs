@@ -6,15 +6,15 @@
 
 using Alexandria.Caching;
 using Alexandria.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.UtilTestsCategory )]
+    [TestFixture]
+    [Category( UnitTestConstants.UtilTestsCategory )]
     public class Test_FlagUtils
     {
-        [TestMethod]
+        [Test]
         public void FlagUtils_DetectsMultipleFlags()
         {
             Assert.IsFalse( CacheableObjects.FanficHtml.HasMultipleFlagsSet() );

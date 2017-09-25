@@ -11,15 +11,15 @@ using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.FullTagParsingTestsCategory )]
+    [TestFixture]
+    [Category( UnitTestConstants.FullTagParsingTestsCategory )]
     public class Test_FullTagParsing
     {
-        [TestMethod]
+        [Test]
         public void AO3Tag_StilesStilinski()
         {
             ITagRequestHandle request = _source.MakeTagRequest( UnitTestConstants.TagStilesStilinski );
@@ -69,7 +69,7 @@ namespace Alexandria.Tests.AO3
             Assert.AreEqual( 20, fanfics.Results.Count );
         }
 
-        [TestMethod]
+        [Test]
         public void AO3Tag_POVJackFrost()
         {
             ITagRequestHandle request = _source.MakeTagRequest( UnitTestConstants.TagPOVJackFrost );

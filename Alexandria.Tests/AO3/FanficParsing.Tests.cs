@@ -9,15 +9,15 @@ using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.FanficParsingTestsCategory )]
+    [TestFixture]
+    [Category( UnitTestConstants.FanficParsingTestsCategory )]
     public class Test_FanficParsing
     {
-        [TestMethod]
+        [Test]
         public void AO3Fanfic_AnonymousAuthorIsNull()
         {
             IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandleHomesick );

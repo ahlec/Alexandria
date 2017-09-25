@@ -8,43 +8,29 @@ using System;
 using System.Collections.Generic;
 using Alexandria.Model;
 using Alexandria.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.UtilTestsCategory )]
-    public class Test_LanguageUtils
+    [TestFixture]
+    [Category( UnitTestConstants.UtilTestsCategory )]
+    public class LanguageUtilsTests
     {
-        [TestMethod]
-        [ExpectedException( typeof( ArgumentNullException ), AllowDerivedTypes = false )]
-        public void BaseLanguageUtils_ParseThrowsOnNull()
+        [Test]
+        public void BaseLanguageUtils_ParseThrowsOnInvalidArguments()
         {
-            LanguageUtils.Parse( null );
+            Assert.Throws<ArgumentNullException>( () => LanguageUtils.Parse( null ) );
+            Assert.Throws<ArgumentNullException>( () => LanguageUtils.Parse( string.Empty ) );
+            Assert.Throws<ArgumentNullException>( () => LanguageUtils.Parse( "      " ) );
         }
 
-        [TestMethod]
-        [ExpectedException( typeof( ArgumentNullException ), AllowDerivedTypes = false )]
-        public void BaseLanguageUtils_ParseThrowsOnEmpty()
-        {
-            LanguageUtils.Parse( string.Empty );
-        }
-
-        [TestMethod]
-        [ExpectedException( typeof( ArgumentNullException ), AllowDerivedTypes = false )]
-        public void BaseLanguageUtils_ParseThrowsOnWhitespace()
-        {
-            LanguageUtils.Parse( "   " );
-        }
-
-        [TestMethod]
-        [ExpectedException( typeof( ArgumentException ), AllowDerivedTypes = false )]
+        [Test]
         public void BaseLanguageUtils_ThrowsOnInvalidLanguage()
         {
-            LanguageUtils.Parse( "C#" );
+            Assert.Throws<ArgumentException>( () => LanguageUtils.Parse( "C#" ) );
         }
 
-        [TestMethod]
+        [Test]
         public void BaseLanguageUtils_ParsesAllEnumValues()
         {
             foreach ( Language language in Enum.GetValues( typeof( Language ) ) )
@@ -54,7 +40,7 @@ namespace Alexandria.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void BaseLanguageUtils_ParsesAllNativeNameValues()
         {
             foreach ( Language language in Enum.GetValues( typeof( Language ) ) )
@@ -65,7 +51,7 @@ namespace Alexandria.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void BaseLanguageUtils_AllAO3LanguagesDefined()
         {
             IReadOnlyDictionary<string, int> ao3Languages = AO3Utils.GetAllLanguages();

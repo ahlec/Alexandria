@@ -5,20 +5,19 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3;
-using Alexandria.AO3.Tests;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.FullAuthorParsingTestsCategory )]
+    [TestFixture]
+    [Category( UnitTestConstants.FullAuthorParsingTestsCategory )]
     public class Test_AuthorParsing
     {
-        [TestMethod]
+        [Test]
         public void AO3Author_Crossroadswrite()
         {
             IAuthorRequestHandle request = _source.MakeAuthorRequest( UnitTestConstants.AuthorUsernameCrossroadswrite );

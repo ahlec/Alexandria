@@ -10,16 +10,15 @@ using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.QueryResultsTestsCategory )]
+    [TestFixture]
+    [Category( UnitTestConstants.QueryResultsTestsCategory )]
     public class Test_QueryResults
     {
-        [TestMethod]
-        [ExpectedException( typeof( InvalidOperationException ) )]
+        [Test]
         public void AO3QueryResults_ThrowsWhenRetrievingAtEnd()
         {
             IQueryResultsPage<IFanfic, IFanficRequestHandle> results = null;
@@ -37,7 +36,7 @@ namespace Alexandria.Tests.AO3
 
             Assert.IsNotNull( results );
             Assert.IsFalse( results.HasMoreResults );
-            results.RetrieveNextPage();
+            Assert.Throws<InvalidOperationException>( () => results.RetrieveNextPage() );
         }
 
         readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );

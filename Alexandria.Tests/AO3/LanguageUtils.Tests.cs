@@ -10,15 +10,15 @@ using System.Linq;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.UtilTestsCategory )]
-    public class Test_LanguageUtils
+    [TestFixture]
+    [Category( UnitTestConstants.UtilTestsCategory )]
+    public class LanguageUtilsTests
     {
-        static Test_LanguageUtils()
+        static LanguageUtilsTests()
         {
             List<Language> languages = new List<Language>();
             foreach ( Language language in Enum.GetValues( typeof( Language ) ) )
@@ -31,7 +31,7 @@ namespace Alexandria.Tests.AO3
             _ao3LanguageOptions = AO3Utils.GetAllLanguages().ToDictionary( kvp => LanguageUtils.Parse( kvp.Key ), kvp => kvp.Value );
         }
 
-        [TestMethod]
+        [Test]
         public void AO3LanguageUtils_AllIdsMatchAO3()
         {
             foreach ( Language language in _languageEnumValues )
@@ -41,7 +41,7 @@ namespace Alexandria.Tests.AO3
             }
         }
 
-        [TestMethod]
+        [Test]
         public void AO3LanguageUtils_NoExtraLanguages()
         {
             IEnumerable<Language> extraLanguages = _languageEnumValues.Except( _ao3LanguageOptions.Keys );

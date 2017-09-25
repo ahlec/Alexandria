@@ -5,20 +5,19 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3;
-using Alexandria.AO3.Tests;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.FullFanficParsingTestsCategory )]
+    [TestFixture]
+    [Category( UnitTestConstants.FullFanficParsingTestsCategory )]
     public class Test_AO3FanficParsing
     {
-        [TestMethod]
+        [Test]
         public void AO3Fanfic_PrinceAmongWolves()
         {
             IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandlePrinceAmongWolves );
@@ -99,7 +98,7 @@ namespace Alexandria.Tests.AO3
             Assert.IsTrue( fanfic.Text.Contains( "The upstairs was blocked off as well, so Stiles really only had access to the kitchen, living room, laundry, garage, and a hallway that lead to a bathroom and the boys’ rooms. Stiles only chanced a quick peek into each one to see a proverbial vomit of toys and stuffed animals everywhere before he decided it would be best to act like he’d never seen any of it to begin with." ) );
         }
 
-        [TestMethod]
+        [Test]
         public void AO3Fanfic_PossibilityOfSilence()
         {
             IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandlePossibilityOfSilence );
@@ -165,7 +164,7 @@ namespace Alexandria.Tests.AO3
             Assert.AreEqual( @"Oh my god this fic messed my writing schedule so much it might just have turned me into a white rabbit with a pocket watch because dearie me am I late.", fanfic.Footnote );
         }
 
-        [TestMethod]
+        [Test]
         public void AO3Fanfic_ItsNotMyLovestory()
         {
             IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandleItsNotMyLovestory );

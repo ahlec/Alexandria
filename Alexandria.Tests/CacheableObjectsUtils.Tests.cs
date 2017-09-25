@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Alexandria.Caching;
 using Alexandria.Utils;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Alexandria.Tests
 {
-    [TestClass]
-    [TestCategory( UnitTestConstants.UtilTestsCategory )]
+    [TestFixture]
+    [System.ComponentModel.Category( UnitTestConstants.UtilTestsCategory )]
     public class CacheableObjectsUtilsTests
     {
         class ObjectInfo
@@ -52,7 +52,7 @@ namespace Alexandria.Tests
             };
         }
 
-        [TestMethod]
+        [Test]
         public void CacheableObjectsUtils_UnitTestDataIsValid()
         {
             foreach ( CacheableObjects obj in Enum.GetValues( typeof( CacheableObjects ) ) )
@@ -61,7 +61,7 @@ namespace Alexandria.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CacheableObjectsUtils_IsHtmlObject()
         {
             foreach ( ObjectInfo info in _objectInfo )
@@ -70,7 +70,7 @@ namespace Alexandria.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void CacheableObjectsUtils_IsJsonObject()
         {
             foreach ( ObjectInfo info in _objectInfo )

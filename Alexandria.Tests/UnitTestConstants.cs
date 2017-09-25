@@ -8,6 +8,6 @@ namespace Alexandria.Tests
 {
     internal static class UnitTestConstants
     {
-        public const string UtilTestsCategory = "Base - Utils";
+        public const string UtilTestsCategory = "Utils (Base)";
     }
 }
