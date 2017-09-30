@@ -1,54 +1,54 @@
 # Alexandria #
 
-**Alexandria** is a suite of libraries and applications written in C# that are meant to facilitate interaction with popular fanfiction websites. Major fanfiction websites such as
+**Alexandria** is a C# library designed to provide a universal API for interacting with the various popular fanfiction websites available. Major fanfiction websites such as
 [Archive of Our Own (AO3)](http://archiveofourown.org) or [FanFiction.net (FF.net)](http://fanfiction.net) store a seemingly limitless wealth of fan-created content, but there are
 no official APIs at the moment to interact with the data provided there. Furthermore, even if there were, these APIs would be site-specific. Alexandria seeks to create a uniform
-API for interacting with the major fanfiction websites, and also provides a number of applications that will consume this in meaningful ways.
+API for interacting with the major fanfiction websites.
 
-### Components ###
+The project operates by providing a programmer-friendly interface that is then translated into HTTP calls and executed, downloading the HTML pages from the websites and decoding them
+back into interfaces and classes useful for programmers. The complexities of this--namely, making HTTP calls or working with HTML--is completely hidden from the programmer.
 
-#### Alexandria ####
+The end goal of Alexandria is to support many different websites as part of the project. Following the current release pattern, one website will be added in every major revision,
+in order to not prevent the project from ever releasing; the order of these can be seen below under **Release Map**. Listed in no particular order are the websites we'd currently like
+to provide support for:
 
-The eponymous project is the library which facilitates the backbone of the project. *Alexandria* provides interfaces, enumerations, and classes for interacting with fanfiction websites
-in a generic yet meaningful way. The project operates by providing a programmer-friendly interface which is then translated into HTTP calls, which then downloads the HTML from the websites
-and is decoded back into the interfaces and classes to allow for programmatic consumption. *Alexandria* does not require the consumer to have any knowledge of what is happening behind the scenes
-and the interface is designed to, in fact, hide away what is really happening and focus on providing the data in a way that fits the consumer's needs.
+* [Archive of Our Own (AO3)](http://archiveofourown.org)
+* [FanFiction.net (FF.net)](http://fanfiction.net)
+* [LiveJournal](https://www.livejournal.com) (if possible)
 
-At present, only AO3 (Archive of Our Own) is supported. However, future bindings for FF.net (as well as others after that) are intended as time permits.
+However, additional fanfiction websites beyond these are always welcome to be proposed.
 
-#### Bibliothecary ####
+### Release Map ###
 
-A Windows service, *Bibliothecary* is designed to continually poll the fanfiction websites for specific search queries and then report new finds to the user as new fanfics or updates are
-made public. These search queries are customisable without any need for a knowledge of programming or interacting with the code to create a special build, and numerous actions are provided built-in
-to allow for customising what can be done when new data is found. *Bibliothecary* grew out of a desire to create a new, dedicated replacement for the popular ao3feed Tumblr blogs (eg,
-[hijack-ao3feed](http://ao3feed-hijack.tumblr.com/) that are currently set up using [IFTTT](https://ifttt.com). While IFTTT is powerful and easy to use, the technology doesn't provide a large degree
-of customization for the blog runner, either in terms of what queries they can be set up with, in how the posts are formatted when posted to Tumblr, or even in how many blogs can be configured
-per account. Additionally, these are traditionally limited to only being able to post AO3-based fanfics, and so other fanfic websites are omitted, leaving readers to miss many otherwise fantastic
-works. Addressing all of these problems while also allowing for the creation and management of these blogs by non-programmers is the goal of *Bibliothecary*.
+The following are the goals of each release, as planned out thus far. These are the minimum goals, though additional features may be included in each version.
 
-#### HeadLibrarian ####
+#### Release 1.0 ####
 
-*HeadLibrarian* is the Windows desktop application that is used to congfigure *Bibliothecary*. Through this panel, new search queries (called "Projects") can be set up and configured, as well as the
-various actions that *Bibliothecary* should undertake when a new fanfic is found. All configuration happens at the project-level. Through the shared design of *HeadLibrarian* and *Bibliothecary*, a
-single instance of *Bibliothecary* is able to process hundreds of different projects at a time, polling each of them at different intervals and performing different actions for each project. Authentication
-with Tumblr, configuration of email addresses, search query management, and more all happen within *HeadLibrarian*. Additionally, it provides an easy, visual way to be able to check on the status of
-*Bibliothecary*, to start it, and to force various operations to happen.
+* Setup of reusable public framework that is extensible but still allows for specific features that are present on one website to be utilised.
+* Establishing the internal backbone for the project
+* Implementing the API for interacting with AO3 in a readonly manner
+** Validating of data (such as all input parameters) in a way that the user can publicly access as well, in order to provide end user protection against exceptions being thrown
+** All major endpoints should be present for accessing data
+* Setting up of CI for the project
+* Establishing all necessary unit tests related to the above points
+** Replacing any tight coupling with Ctor dependency injections
+* Rewriting the original code to make it adhere to maintainability standards
+* Submitting package to NuGet
+
+#### Release 2.0 ####
+
+* Implement the API for interacting with FF.net in a readonly manner
 
 ### Requirements ###
 
 * [Visual Studio 2017](https://www.visualstudio.com/downloads/) (or higher)
 * [Microsoft .NET 4.5.2](https://www.microsoft.com/en-us/download/details.aspx?id=42637)
 
-All libraries used within the suite are obtained via NuGet packages. These are presently:
+Alexandria makes use of the following NuGet packages:
 
 * [HtmlAgilityPack](http://html-agility-pack.net/)
-* [Newtonsoft.Json](http://newtonsoft.com/json)
-* [NewTumblrSharp](https://github.com/piedoom/TumblrSharp)
-    * [BouncyCastle-PCL](https://github.com/onovotny/BouncyCastle-PCL)
-    * [Microsoft.Bcl](http://go.microsoft.com/fwlink/?LinkID=280057)
-    * [Microsoft.Bcl.Build](http://go.microsoft.com/fwlink/?LinkID=296436)
-* [System.Data.SQLite](http://system.data.sqlite.org/)
-* [NLog](http://nlog-project.org/)
-* [PubSub](http://github.com/upta/pubsub)
+* [System.IO.Abstractions](https://github.com/tathamoddie/System.IO.Abstractions)
 
-Not all projects will use all packages.
+Alexandria.Tests makes use of all of the above NuGet packages, but also uses [NUnit](https://github.com/nunit/nunit) as its unit test framework.
+
+Additional to these NuGet packages, Alexandria also uses [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers) to ensure code consistency.
