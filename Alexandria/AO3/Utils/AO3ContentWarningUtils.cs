@@ -13,36 +13,36 @@ namespace Alexandria.AO3.Utils
 {
     public static class AO3ContentWarningUtils
     {
-        public static IEnumerable<int> GetIds( ContentWarnings warnings )
+        public static IEnumerable<string> GetIds( ContentWarnings warnings )
         {
             if ( warnings.HasFlag( ContentWarnings.Undetermined ) )
             {
-                yield return 14;
+                yield return "14";
             }
 
             if ( warnings.HasFlag( ContentWarnings.Violence ) )
             {
-                yield return 17;
+                yield return "17";
             }
 
             if ( warnings.HasFlag( ContentWarnings.MajorCharacterDeath ) )
             {
-                yield return 18;
+                yield return "18";
             }
 
             if ( warnings.HasFlag( ContentWarnings.None ) )
             {
-                yield return 16;
+                yield return "16";
             }
 
             if ( warnings.HasFlag( ContentWarnings.Rape ) )
             {
-                yield return 19;
+                yield return "19";
             }
 
             if ( warnings.HasFlag( ContentWarnings.Underage ) )
             {
-                yield return 20;
+                yield return "20";
             }
         }
 

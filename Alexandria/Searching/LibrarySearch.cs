@@ -8,12 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.Model;
+using Alexandria.RequestHandles;
 
 namespace Alexandria.Searching
 {
-    public sealed class LibrarySearch : IEquatable<LibrarySearch>
+    public abstract class LibrarySearch : IEquatable<LibrarySearch>
     {
-        public LibrarySearch()
+        protected LibrarySearch()
         {
             _internalId = _nextInternalId++;
         }
@@ -52,29 +53,7 @@ namespace Alexandria.Searching
 
         public SortDirection SortDirection { get; set; }
 
-        public LibrarySearch Clone()
-        {
-            return new LibrarySearch
-            {
-                Title = Title,
-                Author = Author,
-                Date = Date?.Clone(),
-                OnlyIncludeCompleteFanfics = OnlyIncludeCompleteFanfics,
-                OnlyIncludeSingleChapterFanfics = OnlyIncludeSingleChapterFanfics,
-                WordCount = WordCount?.Clone(),
-                Language = Language,
-                Fandoms = Fandoms.ToList(),
-                Rating = Rating,
-                ContentWarnings = ContentWarnings,
-                CharacterNames = CharacterNames.ToList(),
-                Ships = Ships.ToList(),
-                Tags = Tags.ToList(),
-                NumberLikes = NumberLikes?.Clone(),
-                NumberComments = NumberComments?.Clone(),
-                SortField = SortField,
-                SortDirection = SortDirection
-            };
-        }
+        public abstract IQueryResultsPage<IFanfic, IFanficRequestHandle> Search();
 
         public bool Equals( LibrarySearch other )
         {

@@ -30,20 +30,20 @@ namespace Alexandria.AO3.Utils
             }
         }
 
-        public static int GetId( MaturityRating rating )
+        public static string GetId( MaturityRating rating )
         {
             switch ( rating )
             {
                 case MaturityRating.NotRated:
-                    return 9;
+                    return "9";
                 case MaturityRating.General:
-                    return 10;
+                    return "10";
                 case MaturityRating.Teen:
-                    return 11;
+                    return "11";
                 case MaturityRating.Adult:
-                    return 12;
+                    return "12";
                 case MaturityRating.Explicit:
-                    return 13;
+                    return "13";
                 default:
                     throw new ArgumentException();
             }

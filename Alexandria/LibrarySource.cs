@@ -26,7 +26,7 @@ namespace Alexandria
 
         public abstract string SourceHandle { get; }
 
-        public abstract IQueryResultsPage<IFanfic, IFanficRequestHandle> Search( LibrarySearch searchCriteria );
+        public abstract LibrarySearch MakeSearch();
 
         public abstract IAuthorRequestHandle MakeAuthorRequest( string username );
 

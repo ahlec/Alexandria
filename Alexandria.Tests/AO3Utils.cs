@@ -13,7 +13,7 @@ namespace Alexandria.Tests
 {
     public static class AO3Utils
     {
-        public static IReadOnlyDictionary<string, int> GetAllLanguages()
+        public static IReadOnlyDictionary<string, string> GetAllLanguages()
         {
             IWebClient webClient = new HttpWebClient();
             HtmlDocument searchPage;
@@ -23,7 +23,7 @@ namespace Alexandria.Tests
             }
 
             HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
-            Dictionary<string, int> ao3Options = new Dictionary<string, int>();
+            Dictionary<string, string> ao3Options = new Dictionary<string, string>();
             foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
             {
                 string idStr = option.GetAttributeValue( "value", null );
@@ -32,9 +32,7 @@ namespace Alexandria.Tests
                     continue;
                 }
 
-                int languageId = int.Parse( idStr );
-
-                ao3Options.Add( option.InnerText, languageId );
+                ao3Options.Add( option.InnerText, idStr );
             }
 
             return ao3Options;

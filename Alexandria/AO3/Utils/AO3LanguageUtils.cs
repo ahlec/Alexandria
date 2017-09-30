@@ -24,7 +24,7 @@ namespace Alexandria.AO3.Utils
             public int Id { get; }
         }
 
-        public static int GetId( Language language )
+        public static string GetId( Language language )
         {
             int inputLanguageEnumId = (int) language;
             foreach ( LanguageJump jump in _languageJumps )
@@ -35,7 +35,7 @@ namespace Alexandria.AO3.Utils
                     continue;
                 }
 
-                return jump.Id + differenceFromJump;
+                return ( jump.Id + differenceFromJump ).ToString();
             }
 
             throw new ApplicationException( "There must always be a base language jump (should be English)" );

@@ -6,7 +6,7 @@
 
 namespace Alexandria.AO3.Utils
 {
-    public static class AO3RequestUtils
+    internal static class AO3RequestUtils
     {
         internal static string GetRequestUriForTag( string tag )
         {

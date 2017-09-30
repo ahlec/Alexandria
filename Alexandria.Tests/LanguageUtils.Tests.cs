@@ -54,7 +54,7 @@ namespace Alexandria.Tests
         [Test]
         public void BaseLanguageUtils_AllAO3LanguagesDefined()
         {
-            IReadOnlyDictionary<string, int> ao3Languages = AO3Utils.GetAllLanguages();
+            IReadOnlyDictionary<string, string> ao3Languages = AO3Utils.GetAllLanguages();
             foreach ( string language in ao3Languages.Keys )
             {
                 LanguageUtils.Parse( language );

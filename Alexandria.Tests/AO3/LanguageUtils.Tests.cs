@@ -36,7 +36,7 @@ namespace Alexandria.Tests.AO3
         {
             foreach ( Language language in _languageEnumValues )
             {
-                int id = AO3LanguageUtils.GetId( language );
+                string id = AO3LanguageUtils.GetId( language );
                 Assert.AreEqual( _ao3LanguageOptions[language], id );
             }
         }
@@ -49,6 +49,6 @@ namespace Alexandria.Tests.AO3
         }
 
         static readonly IReadOnlyList<Language> _languageEnumValues;
-        static readonly IReadOnlyDictionary<Language, int> _ao3LanguageOptions;
+        static readonly IReadOnlyDictionary<Language, string> _ao3LanguageOptions;
     }
 }

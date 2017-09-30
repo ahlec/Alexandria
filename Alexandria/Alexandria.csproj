@@ -55,6 +55,7 @@
     <AdditionalFiles Include="..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
+    <Compile Include="AO3\AO3Search.cs" />
     <Compile Include="AO3\AO3Source.cs" />
     <Compile Include="AO3\Model\AO3Author.cs" />
     <Compile Include="AO3\Model\AO3ChapterInfo.cs" />
