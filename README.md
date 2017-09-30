@@ -13,7 +13,7 @@ in order to not prevent the project from ever releasing; the order of these can 
 to provide support for:
 
 * [Archive of Our Own (AO3)](http://archiveofourown.org)
-* [FanFiction.net (FF.net)](https://fanfiction.net)
+* [FanFiction.net (FF.net)](https://www.fanfiction.net)
 * [LiveJournal](https://www.livejournal.com) (if possible)
 
 However, additional fanfiction websites beyond these are always welcome to be proposed.
@@ -51,4 +51,4 @@ Alexandria makes use of the following NuGet packages:
 
 Alexandria.Tests makes use of all of the above NuGet packages, but also uses [NUnit](https://github.com/nunit/nunit) as its unit test framework.
 
-Additional to these NuGet packages, Alexandria also uses [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers) to ensure code consistency.
+Additional to these NuGet packages, Alexandria also uses [StyleCop.Analyzers](https://github.com/DotNetAnalyzers/StyleCopAnalyzers) and [ReSharper](https://www.jetbrains.com/resharper/) to ensure code consistency.
