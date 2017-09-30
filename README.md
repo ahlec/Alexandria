@@ -13,7 +13,7 @@ in order to not prevent the project from ever releasing; the order of these can 
 to provide support for:
 
 * [Archive of Our Own (AO3)](http://archiveofourown.org)
-* [FanFiction.net (FF.net)](http://fanfiction.net)
+* [FanFiction.net (FF.net)](https://fanfiction.net)
 * [LiveJournal](https://www.livejournal.com) (if possible)
 
 However, additional fanfiction websites beyond these are always welcome to be proposed.
@@ -27,11 +27,11 @@ The following are the goals of each release, as planned out thus far. These are 
 * Setup of reusable public framework that is extensible but still allows for specific features that are present on one website to be utilised.
 * Establishing the internal backbone for the project
 * Implementing the API for interacting with AO3 in a readonly manner
-** Validating of data (such as all input parameters) in a way that the user can publicly access as well, in order to provide end user protection against exceptions being thrown
-** All major endpoints should be present for accessing data
+    * Validating of data (such as all input parameters) in a way that the user can publicly access as well, in order to provide end user protection against exceptions being thrown
+    * All major endpoints should be present for accessing data
 * Setting up of CI for the project
 * Establishing all necessary unit tests related to the above points
-** Replacing any tight coupling with Ctor dependency injections
+    * Replacing any tight coupling with Ctor dependency injections
 * Rewriting the original code to make it adhere to maintainability standards
 * Submitting package to NuGet
 
