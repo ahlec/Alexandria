@@ -9,7 +9,7 @@
   "settings": {
     "documentationRules": {
       "companyName": "Alec Deitloff",
-      "copyrightText": "-----------------------------------------------------------------------\nThis code is part of the Alexandria project (https://bitbucket.org/ahlec/alexandria/).\nWritten and maintained by Alec Deitloff.\nArchive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).\n-----------------------------------------------------------------------",
+      "copyrightText": "-----------------------------------------------------------------------\nThis code is part of the Alexandria project (https://github.com/ahlec/Alexandria).\nWritten and maintained by Alec Deitloff.\nArchive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).\n-----------------------------------------------------------------------",
       "xmlHeader": false,
       "headerDecoration": "-----------------------------------------------------------------------"
     }
