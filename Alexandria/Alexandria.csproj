@@ -57,6 +57,7 @@
     </AdditionalFiles>
     <Compile Include="AO3\AO3Search.cs" />
     <Compile Include="AO3\AO3Source.cs" />
+    <Compile Include="AO3\AO3Validation.cs" />
     <Compile Include="AO3\Model\AO3Author.cs" />
     <Compile Include="AO3\Model\AO3ChapterInfo.cs" />
     <Compile Include="AO3\Model\AO3Character.cs" />
@@ -85,6 +86,8 @@
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\FilesystemCache.cs" />
     <Compile Include="Caching\MemoryCache.cs" />
+    <Compile Include="Exceptions\AlexandriaException.cs" />
+    <Compile Include="Exceptions\Input\InvalidAuthorAlexandriaException.cs" />
     <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="IQueryResultsPage.cs" />
     <Compile Include="IRequestable.cs" />
@@ -125,6 +128,7 @@
     <Compile Include="Searching\SearchField.cs" />
     <Compile Include="Searching\SortDirection.cs" />
     <Compile Include="Utils\CacheableObjectsUtils.cs" />
+    <Compile Include="Utils\CharUtils.cs" />
     <Compile Include="Utils\FlagUtils.cs" />
     <Compile Include="Utils\HtmlUtils.cs" />
     <Compile Include="Utils\LanguageUtils.cs" />

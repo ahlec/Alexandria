@@ -60,6 +60,7 @@
     <Compile Include="AO3Utils.cs" />
     <Compile Include="AO3\AO3Assert.cs" />
     <Compile Include="AO3\AO3Source.Tests.cs" />
+    <Compile Include="AO3\AO3Validation.Tests.cs" />
     <Compile Include="AO3\FanficParsing.Tests.cs" />
     <Compile Include="AO3\FullAuthorParsing.Tests.cs" />
     <Compile Include="AO3\FullFanficParsing.Tests.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="AO3\QueryResults.Tests.cs" />
     <Compile Include="AO3\RequestUtils.Tests.cs" />
     <Compile Include="AO3\AO3UnitTestConstants.cs" />
+    <Compile Include="Asserts.cs" />
     <Compile Include="CacheableObjectsUtils.Tests.cs" />
     <Compile Include="FlagUtils.Tests.cs" />
     <Compile Include="LanguageUtils.Tests.cs" />

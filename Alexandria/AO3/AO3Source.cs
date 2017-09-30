@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.Caching;
+using Alexandria.Exceptions.Input;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
@@ -36,16 +37,36 @@ namespace Alexandria.AO3
             return MakeAuthorRequest( username, null );
         }
 
+        /// <summary>
+        /// Creates a new request handle for searching for a particular author on AO3.
+        /// <para />
+        /// Parameters can be validated ahead of time by using <see cref="AO3Validation.IsValidAuthorName"/>.
+        /// </summary>
+        /// <param name="username">The primary username of the author in question. This cannot be null
+        /// and must adhere to the requirements of a valid AO3 author name.</param>
+        /// <param name="pseud">The specific pseud of the author in question. This may be null in order to
+        /// retrieve information about the author's primary account. If this is not null, however, it must
+        /// adhere to the requirements of a valid AO3 author name.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="username"/> is null.</exception>
+        /// <exception cref="InvalidAuthorAlexandriaException">Thrown when <paramref name="username"/> or when
+        /// <paramref name="pseud"/>, if provided, do not meet the criteria for valid author names for AO3. When
+        /// thrown, which of the two fields can be determined by examining the properties of the exception.</exception>
+        /// <returns>A new request handle that can be requested to retrieve information about the specific author on AO3.</returns>
         public IAuthorRequestHandle MakeAuthorRequest( string username, string pseud )
         {
-            if ( string.IsNullOrEmpty( username ) )
+            if ( username == null )
             {
                 throw new ArgumentNullException( nameof( username ) );
             }
 
-            if ( string.IsNullOrWhiteSpace( pseud ) )
+            if ( !AO3Validation.IsValidAuthorName( username ) )
             {
-                pseud = null;
+                throw new InvalidAuthorAlexandriaException( username, nameof( username ) );
+            }
+
+            if ( pseud != null && !AO3Validation.IsValidAuthorName( pseud ) )
+            {
+                throw new InvalidAuthorAlexandriaException( pseud, nameof( pseud ) );
             }
 
             return new AO3AuthorRequestHandle( this, username, pseud );

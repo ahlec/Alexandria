@@ -7,7 +7,6 @@
 using System;
 using Alexandria.Caching;
 using Alexandria.Documents;
-using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
