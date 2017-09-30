@@ -33,6 +33,7 @@ The following are the goals of each release, as planned out thus far. These are 
 * Establishing all necessary unit tests related to the above points
     * Replacing any tight coupling with Ctor dependency injections
 * Rewriting the original code to make it adhere to maintainability standards
+* Full, comprehensive XMLDOC documentation on all public-facing functions
 * Submitting package to NuGet
 
 #### Release 2.0 ####
