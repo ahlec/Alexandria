@@ -16,11 +16,10 @@ namespace Alexandria.Tests.AO3
     public sealed class AO3SourceTests
     {
         [Test]
-        public void AO3Source_MakeAuthorRequestThrowsOnNullOrEmpty()
+        public void AO3Source_MakeAuthorRequest_ThrowsOnNull()
         {
             AO3Source source = new AO3Source( new IgnoredWebClient(), null );
             Assert.Throws<ArgumentNullException>( () => source.MakeAuthorRequest( null ) );
-            Assert.Throws<ArgumentNullException>( () => source.MakeAuthorRequest( string.Empty ) );
         }
 
         [Test]

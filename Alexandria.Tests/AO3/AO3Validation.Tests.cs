@@ -16,53 +16,53 @@ namespace Alexandria.Tests.AO3
         public void IsValidAuthorNameDetectsNull()
         {
             Assert.IsFalse( AO3Validation.IsValidAuthorName( null, out string reason ) );
-            Asserts.IsStringNotNullOrEmpty( reason );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
         }
 
         [Test]
         public void IsValidAuthorNameDetectsBadLengths()
         {
             Assert.IsFalse( AO3Validation.IsValidAuthorName( string.Empty, out string reason ) );
-            Asserts.IsStringNotNullOrEmpty( reason );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
 
             Assert.IsFalse( AO3Validation.IsValidAuthorName( "12345678901234567890123456789012345678901", out reason ) );
-            Asserts.IsStringNotNullOrEmpty( reason );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
         }
 
         [Test]
         public void IsValidAuthorNameDetectsInvalidCharacters()
         {
             Assert.IsFalse( AO3Validation.IsValidAuthorName( "&", out string reason ) );
-            Asserts.IsStringNotNullOrEmpty( reason );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
 
             Assert.IsFalse( AO3Validation.IsValidAuthorName( "hello #world", out reason ) );
-            Asserts.IsStringNotNullOrEmpty( reason );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
 
             Assert.IsFalse( AO3Validation.IsValidAuthorName( "漢字◎", out reason ) );
-            Asserts.IsStringNotNullOrEmpty( reason );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
         }
 
         [Test]
         public void IsValidAuthorNameDetectsMissingLeterOrDigit()
         {
             Assert.IsFalse( AO3Validation.IsValidAuthorName( "-------------", out string reason ) );
-            Asserts.IsStringNotNullOrEmpty( reason );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
         }
 
         [Test]
         public void IsValidAuthorNameValidNames()
         {
             Assert.IsTrue( AO3Validation.IsValidAuthorName( "Hello World", out string reason ) );
-            Assert.IsNull( reason );
+            Assert.That( reason, Is.Null );
 
             Assert.IsTrue( AO3Validation.IsValidAuthorName( "京介", out reason ) );
-            Assert.IsNull( reason );
+            Assert.That( reason, Is.Null );
 
             Assert.IsTrue( AO3Validation.IsValidAuthorName( "Cloak", out reason ) );
-            Assert.IsNull( reason );
+            Assert.That( reason, Is.Null );
 
             Assert.IsTrue( AO3Validation.IsValidAuthorName( "12345-67890", out reason ) );
-            Assert.IsNull( reason );
+            Assert.That( reason, Is.Null );
         }
     }
 }

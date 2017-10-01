@@ -70,7 +70,6 @@
     <Compile Include="AO3\QueryResults.Tests.cs" />
     <Compile Include="AO3\RequestUtils.Tests.cs" />
     <Compile Include="AO3\AO3UnitTestConstants.cs" />
-    <Compile Include="Asserts.cs" />
     <Compile Include="CacheableObjectsUtils.Tests.cs" />
     <Compile Include="FlagUtils.Tests.cs" />
     <Compile Include="LanguageUtils.Tests.cs" />
