@@ -2,4 +2,4 @@ language: csharp
 solution: Alexandria.sln
 script:
   - xbuild /p:Configuration=Release Alexandria.sln
-  - mono ./packages/NUnit.Console.*/tools/nunit3-console.exe ./Alexandria.Tests/bin/Release/Alexandria.Tests.dll
+  - mono ./packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe ./Alexandria.Tests/bin/Release/Alexandria.Tests.dll
