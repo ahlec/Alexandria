@@ -4,10 +4,15 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
-namespace Alexandria.Tests
+namespace Alexandria.Exceptions.Input
 {
-    internal static class UnitTestConstants
+    public sealed class NoSuchLanguageAlexandriaException : AlexandriaException
     {
-        public const string UtilTestsCategory = "Utils (Base)";
+        internal NoSuchLanguageAlexandriaException( string value )
+        {
+            InvalidValue = value;
+        }
+
+        public string InvalidValue { get; }
     }
 }

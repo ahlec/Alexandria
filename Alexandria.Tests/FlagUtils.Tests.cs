@@ -11,8 +11,7 @@ using NUnit.Framework;
 namespace Alexandria.Tests
 {
     [TestFixture]
-    [Category( UnitTestConstants.UtilTestsCategory )]
-    public class Test_FlagUtils
+    public class FlagUtilsTests
     {
         [Test]
         public void FlagUtils_DetectsMultipleFlags()

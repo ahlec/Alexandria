@@ -4,16 +4,53 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using Alexandria.Exceptions.Input;
+using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.Utils;
 using HtmlAgilityPack;
 
-namespace Alexandria.Tests
+namespace Alexandria.Tests.AO3.Conformity
 {
-    public static class AO3Utils
+    public partial class LanguagesTests
     {
-        public static IReadOnlyDictionary<string, string> GetAllLanguages()
+        class AO3Language
+        {
+            public AO3Language( string ao3Name, string ao3Id )
+            {
+                if ( string.IsNullOrWhiteSpace( ao3Name ) )
+                {
+                    throw new ArgumentNullException( nameof( ao3Name ) );
+                }
+
+                if ( string.IsNullOrWhiteSpace( ao3Id ) )
+                {
+                    AO3Id = ao3Id;
+                }
+
+                AO3Name = ao3Name;
+                AO3Id = ao3Id;
+
+                try
+                {
+                    AlexandriaValue = LanguageUtils.Parse( ao3Name );
+                }
+                catch ( NoSuchLanguageAlexandriaException )
+                {
+                    AlexandriaValue = null;
+                }
+            }
+
+            public string AO3Name { get; }
+
+            public string AO3Id { get; }
+
+            public Language? AlexandriaValue { get; }
+        }
+
+        static IReadOnlyList<AO3Language> PullDownLanguages()
         {
             IWebClient webClient = new HttpWebClient();
             HtmlDocument searchPage;
@@ -23,7 +60,7 @@ namespace Alexandria.Tests
             }
 
             HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
-            Dictionary<string, string> ao3Options = new Dictionary<string, string>();
+            List<AO3Language> ao3Languages = new List<AO3Language>();
             foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
             {
                 string idStr = option.GetAttributeValue( "value", null );
@@ -32,10 +69,10 @@ namespace Alexandria.Tests
                     continue;
                 }
 
-                ao3Options.Add( option.InnerText, idStr );
+                ao3Languages.Add( new AO3Language( option.InnerText, idStr ) );
             }
 
-            return ao3Options;
+            return ao3Languages;
         }
     }
 }

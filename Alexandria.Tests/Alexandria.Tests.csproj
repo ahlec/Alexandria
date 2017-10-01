@@ -57,24 +57,24 @@
     <AdditionalFiles Include="..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
-    <Compile Include="AO3Utils.cs" />
     <Compile Include="AO3\AO3Assert.cs" />
     <Compile Include="AO3\AO3Source.Tests.cs" />
     <Compile Include="AO3\AO3Validation.Tests.cs" />
+    <Compile Include="AO3\Conformity\Languages.Data.cs" />
+    <Compile Include="AO3\Conformity\Languages.Tests.cs" />
     <Compile Include="AO3\FanficParsing.Tests.cs" />
     <Compile Include="AO3\FullAuthorParsing.Tests.cs" />
     <Compile Include="AO3\FullFanficParsing.Tests.cs" />
     <Compile Include="AO3\FullSeriesParsing.Tests.cs" />
     <Compile Include="AO3\FullTagParsing.Tests.cs" />
-    <Compile Include="AO3\LanguageUtils.Tests.cs" />
     <Compile Include="AO3\QueryResults.Tests.cs" />
     <Compile Include="AO3\RequestUtils.Tests.cs" />
     <Compile Include="AO3\AO3UnitTestConstants.cs" />
     <Compile Include="CacheableObjectsUtils.Tests.cs" />
     <Compile Include="FlagUtils.Tests.cs" />
-    <Compile Include="LanguageUtils.Tests.cs" />
+    <Compile Include="Utils\LanguageUtils.Tests.cs" />
     <Compile Include="Mocks\IgnoredWebClient.cs" />
-    <Compile Include="UnitTestConstants.cs" />
+    <Compile Include="AlexandriaTestConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

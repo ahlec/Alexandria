@@ -88,6 +88,7 @@
     <Compile Include="Caching\MemoryCache.cs" />
     <Compile Include="Exceptions\AlexandriaException.cs" />
     <Compile Include="Exceptions\Input\InvalidAuthorAlexandriaException.cs" />
+    <Compile Include="Exceptions\Input\NoSuchLanguageAlexandriaException.cs" />
     <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="IQueryResultsPage.cs" />
     <Compile Include="IRequestable.cs" />

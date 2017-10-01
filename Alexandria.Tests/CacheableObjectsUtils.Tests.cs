@@ -14,7 +14,6 @@ using NUnit.Framework;
 namespace Alexandria.Tests
 {
     [TestFixture]
-    [System.ComponentModel.Category( UnitTestConstants.UtilTestsCategory )]
     public class CacheableObjectsUtilsTests
     {
         class ObjectInfo
