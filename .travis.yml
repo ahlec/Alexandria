@@ -2,7 +2,7 @@ language: csharp
 solution: Alexandria.sln
 install:
   - nuget restore Alexandria.sln
-  - nuget install NUnit.Runners -Version 3.7.0 -OutputDirectory testrunner
+  - nuget install NUnit.Console -Version 3.7.0 -OutputDirectory testrunner
 script:
   - xbuild /p:Configuration=Release Alexandria.sln
-  - mono ./testrunner/NUnit.Runners.3.7.0/tools/nunit-console.exe ./Alexandria.Tests/bin/Release/Alexandria.Tests.dll
+  - mono ./testrunner/NUnit.Console.3.7.0/tools/nunit3-console.exe ./Alexandria.Tests/bin/Release/Alexandria.Tests.dll
