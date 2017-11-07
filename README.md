@@ -17,6 +17,7 @@ to provide support for:
 * [Archive of Our Own (AO3)](http://archiveofourown.org)
 * [FanFiction.net (FF.net)](https://www.fanfiction.net)
 * [LiveJournal](https://www.livejournal.com) (if possible)
+* [Wattpad](https://www.wattpad.com/) (if possible)
 
 However, additional fanfiction websites beyond these are always welcome to be proposed.
 
