@@ -1,5 +1,7 @@
 # Alexandria #
 
+[![Build Status](https://travis-ci.org/ahlec/Alexandria.svg?branch=master)](https://travis-ci.org/ahlec/Alexandria)
+
 **Alexandria** is a C# library designed to provide a universal API for interacting with the various popular fanfiction websites available. Major fanfiction websites such as
 [Archive of Our Own (AO3)](http://archiveofourown.org) or [FanFiction.net (FF.net)](http://fanfiction.net) store a seemingly limitless wealth of fan-created content, but there are
 no official APIs at the moment to interact with the data provided there. Furthermore, even if there were, these APIs would be site-specific. Alexandria seeks to create a uniform
