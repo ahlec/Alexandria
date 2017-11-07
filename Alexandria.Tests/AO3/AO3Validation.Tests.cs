@@ -64,5 +64,60 @@ namespace Alexandria.Tests.AO3
             Assert.IsTrue( AO3Validation.IsValidAuthorName( "12345-67890", out reason ) );
             Assert.That( reason, Is.Null );
         }
+
+        [Test]
+        public void IsValidTagDetectsNull()
+        {
+            Assert.IsFalse( AO3Validation.IsValidTag( null, out string reason ) );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
+        }
+
+        [Test]
+        public void IsValidTagDetectsBadLengths()
+        {
+            Assert.IsFalse( AO3Validation.IsValidTag( string.Empty, out string reason ) );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
+
+            Assert.IsFalse( AO3Validation.IsValidTag( new string( 'a', 101 ), out reason ) );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
+        }
+
+        public void IsValidTagBoundaryLengthsPass()
+        {
+            Assert.IsTrue( AO3Validation.IsValidTag( "1", out string reason ) );
+            Assert.That( reason, Is.Null );
+
+            Assert.IsTrue( AO3Validation.IsValidTag( new string( 'a', 100 ), out reason ) );
+            Assert.That( reason, Is.Null );
+        }
+
+        [Test]
+        public void IsValidTagDetectsInvalidCharacters()
+        {
+            Assert.IsFalse( AO3Validation.IsValidAuthorName( ",", out string reason ) );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
+
+            Assert.IsFalse( AO3Validation.IsValidAuthorName( "\\ ^ {", out reason ) );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
+
+            Assert.IsFalse( AO3Validation.IsValidAuthorName( "`=`", out reason ) );
+            Assert.That( reason, Is.Not.Null.Or.Empty );
+        }
+
+        [Test]
+        public void IsValidTagValidTags()
+        {
+            Assert.IsTrue( AO3Validation.IsValidTag( "Hello World", out string reason ) );
+            Assert.That( reason, Is.Null );
+
+            Assert.IsTrue( AO3Validation.IsValidTag( "京介", out reason ) );
+            Assert.That( reason, Is.Null );
+
+            Assert.IsTrue( AO3Validation.IsValidTag( "this is a really long tag that's got some \"basic\" punctuation in it.", out reason ) );
+            Assert.That( reason, Is.Null );
+
+            Assert.IsTrue( AO3Validation.IsValidTag( "12345-67890", out reason ) );
+            Assert.That( reason, Is.Null );
+        }
     }
 }

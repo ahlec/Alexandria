@@ -6,6 +6,7 @@
 
 using System;
 using Alexandria.AO3;
+using Alexandria.Exceptions.Input;
 using Alexandria.RequestHandles;
 using Alexandria.Tests.Mocks;
 using NUnit.Framework;
@@ -20,6 +21,13 @@ namespace Alexandria.Tests.AO3
         {
             AO3Source source = new AO3Source( new IgnoredWebClient(), null );
             Assert.Throws<ArgumentNullException>( () => source.MakeAuthorRequest( null ) );
+        }
+
+        [Test]
+        public void AO3Source_MakeAuthorRequest_ThrowsOnInvalid()
+        {
+            AO3Source source = new AO3Source( new IgnoredWebClient(), null );
+            Assert.Throws<InvalidAuthorAlexandriaException>( () => source.MakeAuthorRequest( string.Empty ) );
         }
 
         [Test]
@@ -73,11 +81,17 @@ namespace Alexandria.Tests.AO3
         }
 
         [Test]
-        public void AO3Source_MakeShipRequestThrowsOnNullOrEmpty()
+        public void AO3Source_MakeShipRequest_ThrowsOnNull()
         {
             AO3Source source = new AO3Source( new IgnoredWebClient(), null );
             Assert.Throws<ArgumentNullException>( () => source.MakeShipRequest( null ) );
-            Assert.Throws<ArgumentNullException>( () => source.MakeShipRequest( string.Empty ) );
+        }
+
+        [Test]
+        public void AO3Source_MakeShipRequest_ThrowsOnInvalid()
+        {
+            AO3Source source = new AO3Source( new IgnoredWebClient(), null );
+            Assert.Throws<InvalidTagAlexandriaException>( () => source.MakeShipRequest( string.Empty ) );
         }
 
         [Test]
@@ -91,11 +105,16 @@ namespace Alexandria.Tests.AO3
         }
 
         [Test]
-        public void AO3Source_MakeTagRequestThrowsOnNullOrEmpty()
+        public void AO3Source_MakeTagRequest_ThrowsOnNull()
         {
             AO3Source source = new AO3Source( new IgnoredWebClient(), null );
             Assert.Throws<ArgumentNullException>( () => source.MakeTagRequest( null ) );
-            Assert.Throws<ArgumentNullException>( () => source.MakeTagRequest( string.Empty ) );
+        }
+
+        public void AO3Source_MakeTagRequest_ThrowsOnInvalid()
+        {
+            AO3Source source = new AO3Source( new IgnoredWebClient(), null );
+            Assert.Throws<InvalidTagAlexandriaException>( () => source.MakeTagRequest( string.Empty ) );
         }
 
         [Test]
