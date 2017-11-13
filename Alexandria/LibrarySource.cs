@@ -15,6 +15,12 @@ using HtmlAgilityPack;
 
 namespace Alexandria
 {
+    /// <summary>
+    /// A base class for all APIs. This class is the base entry point for the various different supported
+    /// websites. It is through a LibrarySource that functions to querying fanfics, searching the websites,
+    /// or retrieving tags or authors is done. Individual websites will inherit from this class and provide
+    /// additional functionality as that website has available.
+    /// </summary>
     public abstract class LibrarySource
     {
         protected LibrarySource( IWebClient webClient, Cache cache )
