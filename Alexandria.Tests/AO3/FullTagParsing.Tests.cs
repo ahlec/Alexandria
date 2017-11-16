@@ -19,6 +19,8 @@ namespace Alexandria.Tests.AO3
     [Category( UnitTestConstants.FullTagParsingTestsCategory )]
     public class Test_FullTagParsing
     {
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+
         [Test]
         public void AO3Tag_StilesStilinski()
         {
@@ -105,7 +107,5 @@ namespace Alexandria.Tests.AO3
                 Assert.AreEqual( UnitTestConstants.TagPOVJackFrostFanficHandles[index], fanfics.Results[index].Handle );
             }
         }
-
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

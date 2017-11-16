@@ -15,6 +15,13 @@ namespace Alexandria.AO3.Utils
 {
     internal static class ParseUtils
     {
+        static readonly IReadOnlyDictionary<string, ShipType> _shipNameSeparators = new Dictionary<string, ShipType>
+        {
+            { "/", ShipType.Romantic },
+            { "\\", ShipType.Romantic },
+            { "&", ShipType.Platonic }
+        };
+
         public static IReadOnlyList<ICharacterRequestHandle> ParseShipCharacters( AO3Source source, string shipTag, out ShipType type )
         {
             foreach ( KeyValuePair<string, ShipType> separator in _shipNameSeparators )
@@ -74,12 +81,5 @@ namespace Alexandria.AO3.Utils
                 yield return new Tuple<string, HtmlNode>( lastDtText, null );
             }
         }
-
-        static readonly IReadOnlyDictionary<string, ShipType> _shipNameSeparators = new Dictionary<string, ShipType>
-        {
-            { "/", ShipType.Romantic },
-            { "\\", ShipType.Romantic },
-            { "&", ShipType.Platonic }
-        };
     }
 }

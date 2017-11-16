@@ -18,6 +18,8 @@ namespace Alexandria.Tests.AO3
     [Category( UnitTestConstants.QueryResultsTestsCategory )]
     public class Test_QueryResults
     {
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+
         [Test]
         public void AO3QueryResults_ThrowsWhenRetrievingAtEnd()
         {
@@ -38,7 +40,5 @@ namespace Alexandria.Tests.AO3
             Assert.IsFalse( results.HasMoreResults );
             Assert.Throws<InvalidOperationException>( () => results.RetrieveNextPage() );
         }
-
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

@@ -17,6 +17,10 @@ namespace Alexandria.AO3.Searching
 {
     internal sealed class AO3FanficSearchResults : IQueryResultsPage<IFanfic, IFanficRequestHandle>
     {
+        readonly AO3Source _source;
+        readonly string _baseEndpoint;
+        readonly int _currentPage;
+
         public AO3FanficSearchResults( AO3Source source, string baseEndpoint, int currentPage )
         {
             _source = source;
@@ -53,9 +57,5 @@ namespace Alexandria.AO3.Searching
             HtmlDocument document = _source.GetHtmlWebPage( endpoint );
             return Parse( _source, _baseEndpoint, _currentPage + 1, document );
         }
-
-        readonly AO3Source _source;
-        readonly string _baseEndpoint;
-        readonly int _currentPage;
     }
 }

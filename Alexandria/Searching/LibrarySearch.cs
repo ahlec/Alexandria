@@ -14,6 +14,9 @@ namespace Alexandria.Searching
 {
     public abstract class LibrarySearch : IEquatable<LibrarySearch>
     {
+        static uint _nextInternalId = 1;
+        readonly uint _internalId;
+
         protected LibrarySearch()
         {
             _internalId = _nextInternalId++;
@@ -172,8 +175,5 @@ namespace Alexandria.Searching
         {
             return _internalId.GetHashCode();
         }
-
-        static uint _nextInternalId = 1;
-        readonly uint _internalId;
     }
 }

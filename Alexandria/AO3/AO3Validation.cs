@@ -12,6 +12,21 @@ namespace Alexandria.AO3
 {
     public static class AO3Validation
     {
+        const int MinNameLength = 1;
+        const int MaxNameLength = 40;
+
+        /// <summary>
+        /// The minimum length of a valid tag.
+        /// </summary>
+        const int MinTagLength = 1;
+
+        /// <summary>
+        /// The maximum length of a valid tag.
+        /// </summary>
+        const int MaxTagLength = 100;
+
+        static readonly HashSet<char> _invalidTagCharacters = new HashSet<char> { ',', '*', '<', '>', '^', '{', '}', '=', '`', '\\', '%' };
+
         /// <summary>
         /// Determines if the provided string can potentially be a valid author, or if there is a error with its
         /// composition that would produce an error.
@@ -159,20 +174,5 @@ namespace Alexandria.AO3
 
             return false;
         }
-
-        const int MinNameLength = 1;
-        const int MaxNameLength = 40;
-
-        /// <summary>
-        /// The minimum length of a valid tag.
-        /// </summary>
-        const int MinTagLength = 1;
-
-        /// <summary>
-        /// The maximum length of a valid tag.
-        /// </summary>
-        const int MaxTagLength = 100;
-
-        static readonly HashSet<char> _invalidTagCharacters = new HashSet<char> { ',', '*', '<', '>', '^', '{', '}', '=', '`', '\\', '%' };
     }
 }

@@ -17,6 +17,8 @@ namespace Alexandria.Tests.AO3.Conformity
     [Category( AlexandriaTestConstants.ConformityTestsCategory )]
     public partial class LanguagesTests
     {
+        IReadOnlyList<AO3Language> _languages;
+
         [OneTimeSetUp]
         public void Setup()
         {
@@ -57,7 +59,5 @@ namespace Alexandria.Tests.AO3.Conformity
             IEnumerable<Language> extraLanguages = alexandriaLanguages.Except( allDefinedAO3Languages );
             Assert.That( extraLanguages, Is.Empty );
         }
-
-        IReadOnlyList<AO3Language> _languages;
     }
 }

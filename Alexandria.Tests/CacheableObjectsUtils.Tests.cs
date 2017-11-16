@@ -16,21 +16,7 @@ namespace Alexandria.Tests
     [TestFixture]
     public class CacheableObjectsUtilsTests
     {
-        class ObjectInfo
-        {
-            public ObjectInfo( CacheableObjects obj, bool isHtml, bool isJson )
-            {
-                CacheableObject = obj;
-                IsHtml = isHtml;
-                IsJson = isJson;
-            }
-
-            public CacheableObjects CacheableObject { get; }
-
-            public bool IsHtml { get; }
-
-            public bool IsJson { get; }
-        }
+        readonly IReadOnlyList<ObjectInfo> _objectInfo;
 
         public CacheableObjectsUtilsTests()
         {
@@ -78,6 +64,20 @@ namespace Alexandria.Tests
             }
         }
 
-        readonly IReadOnlyList<ObjectInfo> _objectInfo;
+        class ObjectInfo
+        {
+            public ObjectInfo( CacheableObjects obj, bool isHtml, bool isJson )
+            {
+                CacheableObject = obj;
+                IsHtml = isHtml;
+                IsJson = isJson;
+            }
+
+            public CacheableObjects CacheableObject { get; }
+
+            public bool IsHtml { get; }
+
+            public bool IsJson { get; }
+        }
     }
 }

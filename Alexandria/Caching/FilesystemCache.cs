@@ -15,6 +15,14 @@ namespace Alexandria.Caching
 {
     public sealed class FilesystemCache : Cache
     {
+        static readonly IReadOnlyDictionary<Type, string> _documentTypeExtensions = new Dictionary<Type, string>
+        {
+            { typeof( HtmlCacheableDocument ), "htm" }
+        };
+
+        readonly IFileSystem _filesystem;
+        readonly string _cacheDirectory;
+
         public FilesystemCache( IFileSystem filesystem, string cacheDirectory )
         {
             _filesystem = filesystem ?? throw new ArgumentNullException( nameof( filesystem ) );
@@ -108,13 +116,5 @@ namespace Alexandria.Caching
             string filename = handle + "." + extension;
             return Path.Combine( _cacheDirectory, filename );
         }
-
-        static readonly IReadOnlyDictionary<Type, string> _documentTypeExtensions = new Dictionary<Type, string>
-        {
-            { typeof( HtmlCacheableDocument ), "htm" }
-        };
-
-        readonly IFileSystem _filesystem;
-        readonly string _cacheDirectory;
     }
 }

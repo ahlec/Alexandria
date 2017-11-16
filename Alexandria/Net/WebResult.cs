@@ -11,6 +11,11 @@ namespace Alexandria.Net
 {
     public sealed class WebResult : IDisposable
     {
+        readonly Stream _responseStream;
+        bool _hasGottenResponseText;
+        string _responseText;
+        bool _isDisposed;
+
         public WebResult( Uri responseUri, Stream responseStream )
         {
             ResponseUri = responseUri ?? throw new ArgumentNullException( nameof( responseUri ) );
@@ -46,10 +51,5 @@ namespace Alexandria.Net
             _isDisposed = true;
             _responseStream.Dispose();
         }
-
-        readonly Stream _responseStream;
-        bool _hasGottenResponseText;
-        string _responseText;
-        bool _isDisposed;
     }
 }

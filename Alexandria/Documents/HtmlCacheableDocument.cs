@@ -13,6 +13,8 @@ namespace Alexandria.Documents
 {
     internal sealed class HtmlCacheableDocument : CacheableDocument
     {
+        readonly HtmlDocument _htmlDocument;
+
         public HtmlCacheableDocument( string handle, Uri url, HtmlDocument document )
             : base( handle, url )
         {
@@ -33,7 +35,5 @@ namespace Alexandria.Documents
         {
             _htmlDocument.Save( stream, Encoding.UTF8 );
         }
-
-        readonly HtmlDocument _htmlDocument;
     }
 }

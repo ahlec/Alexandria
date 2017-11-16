@@ -11,6 +11,8 @@ namespace Alexandria.Caching
 {
     internal sealed class CachedDocument : IDisposable
     {
+        bool _isDisposed;
+
         public CachedDocument( Uri url, Stream stream )
         {
             Url = url ?? throw new ArgumentNullException( nameof( url ) );
@@ -31,7 +33,5 @@ namespace Alexandria.Caching
             _isDisposed = true;
             Stream.Dispose();
         }
-
-        bool _isDisposed;
     }
 }

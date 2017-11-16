@@ -16,6 +16,31 @@ namespace Alexandria.Tests.AO3.Conformity
 {
     public partial class LanguagesTests
     {
+        static IReadOnlyList<AO3Language> PullDownLanguages()
+        {
+            IWebClient webClient = new HttpWebClient();
+            HtmlDocument searchPage;
+            using ( WebResult result = webClient.Get( "http://archiveofourown.org/works/search" ) )
+            {
+                searchPage = HtmlUtils.ParseHtmlDocument( result.ResponseText );
+            }
+
+            HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
+            List<AO3Language> ao3Languages = new List<AO3Language>();
+            foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
+            {
+                string idStr = option.GetAttributeValue( "value", null );
+                if ( string.IsNullOrWhiteSpace( idStr ) )
+                {
+                    continue;
+                }
+
+                ao3Languages.Add( new AO3Language( option.InnerText, idStr ) );
+            }
+
+            return ao3Languages;
+        }
+
         class AO3Language
         {
             public AO3Language( string ao3Name, string ao3Id )
@@ -48,31 +73,6 @@ namespace Alexandria.Tests.AO3.Conformity
             public string AO3Id { get; }
 
             public Language? AlexandriaValue { get; }
-        }
-
-        static IReadOnlyList<AO3Language> PullDownLanguages()
-        {
-            IWebClient webClient = new HttpWebClient();
-            HtmlDocument searchPage;
-            using ( WebResult result = webClient.Get( "http://archiveofourown.org/works/search" ) )
-            {
-                searchPage = HtmlUtils.ParseHtmlDocument( result.ResponseText );
-            }
-
-            HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
-            List<AO3Language> ao3Languages = new List<AO3Language>();
-            foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
-            {
-                string idStr = option.GetAttributeValue( "value", null );
-                if ( string.IsNullOrWhiteSpace( idStr ) )
-                {
-                    continue;
-                }
-
-                ao3Languages.Add( new AO3Language( option.InnerText, idStr ) );
-            }
-
-            return ao3Languages;
         }
     }
 }

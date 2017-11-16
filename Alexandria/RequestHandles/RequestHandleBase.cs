@@ -22,6 +22,10 @@ namespace Alexandria.RequestHandles
 
         protected TSource Source { get; }
 
+        protected abstract string RequestUri { get; }
+
+        protected abstract string RequestCacheHandle { get; }
+
         public TModel Request()
         {
             HtmlCacheableDocument document = Source.GetCacheableHtmlWebPage( RequestCacheHandle, RequestUri );
@@ -39,10 +43,6 @@ namespace Alexandria.RequestHandles
                 throw new UnrecognizedFormatAlexandriaException( Source.Website, ex );
             }
         }
-
-        protected abstract string RequestUri { get; }
-
-        protected abstract string RequestCacheHandle { get; }
 
         protected abstract TModel ParseRequest( HtmlCacheableDocument requestDocument );
     }

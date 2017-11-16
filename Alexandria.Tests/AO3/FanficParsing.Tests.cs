@@ -17,6 +17,8 @@ namespace Alexandria.Tests.AO3
     [Category( UnitTestConstants.FanficParsingTestsCategory )]
     public class FanficParsingTests
     {
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+
         [Test]
         public void AO3Fanfic_AnonymousAuthorIsNull()
         {
@@ -24,7 +26,5 @@ namespace Alexandria.Tests.AO3
             IFanfic fanfic = request.Request();
             Assert.IsNull( fanfic.Author );
         }
-
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

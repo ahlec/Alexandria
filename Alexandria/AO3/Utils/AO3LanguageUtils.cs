@@ -11,36 +11,6 @@ namespace Alexandria.AO3.Utils
 {
     public static class AO3LanguageUtils
     {
-        class LanguageJump
-        {
-            public LanguageJump( Language language, int id )
-            {
-                LanguageEnumId = (int) language;
-                Id = id;
-            }
-
-            public int LanguageEnumId { get; }
-
-            public int Id { get; }
-        }
-
-        public static string GetId( Language language )
-        {
-            int inputLanguageEnumId = (int) language;
-            foreach ( LanguageJump jump in _languageJumps )
-            {
-                int differenceFromJump = inputLanguageEnumId - jump.LanguageEnumId;
-                if ( differenceFromJump < 0 )
-                {
-                    continue;
-                }
-
-                return ( jump.Id + differenceFromJump ).ToString();
-            }
-
-            throw new ApplicationException( "There must always be a base language jump (should be English)" );
-        }
-
         /// <summary>
         /// AO3 lists all of the languages in database integer order, but like with all database entries, they delete
         /// languages (for whatever reason they have), and the languages coming after don't shift down to fill the spot.
@@ -63,5 +33,35 @@ namespace Alexandria.AO3.Utils
             new LanguageJump( Language.Chinese, 40 ),
             new LanguageJump( Language.English, 1 )
         };
+
+        public static string GetId( Language language )
+        {
+            int inputLanguageEnumId = (int) language;
+            foreach ( LanguageJump jump in _languageJumps )
+            {
+                int differenceFromJump = inputLanguageEnumId - jump.LanguageEnumId;
+                if ( differenceFromJump < 0 )
+                {
+                    continue;
+                }
+
+                return ( jump.Id + differenceFromJump ).ToString();
+            }
+
+            throw new ApplicationException( "There must always be a base language jump (should be English)" );
+        }
+
+        class LanguageJump
+        {
+            public LanguageJump( Language language, int id )
+            {
+                LanguageEnumId = (int) language;
+                Id = id;
+            }
+
+            public int LanguageEnumId { get; }
+
+            public int Id { get; }
+        }
     }
 }

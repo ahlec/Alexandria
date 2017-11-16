@@ -17,6 +17,8 @@ namespace Alexandria.Tests.AO3
     [Category( UnitTestConstants.FullSeriesParsingTestsCategory )]
     public class Test_FullSeriesParsing
     {
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+
         [Test]
         public void AO3Tag_JanuaryJackrabbitWeek2014()
         {
@@ -40,7 +42,5 @@ namespace Alexandria.Tests.AO3
             AO3Assert.IsFanficRequest( "1160404", series.Fanfics[4] );
             AO3Assert.IsFanficRequest( "1169503", series.Fanfics[5] );
         }
-
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

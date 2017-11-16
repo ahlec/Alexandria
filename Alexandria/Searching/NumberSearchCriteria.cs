@@ -12,6 +12,11 @@ namespace Alexandria.Searching
     {
         public const int MaximumNumberValue = 9999999;
 
+        static uint _nextInternalId = 1;
+        readonly uint _internalId;
+        int _number1;
+        int _number2;
+
         public NumberSearchCriteria()
         {
             _internalId = _nextInternalId++;
@@ -167,10 +172,5 @@ namespace Alexandria.Searching
 
             return number;
         }
-
-        static uint _nextInternalId = 1;
-        readonly uint _internalId;
-        int _number1;
-        int _number2;
     }
 }

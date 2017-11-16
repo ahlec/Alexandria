@@ -23,6 +23,9 @@ namespace Alexandria
     /// </summary>
     public abstract class LibrarySource
     {
+        readonly IWebClient _webClient;
+        readonly Cache _cache;
+
         protected LibrarySource( IWebClient webClient, Cache cache )
         {
             _webClient = webClient ?? throw new ArgumentNullException( nameof( webClient ) );
@@ -78,8 +81,5 @@ namespace Alexandria
                 return HtmlUtils.ParseHtmlDocument( webResult.ResponseText );
             }
         }
-
-        readonly IWebClient _webClient;
-        readonly Cache _cache;
     }
 }

@@ -17,6 +17,12 @@ namespace Alexandria.AO3.Model
 {
     internal sealed class AO3QueryResults : IQueryResultsPage<IFanfic, IFanficRequestHandle>
     {
+        readonly AO3Source _source;
+        readonly CacheableObjects _objectType;
+        readonly string _endpointCategory;
+        readonly string _endpointQuery;
+        readonly int _page;
+
         AO3QueryResults( AO3Source source, CacheableObjects objectType, string endpointCategory, string endpointTag, int page )
         {
             _source = source;
@@ -61,11 +67,5 @@ namespace Alexandria.AO3.Model
 
             return results;
         }
-
-        readonly AO3Source _source;
-        readonly CacheableObjects _objectType;
-        readonly string _endpointCategory;
-        readonly string _endpointQuery;
-        readonly int _page;
     }
 }

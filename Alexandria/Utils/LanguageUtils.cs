@@ -14,6 +14,9 @@ namespace Alexandria.Utils
 {
     public static class LanguageUtils
     {
+        static readonly IReadOnlyList<ILanguageInfo> _info;
+        static readonly IDictionary<string, Language> _languageStrings = new Dictionary<string, Language>( StringComparer.InvariantCultureIgnoreCase );
+
         static LanguageUtils()
         {
             List<ILanguageInfo> infos = new List<ILanguageInfo>();
@@ -59,9 +62,6 @@ namespace Alexandria.Utils
 
             throw new NoSuchLanguageAlexandriaException( str );
         }
-
-        static readonly IReadOnlyList<ILanguageInfo> _info;
-        static readonly IDictionary<string, Language> _languageStrings = new Dictionary<string, Language>( StringComparer.InvariantCultureIgnoreCase );
 
         class LanguageInfo : ILanguageInfo
         {

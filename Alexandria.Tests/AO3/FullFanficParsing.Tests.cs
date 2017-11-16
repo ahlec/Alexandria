@@ -17,6 +17,8 @@ namespace Alexandria.Tests.AO3
     [Category( UnitTestConstants.FullFanficParsingTestsCategory )]
     public class Test_AO3FanficParsing
     {
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+
         [Test]
         public void AO3Fanfic_PrinceAmongWolves()
         {
@@ -222,7 +224,5 @@ Every single person in his acquaintance had a soulband, God! Even Greenberg had 
             Assert.AreEqual( @"Thank you Jonjo for the beta work. You are amazing <3", fanfic.AuthorsNote );
             Assert.AreEqual( @"* Comments/Kudos are gold!! They keeps motivating me to write more", fanfic.Footnote );
         }
-
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

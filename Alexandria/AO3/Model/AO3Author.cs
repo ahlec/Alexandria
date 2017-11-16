@@ -18,6 +18,8 @@ namespace Alexandria.AO3.Model
 {
     internal sealed class AO3Author : IAuthor
     {
+        readonly AO3Source _source;
+
         AO3Author( AO3Source source, Uri url )
         {
             _source = source;
@@ -122,7 +124,5 @@ namespace Alexandria.AO3.Model
                 yield return pseudA.ReadableInnerText().Trim();
             }
         }
-
-        readonly AO3Source _source;
     }
 }

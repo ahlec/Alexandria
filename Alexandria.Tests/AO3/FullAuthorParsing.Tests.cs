@@ -17,6 +17,8 @@ namespace Alexandria.Tests.AO3
     [Category( UnitTestConstants.FullAuthorParsingTestsCategory )]
     public class Test_AuthorParsing
     {
+        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+
         [Test]
         public void AO3Author_Crossroadswrite()
         {
@@ -43,7 +45,5 @@ I do not, however, give permition for these works of fiction to be re-published 
             Assert.IsTrue( fanfics.HasMoreResults );
             Assert.AreEqual( 20, fanfics.Results.Count );
         }
-
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
     }
 }

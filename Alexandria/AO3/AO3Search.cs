@@ -18,10 +18,16 @@ namespace Alexandria.AO3
 {
     public sealed class AO3Search : LibrarySearch
     {
+        readonly AO3Source _source;
+
         internal AO3Search( AO3Source source )
         {
             _source = source ?? throw new ArgumentNullException( nameof( source ) );
         }
+
+        delegate string ToSearchStringValueFunc<in T>( T value );
+
+        delegate IEnumerable<string> ToManySearchStringValueFunc<in T>( T value );
 
         /// <inheritdoc />
         public override IQueryResultsPage<IFanfic, IFanficRequestHandle> Search()
@@ -102,8 +108,6 @@ namespace Alexandria.AO3
             }
         }
 
-        delegate string ToSearchStringValueFunc<in T>( T value );
-
         static void AddOptionalSearchField<T>( StringBuilder builder, string key, T? value, ToSearchStringValueFunc<T> toStringFunc )
             where T : struct
         {
@@ -112,8 +116,6 @@ namespace Alexandria.AO3
                 AssignSearchKeyValue( builder, key, false, toStringFunc( value.Value ) );
             }
         }
-
-        delegate IEnumerable<string> ToManySearchStringValueFunc<in T>( T value );
 
         static void AddOptionalCheckboxSearchField<T>( StringBuilder builder, string key, T value, T skipIfEqualTo, ToManySearchStringValueFunc<T> toStringFunc )
             where T : struct
@@ -187,7 +189,5 @@ namespace Alexandria.AO3
             AssignSearchKeyValue( searchUrl, "sort_direction", false, GetSortDirectionUrlValue( SortDirection ) );
             return searchUrl.ToString();
         }
-
-        readonly AO3Source _source;
     }
 }
