@@ -4,24 +4,17 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
-using System;
-
-namespace Alexandria.Exceptions
+namespace Alexandria
 {
-    public abstract class AlexandriaException : Exception
+    /// <summary>
+    /// An enum that indicates all of the valid websites that this version of Alexandria is designed to work
+    /// with.
+    /// </summary>
+    public enum Website
     {
-        protected AlexandriaException()
-        {
-        }
-
-        protected AlexandriaException( string message )
-            : base( message )
-        {
-        }
-
-        protected AlexandriaException( string message, Exception innerException )
-            : base( message, innerException )
-        {
-        }
+        /// <summary>
+        /// Archive of Our Own (http://archiveofourown.org)
+        /// </summary>
+        AO3
     }
 }

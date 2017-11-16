@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions\Parsing\InvalidTagTypeAlexandriaException.cs" />
+    <Compile Include="Website.cs" />
     <None Include="..\Alexandria.ruleset">
       <Link>Alexandria.ruleset</Link>
     </None>
@@ -68,6 +70,7 @@
     <Compile Include="AO3\Model\AO3SeriesEntry.cs" />
     <Compile Include="AO3\Model\AO3Ship.cs" />
     <Compile Include="AO3\Model\AO3Tag.cs" />
+    <Compile Include="AO3\Model\AO3TagBase.cs" />
     <Compile Include="AO3\RequestHandles\AO3AuthorRequestHandle.cs" />
     <Compile Include="AO3\RequestHandles\AO3CharacterRequestHandle.cs" />
     <Compile Include="AO3\RequestHandles\AO3FanficRequestHandle.cs" />
@@ -92,6 +95,8 @@
     <Compile Include="Exceptions\Input\InvalidTagAlexandriaException.cs" />
     <Compile Include="Exceptions\Input\NoSuchLanguageAlexandriaException.cs" />
     <Compile Include="Exceptions\ParseExceptions.cs" />
+    <Compile Include="Exceptions\Parsing\UnrecognizedFormatAlexandriaException.cs" />
+    <Compile Include="Exceptions\Parsing\UnrecognizedTagTypeAlexandriaException.cs" />
     <Compile Include="IQueryResultsPage.cs" />
     <Compile Include="IRequestable.cs" />
     <Compile Include="Model\IChapterInfo.cs" />

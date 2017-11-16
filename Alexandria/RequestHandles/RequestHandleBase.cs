@@ -6,6 +6,8 @@
 
 using System;
 using Alexandria.Documents;
+using Alexandria.Exceptions;
+using Alexandria.Exceptions.Parsing;
 
 namespace Alexandria.RequestHandles
 {
@@ -23,7 +25,19 @@ namespace Alexandria.RequestHandles
         public TModel Request()
         {
             HtmlCacheableDocument document = Source.GetCacheableHtmlWebPage( RequestCacheHandle, RequestUri );
-            return ParseRequest( document );
+
+            try
+            {
+                return ParseRequest( document );
+            }
+            catch ( AlexandriaException )
+            {
+                throw;
+            }
+            catch ( Exception ex )
+            {
+                throw new UnrecognizedFormatAlexandriaException( Source.Website, ex );
+            }
         }
 
         protected abstract string RequestUri { get; }

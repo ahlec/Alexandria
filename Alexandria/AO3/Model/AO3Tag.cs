@@ -6,105 +6,61 @@
 
 using System;
 using System.Collections.Generic;
-using Alexandria.AO3.RequestHandles;
-using Alexandria.Caching;
 using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-    internal sealed class AO3Tag : ITag
+    /// <summary>
+    /// A concrete class for parsing a tag from AO3.
+    /// <para />
+    /// This class can parse a ship or a character tag (because we don't always know what
+    /// a tag is ahead of time) whereas <seealso cref="AO3Ship"/> and <seealso cref="AO3Character"/>
+    /// cannot parse something that isn't exactly the type that they are.
+    /// </summary>
+    internal sealed class AO3Tag : AO3TagBase, ITag
     {
-        AO3Tag( AO3Source source, Uri url )
+        AO3Tag( AO3Source source, Uri url, HtmlNode mainDiv )
+            : base( source, url, mainDiv )
         {
-            _source = source;
-            Url = url;
+            Type = ParseTagType( mainDiv );
+            ParentTags = ParseParentTags( mainDiv );
+            SynonymousTags = ParseSynonymousTags( mainDiv );
         }
 
-        public Uri Url { get; }
+        /// <summary>
+        /// Gets the type of the tag.
+        /// </summary>
+        public TagType Type { get; }
 
-        public TagType Type { get; private set; }
+        /// <summary>
+        /// Gets any parent tags that this tag might have (tags which conceptually would
+        /// encompass this tag alongside other tags, if this website supports that).
+        /// </summary>
+        public IReadOnlyList<ITagRequestHandle> ParentTags { get; }
 
-        public string Text { get; private set; }
+        /// <summary>
+        /// Gets any other tags which have the same meaning as this tag but which are perhaps
+        /// written a different way (for instance, a ship tag AAAA/BBBB might have a synonymous
+        /// tag of BBBB/AAAA).
+        /// </summary>
+        public IReadOnlyList<ITagRequestHandle> SynonymousTags { get; }
 
-        public IReadOnlyList<ITagRequestHandle> ParentTags { get; private set; }
-
-        public IReadOnlyList<ITagRequestHandle> SynonymousTags { get; private set; }
-
-        public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
+        /// <summary>
+        /// Parses an HTML page into an instance of an <seealso cref="AO3Tag"/>.
+        /// </summary>
+        /// <param name="source">The source that the HTML page came from, which is then stored for
+        /// querying fanfics and also passed along to any nested request handles for them to parse
+        /// data with as well.</param>
+        /// <param name="document">The document that came from the website itself.</param>
+        /// <returns>An instance of <seealso cref="AO3Tag"/> that was parsed and configured using
+        /// the information provided.</returns>
+        public static AO3Tag Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            string endpointTag = Text.Replace( "/", "*s*" );
-            return AO3QueryResults.Retrieve( _source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
+            HtmlNode mainDiv = GetMainDiv( document );
+            return new AO3Tag( source, document.Url, mainDiv );
         }
-
-        internal static AO3Tag Parse( AO3Source source, HtmlCacheableDocument document )
-        {
-            AO3Tag parsed = new AO3Tag( source, document.Url );
-
-            HtmlNode mainDiv = document.Html.SelectSingleNode( "//div[@class='tags-show region']" );
-
-            string mainContentPText = mainDiv.SelectSingleNode( "div[@class='tag home profile']/p" ).InnerText;
-            string mainContentPFirstSentence = mainContentPText.Substring( 0, mainContentPText.IndexOf( '.' ) );
-            int mainContentSentenceStartLength = "This tag belongs to the ".Length;
-            string textCategory = mainContentPFirstSentence.Substring( mainContentSentenceStartLength, mainContentPText.LastIndexOf( " Category", StringComparison.InvariantCultureIgnoreCase ) - mainContentSentenceStartLength );
-            switch ( textCategory )
-            {
-                case "Character":
-                    {
-                        parsed.Type = TagType.Character;
-                        break;
-                    }
-
-                case "Relationship":
-                    {
-                        parsed.Type = TagType.Relationship;
-                        break;
-                    }
-
-                case "Additional Tags":
-                    {
-                        parsed.Type = TagType.Miscellaneous;
-                        break;
-                    }
-
-                default:
-                    {
-                        throw new NotImplementedException();
-                    }
-            }
-
-            parsed.Text = mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ).ReadableInnerText().Trim();
-
-            List<ITagRequestHandle> parentTags = new List<ITagRequestHandle>();
-            HtmlNode parentUl = mainDiv.SelectSingleNode( ".//div[@class='parent listbox group']/ul" );
-            if ( parentUl != null )
-            {
-                foreach ( HtmlNode li in parentUl.Elements( "li" ) )
-                {
-                    parentTags.Add( new AO3TagRequestHandle( source, li.ReadableInnerText().Trim() ) );
-                }
-            }
-
-            parsed.ParentTags = parentTags;
-
-            List<ITagRequestHandle> synonymousTags = new List<ITagRequestHandle>();
-            HtmlNode synonymUl = mainDiv.SelectSingleNode( ".//div[@class='synonym listbox group']/ul" );
-            if ( synonymUl != null )
-            {
-                foreach ( HtmlNode li in synonymUl.Elements( "li" ) )
-                {
-                    synonymousTags.Add( new AO3TagRequestHandle( source, li.ReadableInnerText().Trim() ) );
-                }
-            }
-
-            parsed.SynonymousTags = synonymousTags;
-
-            return parsed;
-        }
-
-        readonly AO3Source _source;
     }
 }

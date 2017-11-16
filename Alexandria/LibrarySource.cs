@@ -29,7 +29,7 @@ namespace Alexandria
             _cache = cache;
         }
 
-        public abstract string SourceHandle { get; }
+        public abstract Website Website { get; }
 
         public abstract LibrarySearch MakeSearch();
 

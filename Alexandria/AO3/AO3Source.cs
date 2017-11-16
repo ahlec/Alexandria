@@ -23,7 +23,7 @@ namespace Alexandria.AO3
         }
 
         /// <inheritdoc />
-        public override string SourceHandle => "ao3";
+        public override Website Website => Website.AO3;
 
         /// <inheritdoc />
         public override LibrarySearch MakeSearch()

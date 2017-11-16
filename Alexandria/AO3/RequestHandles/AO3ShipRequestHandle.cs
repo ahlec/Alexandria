@@ -14,9 +14,12 @@ namespace Alexandria.AO3.RequestHandles
 {
     internal sealed class AO3ShipRequestHandle : RequestHandleBase<IShip, AO3Source>, IShipRequestHandle
     {
+        readonly AO3Source _source;
+
         public AO3ShipRequestHandle( AO3Source source, string shipTag )
             : base( source )
         {
+            _source = source;
             ShipTag = shipTag;
         }
 
@@ -36,7 +39,7 @@ namespace Alexandria.AO3.RequestHandles
         /// <inheritdoc />
         protected override IShip ParseRequest( HtmlCacheableDocument requestDocument )
         {
-            return AO3Ship.Parse( requestDocument );
+            return AO3Ship.Parse( _source, requestDocument );
         }
     }
 }

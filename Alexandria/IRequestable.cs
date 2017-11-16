@@ -5,11 +5,19 @@
 // -----------------------------------------------------------------------
 
 using System;
+using Alexandria.RequestHandles;
 
 namespace Alexandria
 {
+    /// <summary>
+    /// Any item which is requestable from a website by using an appropriately
+    /// configured and typed <seealso cref="IRequestHandle{TModel}"/>.
+    /// </summary>
     public interface IRequestable
     {
+        /// <summary>
+        /// Gets the URL of the webpage that is being requested.
+        /// </summary>
         Uri Url { get; }
     }
 }

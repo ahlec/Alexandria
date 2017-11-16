@@ -4,24 +4,15 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
-using System;
-
-namespace Alexandria.Exceptions
+namespace Alexandria.Exceptions.Parsing
 {
-    public abstract class AlexandriaException : Exception
+    public sealed class UnrecognizedTagTypeAlexandriaException : AlexandriaException
     {
-        protected AlexandriaException()
+        internal UnrecognizedTagTypeAlexandriaException( string value )
         {
+            InvalidValue = value;
         }
 
-        protected AlexandriaException( string message )
-            : base( message )
-        {
-        }
-
-        protected AlexandriaException( string message, Exception innerException )
-            : base( message, innerException )
-        {
-        }
+        public string InvalidValue { get; }
     }
 }
