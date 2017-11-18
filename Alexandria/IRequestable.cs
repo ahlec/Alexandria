@@ -16,6 +16,11 @@ namespace Alexandria
     public interface IRequestable
     {
         /// <summary>
+        /// Gets the website that this request handle will be retrieving data from.
+        /// </summary>
+        Website Website { get; }
+
+        /// <summary>
         /// Gets the URL of the webpage that is being requested.
         /// </summary>
         Uri Url { get; }

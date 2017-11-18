@@ -6,22 +6,31 @@
 
 using System;
 using Alexandria.Documents;
+using Alexandria.Exceptions.Parsing;
 using Alexandria.Model;
+using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-    internal sealed class AO3Character : ICharacter
+    internal sealed class AO3Character : AO3TagBase, ICharacter
     {
-        AO3Character( Uri uri )
+        AO3Character( AO3Source source, Uri url, HtmlNode mainDiv )
+            : base( source, url, mainDiv )
         {
-            Url = uri;
         }
 
-        public Uri Url { get; }
-
-        public static AO3Character Parse( HtmlCacheableDocument document )
+        public static AO3Character Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            throw new NotImplementedException();
+            HtmlNode mainDiv = GetMainDiv( document );
+
+            TagType type = ParseTagType( mainDiv );
+            if ( type != TagType.Character )
+            {
+                string name = ParseTagText( mainDiv );
+                throw new InvalidTagTypeAlexandriaException( TagType.Character, type, name );
+            }
+
+            return new AO3Character( source, document.Url, mainDiv );
         }
     }
 }

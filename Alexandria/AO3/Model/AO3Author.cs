@@ -16,17 +16,12 @@ using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-    internal sealed class AO3Author : IAuthor
+    internal sealed class AO3Author : RequestableBase<AO3Source>, IAuthor
     {
-        readonly AO3Source _source;
-
         AO3Author( AO3Source source, Uri url )
+            : base( source, url )
         {
-            _source = source;
-            Url = url;
         }
-
-        public Uri Url { get; }
 
         public string Name { get; private set; }
 
@@ -114,7 +109,7 @@ namespace Alexandria.AO3.Model
 
         public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
         {
-            return AO3QueryResults.Retrieve( _source, CacheableObjects.AuthorFanficsHtml, "users", Name, 1 );
+            return AO3QueryResults.Retrieve( Source, CacheableObjects.AuthorFanficsHtml, "users", Name, 1 );
         }
 
         static IEnumerable<string> CollectPseuds( HtmlNode pseudsDd )

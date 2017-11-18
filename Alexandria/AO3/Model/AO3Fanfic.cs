@@ -16,14 +16,12 @@ using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-    internal sealed class AO3Fanfic : IFanfic
+    internal sealed class AO3Fanfic : RequestableBase<AO3Source>, IFanfic
     {
-        AO3Fanfic( Uri url )
+        AO3Fanfic( AO3Source source, Uri url )
+            : base( source, url )
         {
-            Url = url;
         }
-
-        public Uri Url { get; }
 
         public string Title { get; private set; }
 
@@ -67,7 +65,7 @@ namespace Alexandria.AO3.Model
 
         public static AO3Fanfic Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            AO3Fanfic parsed = new AO3Fanfic( document.Url );
+            AO3Fanfic parsed = new AO3Fanfic( source, document.Url );
 
             HtmlNode workMetaGroup = document.Html.SelectSingleNode( "//dl[@class='work meta group']" );
             parsed.Rating = AO3MaturityRatingUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='rating tags']//a" ).InnerText );

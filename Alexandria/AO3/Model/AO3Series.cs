@@ -16,14 +16,12 @@ using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-    internal sealed class AO3Series : ISeries
+    internal sealed class AO3Series : RequestableBase<AO3Source>, ISeries
     {
-        AO3Series( Uri url )
+        AO3Series( AO3Source source, Uri url )
+            : base( source, url )
         {
-            Url = url;
         }
-
-        public Uri Url { get; }
 
         public IAuthorRequestHandle Author { get; private set; }
 
@@ -37,7 +35,7 @@ namespace Alexandria.AO3.Model
 
         public static AO3Series Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            AO3Series parsed = new AO3Series( document.Url );
+            AO3Series parsed = new AO3Series( source, document.Url );
 
             HtmlNode mainDiv = document.Html.SelectSingleNode( "//div[@id='main']" );
 

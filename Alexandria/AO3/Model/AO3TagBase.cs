@@ -21,29 +21,27 @@ namespace Alexandria.AO3.Model
     /// A base class for anything that AO3 uses as a tag. This can be a character, a ship, or
     /// an actual, legitimate tag (freeform or otherwise).
     /// </summary>
-    internal abstract class AO3TagBase
+    internal abstract class AO3TagBase : RequestableBase<AO3Source>
     {
-        AO3Source _source;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AO3TagBase"/> class.
+        /// </summary>
+        /// <param name="source">The configured class for accessing AO3.</param>
+        /// <param name="url">The URL for this tag page on AO3's website.</param>
+        /// <param name="mainDiv">Can be retrieved by using <seealso cref="GetMainDiv"/>. This is
+        /// the primary location in the HTML document where all of the tag-related data on AO3 is.</param>
         protected AO3TagBase( AO3Source source, Uri url, HtmlNode mainDiv )
+            : base( source, url )
         {
-            _source = source;
-            Url = url;
-
             Text = ParseTagText( mainDiv );
         }
-
-        /// <summary>
-        /// Gets the URL of the webpage for this tag on AO3.
-        /// </summary>
-        public Uri Url { get; }
 
         public string Text { get; }
 
         public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
         {
             string endpointTag = Text.Replace( "/", "*s*" );
-            return AO3QueryResults.Retrieve( _source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
+            return AO3QueryResults.Retrieve( Source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
         }
 
         protected static HtmlNode GetMainDiv( HtmlCacheableDocument document )
@@ -85,7 +83,7 @@ namespace Alexandria.AO3.Model
             {
                 foreach ( HtmlNode li in parentUl.Elements( "li" ) )
                 {
-                    parentTags.Add( new AO3TagRequestHandle( _source, li.ReadableInnerText().Trim() ) );
+                    parentTags.Add( new AO3TagRequestHandle( Source, li.ReadableInnerText().Trim() ) );
                 }
             }
 
@@ -100,7 +98,7 @@ namespace Alexandria.AO3.Model
             {
                 foreach ( HtmlNode li in synonymUl.Elements( "li" ) )
                 {
-                    synonymousTags.Add( new AO3TagRequestHandle( _source, li.ReadableInnerText().Trim() ) );
+                    synonymousTags.Add( new AO3TagRequestHandle( Source, li.ReadableInnerText().Trim() ) );
                 }
             }
 

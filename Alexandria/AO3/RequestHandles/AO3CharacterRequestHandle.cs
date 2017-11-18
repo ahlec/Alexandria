@@ -36,7 +36,7 @@ namespace Alexandria.AO3.RequestHandles
         /// <inheritdoc />
         protected override ICharacter ParseRequest( HtmlCacheableDocument requestDocument )
         {
-            return AO3Character.Parse( requestDocument );
+            return AO3Character.Parse( Source, requestDocument );
         }
     }
 }

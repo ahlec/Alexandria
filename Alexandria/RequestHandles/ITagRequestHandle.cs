@@ -8,8 +8,14 @@ using Alexandria.Model;
 
 namespace Alexandria.RequestHandles
 {
+    /// <summary>
+    /// A request handle that is configured to retrieve data about a tag from the website.
+    /// </summary>
     public interface ITagRequestHandle : IRequestHandle<ITag>
     {
+        /// <summary>
+        /// Gets the text of the tag that can be requested.
+        /// </summary>
         string Text { get; }
     }
 }
