@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AO3\RequestHandles\AO3TagRequestHandleBase.cs" />
     <Compile Include="Exceptions\Parsing\InvalidTagTypeAlexandriaException.cs" />
     <Compile Include="Model\RequestableBase.cs" />
     <Compile Include="Website.cs" />
@@ -82,7 +83,6 @@
     <Compile Include="AO3\Utils\AO3ContentWarningUtils.cs" />
     <Compile Include="AO3\Utils\AO3LanguageUtils.cs" />
     <Compile Include="AO3\Utils\AO3MaturityRatingUtils.cs" />
-    <Compile Include="AO3\Utils\AO3RequestUtils.cs" />
     <Compile Include="AO3\Utils\ParseUtils.cs" />
     <Compile Include="Caching\CachedDocument.cs" />
     <Compile Include="Documents\CacheableDocument.cs" />

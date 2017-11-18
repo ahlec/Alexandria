@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3.Model;
-using Alexandria.AO3.Utils;
 using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -15,7 +14,7 @@ namespace Alexandria.AO3.RequestHandles
     /// <summary>
     /// A concrete class for requesting a tag from AO3.
     /// </summary>
-    internal sealed class AO3TagRequestHandle : RequestHandleBase<ITag, AO3Source>, ITagRequestHandle
+    internal sealed class AO3TagRequestHandle : AO3TagRequestHandleBase<ITag>, ITagRequestHandle
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AO3TagRequestHandle"/> class.
@@ -25,16 +24,12 @@ namespace Alexandria.AO3.RequestHandles
         /// data with as well.</param>
         /// <param name="tagName">The name of the tag that can be requested.</param>
         public AO3TagRequestHandle( AO3Source source, string tagName )
-            : base( source )
+            : base( source, tagName )
         {
-            Text = tagName;
         }
 
         /// <inheritdoc />
-        public string Text { get; }
-
-        /// <inheritdoc />
-        protected override string RequestUri => AO3RequestUtils.GetRequestUriForTag( Text );
+        public string Text => TagName;
 
         /// <inheritdoc />
         protected override string RequestCacheHandle => $"ao3-tag-{Text}";

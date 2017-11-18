@@ -12,18 +12,14 @@ using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-    internal sealed class AO3CharacterRequestHandle : RequestHandleBase<ICharacter, AO3Source>, ICharacterRequestHandle
+    internal sealed class AO3CharacterRequestHandle : AO3TagRequestHandleBase<ICharacter>, ICharacterRequestHandle
     {
         public AO3CharacterRequestHandle( AO3Source source, string name )
-            : base( source )
+            : base( source, name )
         {
-            FullName = name;
         }
 
-        public string FullName { get; }
-
-        /// <inheritdoc />
-        protected override string RequestUri => AO3RequestUtils.GetRequestUriForTag( FullName );
+        public string FullName => TagName;
 
         /// <inheritdoc />
         protected override string RequestCacheHandle => $"ao3-character-{FullName}";

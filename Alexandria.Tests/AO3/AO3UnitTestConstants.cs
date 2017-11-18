@@ -37,7 +37,6 @@ namespace Alexandria.Tests.AO3
         public static readonly string[] TagPOVJackFrostFanficHandles =
         {
             "10659105",
-            "7367401",
             "1312102",
             "5663545",
             "5480645",

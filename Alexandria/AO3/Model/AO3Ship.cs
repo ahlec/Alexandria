@@ -19,10 +19,6 @@ namespace Alexandria.AO3.Model
 {
     /// <summary>
     /// A concrete class for parsing a tag from AO3.
-    /// <para />
-    /// This class can parse a ship or a character tag (because we don't always know what
-    /// a tag is ahead of time) whereas <seealso cref="AO3Ship"/> and <seealso cref="AO3Character"/>
-    /// cannot parse something that isn't exactly the type that they are.
     /// </summary>
     internal sealed class AO3Ship : AO3TagBase, IShip
     {
@@ -35,7 +31,7 @@ namespace Alexandria.AO3.Model
             if ( TryDetermineShipTypeFromName( internalShipName, out ShipType type, out string[] characterNames ) )
             {
                 Type = type;
-                Characters = GetCharacters( source, mainDiv, characterNames );
+                Characters = GetCharacters( mainDiv, characterNames );
             }
         }
 
@@ -121,7 +117,7 @@ namespace Alexandria.AO3.Model
             return uniqueNames.Contains( tagName );
         }
 
-        IReadOnlyList<ICharacterRequestHandle> GetCharacters( AO3Source source, HtmlNode mainDiv, IEnumerable<string> characterNames )
+        IReadOnlyList<ICharacterRequestHandle> GetCharacters( HtmlNode mainDiv, IEnumerable<string> characterNames )
         {
             List<ICharacterRequestHandle> characters = new List<ICharacterRequestHandle>();
             HashSet<string> uniqueNames = new HashSet<string>( characterNames, StringComparer.InvariantCultureIgnoreCase );
@@ -130,7 +126,7 @@ namespace Alexandria.AO3.Model
             {
                 if ( IsCharacterTag( tagRequest, uniqueNames ) )
                 {
-                    characters.Add( new AO3CharacterRequestHandle( source, tagRequest.Text ) );
+                    characters.Add( new AO3CharacterRequestHandle( Source, tagRequest.Text ) );
                 }
             }
 

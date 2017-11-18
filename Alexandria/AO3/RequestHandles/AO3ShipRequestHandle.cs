@@ -5,28 +5,21 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3.Model;
-using Alexandria.AO3.Utils;
 using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
-    internal sealed class AO3ShipRequestHandle : RequestHandleBase<IShip, AO3Source>, IShipRequestHandle
+    internal sealed class AO3ShipRequestHandle : AO3TagRequestHandleBase<IShip>, IShipRequestHandle
     {
-        readonly AO3Source _source;
-
         public AO3ShipRequestHandle( AO3Source source, string shipTag )
-            : base( source )
+            : base( source, shipTag )
         {
-            _source = source;
-            ShipTag = shipTag;
         }
 
-        public string ShipTag { get; }
-
         /// <inheritdoc />
-        protected override string RequestUri => AO3RequestUtils.GetRequestUriForTag( ShipTag );
+        public string ShipTag => TagName;
 
         /// <inheritdoc />
         protected override string RequestCacheHandle => $"ao3-ship-{ShipTag}";
@@ -39,7 +32,7 @@ namespace Alexandria.AO3.RequestHandles
         /// <inheritdoc />
         protected override IShip ParseRequest( HtmlCacheableDocument requestDocument )
         {
-            return AO3Ship.Parse( _source, requestDocument );
+            return AO3Ship.Parse( Source, requestDocument );
         }
     }
 }

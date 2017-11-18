@@ -36,6 +36,10 @@ namespace Alexandria.AO3.Model
             Text = ParseTagText( mainDiv );
         }
 
+        delegate TRequestHandle RequestHandleCreatorFunc<TModel, out TRequestHandle>( string text )
+            where TModel : IRequestable
+            where TRequestHandle : IRequestHandle<TModel>;
+
         public string Text { get; }
 
         public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
@@ -77,32 +81,47 @@ namespace Alexandria.AO3.Model
 
         protected IReadOnlyList<ITagRequestHandle> ParseParentTags( HtmlNode mainDiv )
         {
-            List<ITagRequestHandle> parentTags = new List<ITagRequestHandle>();
-            HtmlNode parentUl = mainDiv.SelectSingleNode( ".//div[@class='parent listbox group']/ul" );
-            if ( parentUl != null )
-            {
-                foreach ( HtmlNode li in parentUl.Elements( "li" ) )
-                {
-                    parentTags.Add( new AO3TagRequestHandle( Source, li.ReadableInnerText().Trim() ) );
-                }
-            }
-
-            return parentTags;
+            return ParseTagsListboxGroup<ITag, ITagRequestHandle>( mainDiv, "parent", ( tag => new AO3TagRequestHandle( Source, tag ) ) );
         }
 
         protected IReadOnlyList<ITagRequestHandle> ParseSynonymousTags( HtmlNode mainDiv )
         {
-            List<ITagRequestHandle> synonymousTags = new List<ITagRequestHandle>();
-            HtmlNode synonymUl = mainDiv.SelectSingleNode( ".//div[@class='synonym listbox group']/ul" );
-            if ( synonymUl != null )
+            return ParseTagsListboxGroup<ITag, ITagRequestHandle>( mainDiv, "synonym", ( tag => new AO3TagRequestHandle( Source, tag ) ) );
+        }
+
+        protected IReadOnlyList<IShipRequestHandle> ParseChildRelationshipTags( HtmlNode mainDiv )
+        {
+            return ParseTagsListboxGroup<IShip, IShipRequestHandle>( mainDiv, "relationships", ( tag => new AO3ShipRequestHandle( Source, tag ) ) );
+        }
+
+        static IReadOnlyList<TRequestHandle> ParseTagsListboxGroup<TModel, TRequestHandle>( HtmlNode mainDiv, string listboxName, RequestHandleCreatorFunc<TModel, TRequestHandle> requestHandleCreator )
+            where TModel : IRequestable
+            where TRequestHandle : IRequestHandle<TModel>
+        {
+            string xpath = $".//div[@class='{listboxName} listbox group']/ul";
+            HtmlNode tagsGroupUl = mainDiv.SelectSingleNode( xpath );
+            if ( tagsGroupUl == null )
             {
-                foreach ( HtmlNode li in synonymUl.Elements( "li" ) )
-                {
-                    synonymousTags.Add( new AO3TagRequestHandle( Source, li.ReadableInnerText().Trim() ) );
-                }
+                return new List<TRequestHandle>( 0 );
             }
 
-            return synonymousTags;
+            List<TRequestHandle> results = new List<TRequestHandle>();
+
+            foreach ( HtmlNode li in tagsGroupUl.Elements( "li" ) )
+            {
+                HtmlNode tagA = li.Element( "a" );
+                string aClass = tagA.GetAttributeValue( "class", string.Empty ) ?? string.Empty;
+                if ( !aClass.Equals( "tag" ) )
+                {
+                    continue;
+                }
+
+                string tag = tagA.ReadableInnerText().Trim();
+                TRequestHandle requestHandle = requestHandleCreator( tag );
+                results.Add( requestHandle );
+            }
+
+            return results;
         }
     }
 }
