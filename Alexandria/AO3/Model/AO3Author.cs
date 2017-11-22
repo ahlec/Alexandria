@@ -25,10 +25,10 @@ namespace Alexandria.AO3.Model
     {
         static readonly IReadOnlyDictionary<string, AuthorFieldMutator> _metaMutators = new Dictionary<string, AuthorFieldMutator>
         {
-            { "My pseuds:", ( author, value ) => author.Nicknames = CollectPseuds( value ) },
-            { "I joined on:", ( author, value ) => author.DateJoined = DateTime.Parse( value.InnerText ) },
-            { "I live in:", ( author, value ) => author.Location = value.ReadableInnerText().Trim() },
-            { "My birthday:", ( author, value ) => author.Birthday = DateTime.Parse( value.InnerText ) }
+            { "My pseuds", ( author, value ) => author.Nicknames = CollectPseuds( value ) },
+            { "I joined on", ( author, value ) => author.DateJoined = DateTime.Parse( value.InnerText ) },
+            { "I live in", ( author, value ) => author.Location = value.ReadableInnerText().Trim() },
+            { "My birthday", ( author, value ) => author.Birthday = DateTime.Parse( value.InnerText ) }
         };
 
         AO3Author( AO3Source source, Uri url )
@@ -119,8 +119,7 @@ namespace Alexandria.AO3.Model
             HtmlNode metaDl = userHomeProfile.SelectSingleNode( ".//dl[@class='meta']" );
             foreach ( Tuple<string, HtmlNode> row in metaDl.EnumerateDlTable() )
             {
-                AuthorFieldMutator mutator = _metaMutators[row.Item1];
-                if ( mutator == null )
+                if ( !_metaMutators.TryGetValue( row.Item1, out AuthorFieldMutator mutator ) )
                 {
                     throw new UnrecognizedFormatAlexandriaException( Source.Website, Url, $"There was an unrecognized author profile row '{row.Item1}'" );
                 }
