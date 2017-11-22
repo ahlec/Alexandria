@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.Documents;
-using Alexandria.Exceptions.Parsing;
+using Alexandria.Exceptions;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -41,7 +41,7 @@ namespace Alexandria.AO3.Model
         {
             HtmlNode mainDiv = GetMainDiv( document );
 
-            TagType type = ParseTagType( mainDiv );
+            TagType type = ParseTagType( mainDiv, source.Website, document.Url );
             if ( type != TagType.Character )
             {
                 string name = ParseTagText( mainDiv );

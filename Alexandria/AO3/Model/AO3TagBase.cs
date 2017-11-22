@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.AO3.Utils;
 using Alexandria.Caching;
 using Alexandria.Documents;
 using Alexandria.Exceptions.Parsing;
@@ -21,7 +22,7 @@ namespace Alexandria.AO3.Model
     /// A base class for anything that AO3 uses as a tag. This can be a character, a ship, or
     /// an actual, legitimate tag (freeform or otherwise).
     /// </summary>
-    internal abstract class AO3TagBase : RequestableBase<AO3Source>
+    internal abstract class AO3TagBase : RequestableBase<AO3Source>, IQueryable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AO3TagBase"/> class.
@@ -42,9 +43,10 @@ namespace Alexandria.AO3.Model
 
         public string Text { get; }
 
+        /// <inheritdoc />
         public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
         {
-            string endpointTag = Text.Replace( "/", "*s*" );
+            string endpointTag = AO3TagUtils.EscapeTagForUrl( Text );
             return AO3QueryResults.Retrieve( Source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
         }
 
@@ -59,7 +61,7 @@ namespace Alexandria.AO3.Model
             return mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ).ReadableInnerText().Trim();
         }
 
-        protected static TagType ParseTagType( HtmlNode mainDiv )
+        protected static TagType ParseTagType( HtmlNode mainDiv, Website website, Uri url )
         {
             string mainContentPText = mainDiv.SelectSingleNode( "div[@class='tag home profile']/p" ).InnerText;
             string mainContentPFirstSentence = mainContentPText.Substring( 0, mainContentPText.IndexOf( '.' ) );
@@ -75,7 +77,7 @@ namespace Alexandria.AO3.Model
                 case "Additional Tags":
                     return TagType.Miscellaneous;
                 default:
-                    throw new UnrecognizedTagTypeAlexandriaException( textCategory );
+                    throw new UnrecognizedTagTypeAlexandriaException( textCategory, website, url );
             }
         }
 

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.Documents;
-using Alexandria.Exceptions.Parsing;
+using Alexandria.Exceptions;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -67,7 +67,7 @@ namespace Alexandria.AO3.Model
         {
             HtmlNode mainDiv = GetMainDiv( document );
 
-            TagType type = ParseTagType( mainDiv );
+            TagType type = ParseTagType( mainDiv, source.Website, document.Url );
             if ( type != TagType.Relationship )
             {
                 string name = ParseTagText( mainDiv );
@@ -84,10 +84,10 @@ namespace Alexandria.AO3.Model
 
         static bool TryDetermineShipTypeFromName( string name, out ShipType type, out string[] characterNames )
         {
-            if ( name.Contains( "/" ) )
+            if ( name.Contains( "/" ) || name.Contains( "\\" ) )
             {
                 type = ShipType.Romantic;
-                characterNames = name.Split( '/' );
+                characterNames = name.Split( '/', '\\' );
                 return true;
             }
 

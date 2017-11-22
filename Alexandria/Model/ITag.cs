@@ -18,7 +18,7 @@ namespace Alexandria.Model
     /// <para />
     /// Fanfics and tags have a 1:many relationship.
     /// </summary>
-    public interface ITag : IRequestable
+    public interface ITag : IQueryable
     {
         /// <summary>
         /// Gets the type of the tag.
@@ -42,13 +42,5 @@ namespace Alexandria.Model
         /// tag of BBBB/AAAA).
         /// </summary>
         IReadOnlyList<ITagRequestHandle> SynonymousTags { get; }
-
-        /// <summary>
-        /// Queries the original <see cref="LibrarySource"/> to retrieve a page of fanfics
-        /// which are tagged with this tag. Subsequent pages can be called by using the result
-        /// to ask for them.
-        /// </summary>
-        /// <returns>The first page of fanfics which are tagged with this tag.</returns>
-        IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics();
     }
 }

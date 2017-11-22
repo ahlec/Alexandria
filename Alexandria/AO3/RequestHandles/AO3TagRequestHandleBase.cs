@@ -4,6 +4,7 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
+using Alexandria.AO3.Utils;
 using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
@@ -38,8 +39,7 @@ namespace Alexandria.AO3.RequestHandles
 
         static string CreateRequestUri( string tagName )
         {
-            tagName = tagName.Replace( "/", "*s*" );
-            tagName = tagName.Replace( "#", "*h*" );
+            tagName = AO3TagUtils.EscapeTagForUrl( tagName );
             return $"http://archiveofourown.org/tags/{tagName}";
         }
     }

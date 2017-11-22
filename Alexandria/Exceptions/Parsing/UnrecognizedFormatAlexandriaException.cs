@@ -12,27 +12,19 @@ namespace Alexandria.Exceptions.Parsing
     /// An exception which indicates that the data or the format of the data that was downloaded from
     /// the website in question is not understandable by the current version of Alexandria. This is a
     /// general "unknown data format" error, and something that end users should not need to worry about
-    /// (so long as they're using Alexandria correctly). Errors of this nature should be reported as
-    /// bugs on the repository, as it likely indicates that the website's format has had a breaking change
-    /// with Alexandria's code.
+    /// (so long as they're using Alexandria correctly).
     /// </summary>
-    public sealed class UnrecognizedFormatAlexandriaException : AlexandriaException
+    public sealed class UnrecognizedFormatAlexandriaException : AlexandriaParseException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UnrecognizedFormatAlexandriaException"/> class.
         /// </summary>
         /// <param name="website">The website whose data appears to be unrecognized.</param>
-        /// <param name="exception">The native exception that was thrown that indicates what the exception
-        /// actually is/where it originated from.</param>
-        internal UnrecognizedFormatAlexandriaException( Website website, Exception exception )
-            : base( $"The format of the {website} page was unrecognized in some manner.", exception )
+        /// <param name="url">The URL that was accessed and whose data was unrecognized in some manner.</param>
+        /// <param name="message">A human-readable message detailing what the unrecognized data was.</param>
+        internal UnrecognizedFormatAlexandriaException( Website website, Uri url, string message )
+            : base( website, url, message )
         {
-            Website = website;
         }
-
-        /// <summary>
-        /// Gets the website whose data appears to be unrecognized.
-        /// </summary>
-        public Website Website { get; }
     }
 }

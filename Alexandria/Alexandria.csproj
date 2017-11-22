@@ -51,7 +51,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AO3\RequestHandles\AO3TagRequestHandleBase.cs" />
-    <Compile Include="Exceptions\Parsing\InvalidTagTypeAlexandriaException.cs" />
+    <Compile Include="AO3\Utils\AO3TagUtils.cs" />
+    <Compile Include="Exceptions\Parsing\AlexandriaParseException.cs" />
+    <Compile Include="Exceptions\InvalidTagTypeAlexandriaException.cs" />
+    <Compile Include="Exceptions\Parsing\UnknownParsingErrorAlexandriaException.cs" />
+    <Compile Include="Model\IQueryable.cs" />
     <Compile Include="Model\RequestableBase.cs" />
     <Compile Include="Website.cs" />
     <None Include="..\Alexandria.ruleset">
@@ -95,7 +99,6 @@
     <Compile Include="Exceptions\Input\InvalidAuthorAlexandriaException.cs" />
     <Compile Include="Exceptions\Input\InvalidTagAlexandriaException.cs" />
     <Compile Include="Exceptions\Input\NoSuchLanguageAlexandriaException.cs" />
-    <Compile Include="Exceptions\ParseExceptions.cs" />
     <Compile Include="Exceptions\Parsing\UnrecognizedFormatAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\UnrecognizedTagTypeAlexandriaException.cs" />
     <Compile Include="IQueryResultsPage.cs" />
@@ -147,6 +150,7 @@
     <Compile Include="Utils\StringBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="AO3\Exceptions\" />
     <Folder Include="Queries\" />
   </ItemGroup>
   <ItemGroup>

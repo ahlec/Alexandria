@@ -15,7 +15,7 @@ namespace Alexandria.Model
     /// Fanfics and characters have a 1:many relationship. Additionally, characters and ships
     /// have a many:many relationship.
     /// </summary>
-    public interface ICharacter : IRequestable
+    public interface ICharacter : IQueryable
     {
         /// <summary>
         /// Gets the fandoms that this character is from, if there are any.
@@ -40,13 +40,5 @@ namespace Alexandria.Model
         /// a distinct list of relationships this character is involved in.
         /// </summary>
         IReadOnlyList<IShipRequestHandle> Relationships { get; }
-
-        /// <summary>
-        /// Queries the original <see cref="LibrarySource"/> to retrieve a page of fanfics
-        /// which contain this character.Subsequent pages can be called by using the result
-        /// to ask for them.
-        /// </summary>
-        /// <returns>The first page of fanfics which contain this character.</returns>
-        IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics();
     }
 }

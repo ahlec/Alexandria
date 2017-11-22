@@ -25,7 +25,7 @@ namespace Alexandria.AO3.Model
         AO3Tag( AO3Source source, Uri url, HtmlNode mainDiv )
             : base( source, url, mainDiv )
         {
-            Type = ParseTagType( mainDiv );
+            Type = ParseTagType( mainDiv, source.Website, url );
             ParentTags = ParseParentTags( mainDiv );
             SynonymousTags = ParseSynonymousTags( mainDiv );
         }

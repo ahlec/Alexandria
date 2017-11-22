@@ -55,7 +55,8 @@ namespace Alexandria.RequestHandles
         /// <inheritdoc />
         public TModel Request()
         {
-            HtmlCacheableDocument document = Source.GetCacheableHtmlWebPage( RequestCacheHandle, RequestUri );
+            string url = RequestUri;
+            HtmlCacheableDocument document = Source.GetCacheableHtmlWebPage( RequestCacheHandle, url );
 
             try
             {
@@ -67,7 +68,7 @@ namespace Alexandria.RequestHandles
             }
             catch ( Exception ex )
             {
-                throw new UnrecognizedFormatAlexandriaException( Source.Website, ex );
+                throw new UnknownParsingErrorAlexandriaException( Source.Website, new Uri( url ), ex );
             }
         }
 

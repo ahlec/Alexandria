@@ -6,56 +6,12 @@
 
 using System;
 using System.Collections.Generic;
-using Alexandria.AO3.RequestHandles;
-using Alexandria.Model;
-using Alexandria.RequestHandles;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Utils
 {
     internal static class ParseUtils
     {
-        static readonly IReadOnlyDictionary<string, ShipType> _shipNameSeparators = new Dictionary<string, ShipType>
-        {
-            { "/", ShipType.Romantic },
-            { "\\", ShipType.Romantic },
-            { "&", ShipType.Platonic }
-        };
-
-        public static IReadOnlyList<ICharacterRequestHandle> ParseShipCharacters( AO3Source source, string shipTag, out ShipType type )
-        {
-            foreach ( KeyValuePair<string, ShipType> separator in _shipNameSeparators )
-            {
-                int currentStartIndex = 0;
-                int nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex, StringComparison.InvariantCultureIgnoreCase );
-                if ( nextSeparatorIndex < 0 )
-                {
-                    continue;
-                }
-
-                List<ICharacterRequestHandle> characters = new List<ICharacterRequestHandle>();
-
-                while ( nextSeparatorIndex >= 0 )
-                {
-                    string character = shipTag.Substring( currentStartIndex, nextSeparatorIndex - currentStartIndex );
-                    characters.Add( new AO3CharacterRequestHandle( source, character.Trim() ) );
-                    currentStartIndex = nextSeparatorIndex + separator.Key.Length;
-                    nextSeparatorIndex = shipTag.IndexOf( separator.Key, currentStartIndex, StringComparison.InvariantCultureIgnoreCase );
-                }
-
-                if ( currentStartIndex < shipTag.Length - 1 )
-                {
-                    characters.Add( new AO3CharacterRequestHandle( source, shipTag.Substring( currentStartIndex ).Trim() ) );
-                }
-
-                type = separator.Value;
-                return characters;
-            }
-
-            type = ShipType.Unknown;
-            return new List<ICharacterRequestHandle>();
-        }
-
         public static IEnumerable<Tuple<string, HtmlNode>> EnumerateDlTable( this HtmlNode dl )
         {
             string lastDtText = null;

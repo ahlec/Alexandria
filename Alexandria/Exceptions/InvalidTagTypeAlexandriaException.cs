@@ -7,7 +7,7 @@
 using Alexandria.AO3.Model;
 using Alexandria.Model;
 
-namespace Alexandria.Exceptions.Parsing
+namespace Alexandria.Exceptions
 {
     /// <summary>
     /// An exception to be thrown when a tag is being parsed by a class and the page being retrieved indicates
