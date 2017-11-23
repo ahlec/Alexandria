@@ -12,7 +12,7 @@ namespace Alexandria.Model
 {
     public interface ISeries : IRequestable
     {
-        IAuthorRequestHandle Author { get; }
+        IReadOnlyList<IAuthorRequestHandle> Authors { get; }
 
         DateTime DateStarted { get; }
 

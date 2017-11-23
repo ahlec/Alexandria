@@ -10,6 +10,7 @@ using Alexandria.AO3;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Net;
+using Alexandria.Querying;
 using Alexandria.RequestHandles;
 using NUnit.Framework;
 

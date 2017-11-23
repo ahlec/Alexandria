@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.Model;
+using Alexandria.Querying;
 using Alexandria.RequestHandles;
 
 namespace Alexandria.Searching

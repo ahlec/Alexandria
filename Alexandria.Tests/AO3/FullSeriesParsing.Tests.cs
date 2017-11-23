@@ -27,8 +27,9 @@ namespace Alexandria.Tests.AO3
 
             Assert.IsNotNull( series );
 
-            Assert.IsNotNull( series.Author );
-            Assert.AreEqual( "Melissae", series.Author.Username );
+            Assert.IsNotNull( series.Authors );
+            Assert.That( series.Authors.Count, Is.EqualTo( 1 ) );
+            Assert.AreEqual( "Melissae", series.Authors[0].Username );
             AO3Assert.IsDate( 2014, 1, 25, series.DateStarted );
             AO3Assert.IsDate( 2016, 3, 28, series.DateLastUpdated );
             Assert.IsFalse( series.IsCompleted );

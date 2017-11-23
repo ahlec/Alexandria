@@ -23,7 +23,7 @@ namespace Alexandria.AO3.Model
         {
         }
 
-        public IAuthorRequestHandle Author { get; private set; }
+        public IReadOnlyList<IAuthorRequestHandle> Authors { get; private set; }
 
         public DateTime DateStarted { get; private set; }
 
@@ -47,7 +47,7 @@ namespace Alexandria.AO3.Model
                 {
                     case "Creator":
                         {
-                            parsed.Author = AO3AuthorRequestHandle.Parse( source, row.Item2.Element( "a" ) );
+                            parsed.Authors = ParseAuthors( row.Item2, source );
                             break;
                         }
 
@@ -82,6 +82,13 @@ namespace Alexandria.AO3.Model
             parsed.Fanfics = seriesWorkUl.Elements( "li" ).Select( li => AO3FanficRequestHandle.ParseFromWorkLi( source, li ) ).Cast<IFanficRequestHandle>().ToList();
 
             return parsed;
+        }
+
+        static IReadOnlyList<IAuthorRequestHandle> ParseAuthors( HtmlNode creatorsDd, AO3Source source )
+        {
+            return creatorsDd.Elements( "a" )
+                .Select( authorA => AO3AuthorRequestHandle.Parse( source, authorA ) )
+                .ToList();
         }
     }
 }

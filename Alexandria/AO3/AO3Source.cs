@@ -5,8 +5,8 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Linq;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.AO3.Searching;
 using Alexandria.Caching;
 using Alexandria.Exceptions.Input;
 using Alexandria.Net;
@@ -107,33 +107,49 @@ namespace Alexandria.AO3
             return new AO3CharacterRequestHandle( this, fullName );
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates a new request handle for retrieving a specific fanfic on AO3.
+        /// <para />
+        /// Parameter can be validated ahead of time by using <see cref="AO3Validation.IsValidFanficHandle"/>.
+        /// </summary>
+        /// <param name="handle">The unique handle of the fanfic to retrieve.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="handle"/> is null.</exception>
+        /// <exception cref="InvalidFanficAlexandriaException">Thrown when <paramref name="handle"/> is not valid to be used as a fanfic handle.</exception>
+        /// <returns>A new request handle that can be used to retrieve the specific fanfic on AO3.</returns>
         public override IFanficRequestHandle MakeFanficRequest( string handle )
         {
-            if ( string.IsNullOrEmpty( handle ) )
+            if ( handle == null )
             {
                 throw new ArgumentNullException( nameof( handle ) );
             }
 
-            if ( handle.Any( character => !char.IsDigit( character ) ) )
+            if ( !AO3Validation.IsValidFanficHandle( handle ) )
             {
-                throw new ArgumentException( "Handles to fanfics on AO3 may only consist of numbers.", nameof( handle ) );
+                throw new InvalidFanficAlexandriaException( Website, handle, nameof( handle ) );
             }
 
             return new AO3FanficRequestHandle( this, handle );
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Creates a new request handle for retrieving a specific series on AO3.
+        /// <para />
+        /// Parameter can be validated ahead of time by using <see cref="AO3Validation.IsValidSeriesHandle"/>.
+        /// </summary>
+        /// <param name="handle">The unique handle of the series to retrieve.</param>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="handle"/> is null.</exception>
+        /// <exception cref="InvalidFanficAlexandriaException">Thrown when <paramref name="handle"/> is not valid to be used as a series handle.</exception>
+        /// <returns>A new request handle that can be used to retrieve the specific series on AO3.</returns>
         public override ISeriesRequestHandle MakeSeriesRequest( string handle )
         {
-            if ( string.IsNullOrEmpty( handle ) )
+            if ( handle == null )
             {
                 throw new ArgumentNullException( nameof( handle ) );
             }
 
-            if ( handle.Any( character => !char.IsDigit( character ) ) )
+            if ( !AO3Validation.IsValidSeriesHandle( handle ) )
             {
-                throw new ArgumentException( "Handles for series on AO3 may only consist of numbers.", nameof( handle ) );
+                throw new InvalidSeriesAlexandriaException( Website, handle, nameof( handle ) );
             }
 
             return new AO3SeriesRequestHandle( this, handle );

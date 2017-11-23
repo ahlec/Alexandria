@@ -10,10 +10,11 @@ using System.Linq;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.Caching;
 using Alexandria.Model;
+using Alexandria.Querying;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
 
-namespace Alexandria.AO3.Model
+namespace Alexandria.AO3.Querying
 {
     internal sealed class AO3QueryResults : IQueryResultsPage<IFanfic, IFanficRequestHandle>
     {

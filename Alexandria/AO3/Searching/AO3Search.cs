@@ -7,14 +7,14 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Alexandria.AO3.Searching;
 using Alexandria.AO3.Utils;
 using Alexandria.Model;
+using Alexandria.Querying;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
 using HtmlAgilityPack;
 
-namespace Alexandria.AO3
+namespace Alexandria.AO3.Searching
 {
     public sealed class AO3Search : LibrarySearch
     {

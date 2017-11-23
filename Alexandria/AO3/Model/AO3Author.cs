@@ -7,11 +7,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Alexandria.AO3.Querying;
 using Alexandria.AO3.Utils;
 using Alexandria.Caching;
 using Alexandria.Documents;
 using Alexandria.Exceptions.Parsing;
 using Alexandria.Model;
+using Alexandria.Querying;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
 using HtmlAgilityPack;

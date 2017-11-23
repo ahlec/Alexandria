@@ -31,18 +31,18 @@ namespace Alexandria.Tests.AO3
         }
 
         [Test]
-        public void AO3Source_MakeFanficRequestThrowsOnNullOrEmpty()
+        public void AO3Source_MakeFanficRequestThrowsOnNull()
         {
             AO3Source source = new AO3Source( new IgnoredWebClient(), null );
             Assert.Throws<ArgumentNullException>( () => source.MakeFanficRequest( null ) );
-            Assert.Throws<ArgumentNullException>( () => source.MakeFanficRequest( string.Empty ) );
         }
 
         [Test]
-        public void AO3Source_MakeFanficRequestThrowsOnAlphaCharacters()
+        public void AO3Source_MakeFanficRequest_ThrowsOnInvalid()
         {
             AO3Source source = new AO3Source( new IgnoredWebClient(), null );
-            Assert.Throws<ArgumentException>( () => source.MakeFanficRequest( "hello world" ) );
+            Assert.Throws<InvalidFanficAlexandriaException>( () => source.MakeFanficRequest( string.Empty ) );
+            Assert.Throws<InvalidFanficAlexandriaException>( () => source.MakeFanficRequest( "hello world" ) );
         }
 
         [Test]
@@ -56,18 +56,18 @@ namespace Alexandria.Tests.AO3
         }
 
         [Test]
-        public void AO3Source_MakeSeriesRequestThrowsOnNullOrEmpty()
+        public void AO3Source_MakeSeriesRequest_ThrowsOnNull()
         {
             AO3Source source = new AO3Source( new IgnoredWebClient(), null );
             Assert.Throws<ArgumentNullException>( () => source.MakeSeriesRequest( null ) );
-            Assert.Throws<ArgumentNullException>( () => source.MakeSeriesRequest( string.Empty ) );
         }
 
         [Test]
-        public void AO3Source_MakeSeriesRequestThrowsOnAlphaCharacters()
+        public void AO3Source_MakeSeriesRequest_ThrowsOnInvalid()
         {
             AO3Source source = new AO3Source( new IgnoredWebClient(), null );
-            Assert.Throws<ArgumentException>( () => source.MakeSeriesRequest( "hello world" ) );
+            Assert.Throws<InvalidSeriesAlexandriaException>( () => source.MakeSeriesRequest( string.Empty ) );
+            Assert.Throws<InvalidSeriesAlexandriaException>( () => source.MakeSeriesRequest( "hello world" ) );
         }
 
         [Test]

@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using Alexandria.RequestHandles;
 
-namespace Alexandria
+namespace Alexandria.Querying
 {
     public interface IQueryResultsPage<TModel, out TRequestHandle>
         where TModel : IRequestable

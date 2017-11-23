@@ -22,6 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\Alexandria.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>..\build\Alexandria.xml</DocumentationFile>
+    <NoWarn>0419</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -52,6 +53,8 @@
   <ItemGroup>
     <Compile Include="AO3\RequestHandles\AO3TagRequestHandleBase.cs" />
     <Compile Include="AO3\Utils\AO3TagUtils.cs" />
+    <Compile Include="Exceptions\Input\InvalidFanficAlexandriaException.cs" />
+    <Compile Include="Exceptions\Input\InvalidSeriesAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\AlexandriaParseException.cs" />
     <Compile Include="Exceptions\InvalidTagTypeAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\UnknownParsingErrorAlexandriaException.cs" />
@@ -64,14 +67,14 @@
     <AdditionalFiles Include="..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
-    <Compile Include="AO3\AO3Search.cs" />
+    <Compile Include="AO3\Searching\AO3Search.cs" />
     <Compile Include="AO3\AO3Source.cs" />
     <Compile Include="AO3\AO3Validation.cs" />
     <Compile Include="AO3\Model\AO3Author.cs" />
     <Compile Include="AO3\Model\AO3ChapterInfo.cs" />
     <Compile Include="AO3\Model\AO3Character.cs" />
     <Compile Include="AO3\Model\AO3Fanfic.cs" />
-    <Compile Include="AO3\Model\AO3QueryResults.cs" />
+    <Compile Include="AO3\Querying\AO3QueryResults.cs" />
     <Compile Include="AO3\Model\AO3Series.cs" />
     <Compile Include="AO3\Model\AO3SeriesEntry.cs" />
     <Compile Include="AO3\Model\AO3Ship.cs" />
@@ -83,7 +86,7 @@
     <Compile Include="AO3\RequestHandles\AO3SeriesRequestHandle.cs" />
     <Compile Include="AO3\RequestHandles\AO3ShipRequestHandle.cs" />
     <Compile Include="AO3\RequestHandles\AO3TagRequestHandle.cs" />
-    <Compile Include="AO3\Searching\AO3FanficSearchResults.cs" />
+    <Compile Include="AO3\Querying\AO3FanficSearchResults.cs" />
     <Compile Include="AO3\Utils\AO3ContentWarningUtils.cs" />
     <Compile Include="AO3\Utils\AO3LanguageUtils.cs" />
     <Compile Include="AO3\Utils\AO3MaturityRatingUtils.cs" />
@@ -101,7 +104,7 @@
     <Compile Include="Exceptions\Input\NoSuchLanguageAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\UnrecognizedFormatAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\UnrecognizedTagTypeAlexandriaException.cs" />
-    <Compile Include="IQueryResultsPage.cs" />
+    <Compile Include="Querying\IQueryResultsPage.cs" />
     <Compile Include="IRequestable.cs" />
     <Compile Include="Model\IChapterInfo.cs" />
     <Compile Include="Model\ILanguageInfo.cs" />
@@ -149,10 +152,7 @@
     <Compile Include="Utils\RenderLanguageNameAttribute.cs" />
     <Compile Include="Utils\StringBuilderExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AO3\Exceptions\" />
-    <Folder Include="Queries\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

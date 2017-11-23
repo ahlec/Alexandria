@@ -4,6 +4,7 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
+using Alexandria.Querying;
 using Alexandria.RequestHandles;
 
 namespace Alexandria.Model

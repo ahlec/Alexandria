@@ -9,8 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.Model;
+using Alexandria.Querying;
 using Alexandria.RequestHandles;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Searching
