@@ -20,14 +20,14 @@ namespace Alexandria.AO3.Model
     /// a tag is ahead of time) whereas <seealso cref="AO3Ship"/> and <seealso cref="AO3Character"/>
     /// cannot parse something that isn't exactly the type that they are.
     /// </summary>
-    internal sealed class AO3Tag : AO3TagBase, ITag
+    internal sealed class AO3Tag : AO3TagBase<AO3Tag>, ITag
     {
         AO3Tag( AO3Source source, Uri url, HtmlNode mainDiv )
             : base( source, url, mainDiv )
         {
             Type = ParseTagType( mainDiv, source.Website, url );
-            ParentTags = ParseParentTags( mainDiv );
-            SynonymousTags = ParseSynonymousTags( mainDiv );
+            ParentTags = ParseParentTags( this, mainDiv );
+            SynonymousTags = ParseSynonymousTags( this, mainDiv );
         }
 
         /// <summary>

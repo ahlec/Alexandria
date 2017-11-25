@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using Alexandria.AO3.Querying;
-using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
 using Alexandria.Caching;
 using Alexandria.Documents;
@@ -24,10 +23,13 @@ namespace Alexandria.AO3.Model
     /// A base class for anything that AO3 uses as a tag. This can be a character, a ship, or
     /// an actual, legitimate tag (freeform or otherwise).
     /// </summary>
-    internal abstract class AO3TagBase : RequestableBase<AO3Source>, IQueryable
+    /// <typeparam name="TSelf">The child class itself. We use this for working with other generic functions to
+    /// pass in `this` (so to speak) in order to prevent boxing internally.</typeparam>
+    internal abstract class AO3TagBase<TSelf> : AO3ModelBase<TSelf>, IQueryable
+        where TSelf : AO3TagBase<TSelf>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AO3TagBase"/> class.
+        /// Initializes a new instance of the <see cref="AO3TagBase{TSelf}"/> class.
         /// </summary>
         /// <param name="source">The configured class for accessing AO3.</param>
         /// <param name="url">The URL for this tag page on AO3's website.</param>
@@ -38,10 +40,6 @@ namespace Alexandria.AO3.Model
         {
             Text = ParseTagText( mainDiv );
         }
-
-        delegate TRequestHandle RequestHandleCreatorFunc<TModel, out TRequestHandle>( string text )
-            where TModel : IRequestable
-            where TRequestHandle : IRequestHandle<TModel>;
 
         public string Text { get; }
 
@@ -83,49 +81,28 @@ namespace Alexandria.AO3.Model
             }
         }
 
-        protected IReadOnlyList<ITagRequestHandle> ParseParentTags( HtmlNode mainDiv )
+        protected IReadOnlyList<ITagRequestHandle> ParseParentTags( TSelf self, HtmlNode mainDiv )
         {
-            return ParseTagsListboxGroup<ITag, ITagRequestHandle>( mainDiv, "parent", ( tag => new AO3TagRequestHandle( Source, tag ) ) );
+            return ParseTagsListboxGroup<ITag, ITagRequestHandle>( self, mainDiv, "parent", TagRequestHandleCreator );
         }
 
-        protected IReadOnlyList<ITagRequestHandle> ParseSynonymousTags( HtmlNode mainDiv )
+        protected IReadOnlyList<ITagRequestHandle> ParseSynonymousTags( TSelf self, HtmlNode mainDiv )
         {
-            return ParseTagsListboxGroup<ITag, ITagRequestHandle>( mainDiv, "synonym", ( tag => new AO3TagRequestHandle( Source, tag ) ) );
+            return ParseTagsListboxGroup<ITag, ITagRequestHandle>( self, mainDiv, "synonym", TagRequestHandleCreator );
         }
 
-        protected IReadOnlyList<IShipRequestHandle> ParseChildRelationshipTags( HtmlNode mainDiv )
+        protected IReadOnlyList<IShipRequestHandle> ParseChildRelationshipTags( TSelf self, HtmlNode mainDiv )
         {
-            return ParseTagsListboxGroup<IShip, IShipRequestHandle>( mainDiv, "relationships", ( tag => new AO3ShipRequestHandle( Source, tag ) ) );
+            return ParseTagsListboxGroup<IShip, IShipRequestHandle>( self, mainDiv, "relationships", ShipRequestHandleCreator );
         }
 
-        static IReadOnlyList<TRequestHandle> ParseTagsListboxGroup<TModel, TRequestHandle>( HtmlNode mainDiv, string listboxName, RequestHandleCreatorFunc<TModel, TRequestHandle> requestHandleCreator )
+        static IReadOnlyList<TRequestHandle> ParseTagsListboxGroup<TModel, TRequestHandle>( TSelf self, HtmlNode mainDiv, string listboxName, RequestHandleCreatorFunc<TModel, TRequestHandle> requestHandleCreator )
             where TModel : IRequestable
             where TRequestHandle : IRequestHandle<TModel>
         {
             string xpath = $".//div[@class='{listboxName} listbox group']/ul";
             HtmlNode tagsGroupUl = mainDiv.SelectSingleNode( xpath );
-            if ( tagsGroupUl == null )
-            {
-                return new List<TRequestHandle>( 0 );
-            }
-
-            List<TRequestHandle> results = new List<TRequestHandle>();
-
-            foreach ( HtmlNode li in tagsGroupUl.Elements( "li" ) )
-            {
-                HtmlNode tagA = li.Element( "a" );
-                string aClass = tagA.GetAttributeValue( "class", string.Empty ) ?? string.Empty;
-                if ( !aClass.Equals( "tag" ) )
-                {
-                    continue;
-                }
-
-                string tag = tagA.ReadableInnerText().Trim();
-                TRequestHandle requestHandle = requestHandleCreator( tag );
-                results.Add( requestHandle );
-            }
-
-            return results;
+            return ParseTagsUl( self, tagsGroupUl, requestHandleCreator );
         }
     }
 }

@@ -18,14 +18,14 @@ namespace Alexandria.AO3.Model
     /// <summary>
     /// A concrete class for parsing a tag from AO3.
     /// </summary>
-    internal sealed class AO3Character : AO3TagBase, ICharacter
+    internal sealed class AO3Character : AO3TagBase<AO3Character>, ICharacter
     {
         AO3Character( AO3Source source, Uri url, HtmlNode mainDiv )
             : base( source, url, mainDiv )
         {
-            Fandoms = ParseParentTags( mainDiv );
+            Fandoms = ParseParentTags( this, mainDiv );
             AlternateNames = ParseAlternateNames( mainDiv );
-            Relationships = ParseChildRelationshipTags( mainDiv );
+            Relationships = ParseChildRelationshipTags( this, mainDiv );
         }
 
         /// <inheritdoc />
@@ -55,7 +55,7 @@ namespace Alexandria.AO3.Model
         {
             List<ICharacterRequestHandle> alternateNames = new List<ICharacterRequestHandle>();
 
-            foreach ( ITagRequestHandle requestHandle in ParseSynonymousTags( mainDiv ) )
+            foreach ( ITagRequestHandle requestHandle in ParseSynonymousTags( this, mainDiv ) )
             {
                 alternateNames.Add( new AO3CharacterRequestHandle( Source, requestHandle.Text ) );
             }

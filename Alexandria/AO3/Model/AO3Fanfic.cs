@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Utils;
 using Alexandria.Documents;
 using Alexandria.Model;
@@ -16,51 +15,104 @@ using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-    internal sealed class AO3Fanfic : RequestableBase<AO3Source>, IFanfic
+    /// <summary>
+    /// A concrete class for fanfics from AO3.
+    /// </summary>
+    internal sealed class AO3Fanfic : AO3ModelBase<AO3Fanfic>, IFanfic
     {
+        static readonly IReadOnlyDictionary<string, TableFieldMutator> _workMetaGroupMutators = new Dictionary<string, TableFieldMutator>
+        {
+            { "rating tags", ( fanfic, value ) => fanfic.Rating = AO3MaturityRatingUtils.Parse( value.InnerText.Trim() ) },
+            { "warning tags", ( fanfic, value ) => fanfic.ContentWarnings = ParseContentWarning( value ) },
+            { "relationship tags", ( fanfic, value ) => fanfic.Ships = ParseTagsFromDlTable<IShip, IShipRequestHandle>( fanfic, value, ShipRequestHandleCreator ) },
+            { "character tags", ( fanfic, value ) => fanfic.Characters = ParseTagsFromDlTable<ICharacter, ICharacterRequestHandle>( fanfic, value, CharacterRequestHandleCreator ) },
+            { "freeform tags", ( fanfic, value ) => fanfic.Tags = ParseTagsFromDlTable<ITag, ITagRequestHandle>( fanfic, value, TagRequestHandleCreator ) },
+            { "language", ( fanfic, value ) => fanfic.Language = LanguageUtils.Parse( value.ReadableInnerText().Trim() ) },
+            { "series", ( fanfic, value ) => fanfic.SeriesInfo = AO3SeriesEntry.Parse( fanfic.Source, value ) },
+            { "stats", ParseStatsTable }
+        };
+
+        static readonly IReadOnlyDictionary<string, TableFieldMutator> _statsMutators = new Dictionary<string, TableFieldMutator>
+        {
+            { "published", ( fanfic, value ) => fanfic.DateStarted = DateTime.Parse( value.InnerText ) },
+            { "status", ( fanfic, value ) => fanfic._dateLastUpdated = DateTime.Parse( value.InnerText ) },
+            { "words", ( fanfic, value ) => fanfic.NumberWords = int.Parse( value.InnerText ) },
+            { "comments", ( fanfic, value ) => fanfic.NumberComments = int.Parse( value.InnerText ) },
+            { "kudos", ( fanfic, value ) => fanfic.NumberLikes = int.Parse( value.InnerText ) }
+        };
+
+        static readonly IReadOnlyDictionary<string, ContentWarnings> _ao3ContentWarningLookup = new Dictionary<string, ContentWarnings>( StringComparer.InvariantCultureIgnoreCase )
+        {
+            { "no archive warnings apply", ContentWarnings.None },
+            { "creator chose not to use archive warnings", ContentWarnings.Undetermined },
+            { "graphic depictions of violence", ContentWarnings.Violence },
+            { "major character death", ContentWarnings.MajorCharacterDeath },
+            { "rape/non-con", ContentWarnings.Rape },
+            { "underage", ContentWarnings.Underage }
+        };
+
+        DateTime? _dateLastUpdated;
+
         AO3Fanfic( AO3Source source, Uri url )
             : base( source, url )
         {
         }
 
+        /// <inheritdoc />
         public string Title { get; private set; }
 
-        public IAuthorRequestHandle Author { get; private set; }
+        /// <inheritdoc />
+        public IReadOnlyList<IAuthorRequestHandle> Authors { get; private set; }
 
+        /// <inheritdoc />
         public MaturityRating Rating { get; private set; }
 
+        /// <inheritdoc />
         public ContentWarnings ContentWarnings { get; private set; }
 
+        /// <inheritdoc />
         public IReadOnlyList<IShipRequestHandle> Ships { get; private set; }
 
+        /// <inheritdoc />
         public IReadOnlyList<ICharacterRequestHandle> Characters { get; private set; }
 
+        /// <inheritdoc />
         public IReadOnlyList<ITagRequestHandle> Tags { get; private set; }
 
+        /// <inheritdoc />
         public int NumberWords { get; private set; }
 
-        public bool IsCompleted { get; private set; }
-
+        /// <inheritdoc />
         public DateTime DateStarted { get; private set; }
 
-        public DateTime DateLastUpdated { get; private set; }
+        /// <inheritdoc />
+        public DateTime DateLastUpdated => _dateLastUpdated.GetValueOrDefault( DateStarted );
 
+        /// <inheritdoc />
         public int NumberLikes { get; private set; }
 
+        /// <inheritdoc />
         public int NumberComments { get; private set; }
 
+        /// <inheritdoc />
         public ISeriesEntry SeriesInfo { get; private set; }
 
+        /// <inheritdoc />
         public IChapterInfo ChapterInfo { get; private set; }
 
+        /// <inheritdoc />
         public Language Language { get; private set; }
 
+        /// <inheritdoc />
         public string Summary { get; private set; }
 
+        /// <inheritdoc />
         public string AuthorsNote { get; private set; }
 
+        /// <inheritdoc />
         public string Footnote { get; private set; }
 
+        /// <inheritdoc />
         public string Text { get; private set; }
 
         public static AO3Fanfic Parse( AO3Source source, HtmlCacheableDocument document )
@@ -68,123 +120,11 @@ namespace Alexandria.AO3.Model
             AO3Fanfic parsed = new AO3Fanfic( source, document.Url );
 
             HtmlNode workMetaGroup = document.Html.SelectSingleNode( "//dl[@class='work meta group']" );
-            parsed.Rating = AO3MaturityRatingUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='rating tags']//a" ).InnerText );
-            parsed.ContentWarnings = AO3ContentWarningUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='warning tags']/ul" ) );
-
-            HtmlNode relationshipsUl = workMetaGroup.SelectSingleNode( "dd[@class='relationship tags']/ul" );
-            List<IShipRequestHandle> ships = new List<IShipRequestHandle>();
-            if ( relationshipsUl != null )
-            {
-                foreach ( HtmlNode li in relationshipsUl.Elements( "li" ) )
-                {
-                    string shipTag = li.Element( "a" ).ReadableInnerText().Trim();
-                    ships.Add( new AO3ShipRequestHandle( source, shipTag ) );
-                }
-            }
-
-            parsed.Ships = ships;
-
-            HtmlNode charactersUl = workMetaGroup.SelectSingleNode( "dd[@class='character tags']/ul" );
-            List<ICharacterRequestHandle> characters = new List<ICharacterRequestHandle>();
-            if ( charactersUl != null )
-            {
-                foreach ( HtmlNode li in charactersUl.Elements( "li" ) )
-                {
-                    string characterName = li.Element( "a" ).ReadableInnerText().Trim();
-                    characters.Add( new AO3CharacterRequestHandle( source, characterName ) );
-                }
-            }
-
-            parsed.Characters = characters;
-
-            HtmlNode freeformTagsUl = workMetaGroup.SelectSingleNode( "dd[@class='freeform tags']/ul" );
-            List<ITagRequestHandle> tags = new List<ITagRequestHandle>();
-            if ( freeformTagsUl != null )
-            {
-                foreach ( HtmlNode li in freeformTagsUl.Elements( "li" ) )
-                {
-                    string tag = li.Element( "a" ).ReadableInnerText().Trim();
-                    tags.Add( new AO3TagRequestHandle( source, tag ) );
-                }
-            }
-
-            parsed.Tags = tags;
-            parsed.Language = LanguageUtils.Parse( workMetaGroup.SelectSingleNode( "dd[@class='language']" ).ReadableInnerText().Trim() );
-
-            // We wind up looking at every <dd> anyways, so this is more efficient than needing to make a lot of XPath calls over the same datasets
-            bool hasDateLastUpdated = false;
-            HtmlNode statsDl = workMetaGroup.SelectSingleNode( "dd[@class='stats']/dl" );
-            foreach ( HtmlNode dd in statsDl.Elements( "dd" ) )
-            {
-                string ddClass = dd.GetAttributeValue( "class", null )?.ToLowerInvariant();
-                string ddValue = dd.InnerText;
-                switch ( ddClass )
-                {
-                    case "words":
-                        {
-                            parsed.NumberWords = int.Parse( ddValue );
-                            break;
-                        }
-
-                    case "kudos":
-                        {
-                            parsed.NumberLikes = int.Parse( ddValue );
-                            break;
-                        }
-
-                    case "comments":
-                        {
-                            parsed.NumberComments = int.Parse( ddValue );
-                            break;
-                        }
-
-                    case "published":
-                        {
-                            parsed.DateStarted = DateTime.Parse( ddValue );
-                            break;
-                        }
-
-                    case "status":
-                        {
-                            parsed.DateLastUpdated = DateTime.Parse( ddValue );
-                            hasDateLastUpdated = true;
-                            break;
-                        }
-                }
-            }
-
-            if ( !hasDateLastUpdated )
-            {
-                parsed.DateLastUpdated = parsed.DateStarted;
-            }
-
-            HtmlNode seriesSpan = workMetaGroup.SelectSingleNode( "dd[@class='series']/span" );
-            if ( seriesSpan != null )
-            {
-                parsed.SeriesInfo = AO3SeriesEntry.Parse( source, seriesSpan );
-            }
+            ParseDlTable( parsed, workMetaGroup, _workMetaGroupMutators, DlFieldSource.DtClass );
 
             parsed.ChapterInfo = AO3ChapterInfo.Parse( source, document, workMetaGroup );
 
-            HtmlNode prefaceGroup = document.Html.SelectSingleNode( "//div[@class='preface group']" );
-            parsed.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();
-            HtmlNode authorA = prefaceGroup.SelectSingleNode( ".//a[@rel='author']" );
-            if ( authorA != null )
-            {
-                parsed.Author = AO3AuthorRequestHandle.Parse( source, authorA );
-            }
-
-            HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='summary module']/blockquote" );
-            if ( summaryBlockquote != null )
-            {
-                parsed.Summary = summaryBlockquote.ReadableInnerText().Trim();
-            }
-
-            HtmlNode notesBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='notes module']/blockquote" );
-            if ( notesBlockquote != null )
-            {
-                parsed.AuthorsNote = notesBlockquote.ReadableInnerText().Trim();
-            }
+            ParsePreface( parsed, document.Html );
 
             HtmlNode workEndnotesBlockquote = document.Html.SelectSingleNode( "//div[@id='work_endnotes']/blockquote" );
             if ( workEndnotesBlockquote != null )
@@ -198,6 +138,65 @@ namespace Alexandria.AO3.Model
             parsed.Text = userstuffModuleDiv.ReadableInnerText().Trim();
 
             return parsed;
+        }
+
+        static ContentWarnings ParseContentWarning( HtmlNode value )
+        {
+            HtmlNode ul = value?.Element( "ul" );
+            if ( ul == null )
+            {
+                return ContentWarnings.None;
+            }
+
+            ContentWarnings parsed = ContentWarnings.None;
+
+            foreach ( HtmlNode li in ul.Elements( "li" ) )
+            {
+                string tag = li.FirstChild.InnerText;
+
+                if ( !_ao3ContentWarningLookup.TryGetValue( tag, out ContentWarnings flag ) )
+                {
+                    throw new ArgumentException( $"Unable to parse the built-in AO3 content warning tag for '{tag}'" );
+                }
+
+                parsed |= flag;
+            }
+
+            return parsed;
+        }
+
+        static IReadOnlyList<TRequestHandle> ParseTagsFromDlTable<TModel, TRequestHandle>( AO3Fanfic fanfic, HtmlNode value, RequestHandleCreatorFunc<TModel, TRequestHandle> requestHandleCreator )
+            where TModel : IRequestable
+            where TRequestHandle : IRequestHandle<TModel>
+        {
+            HtmlNode ul = value?.Element( "ul" );
+            return ParseTagsUl( fanfic, ul, requestHandleCreator );
+        }
+
+        static void ParseStatsTable( AO3Fanfic fanfic, HtmlNode statsTable )
+        {
+            HtmlNode statsDl = statsTable.Element( "dl" );
+            ParseDlTable( fanfic, statsDl, _statsMutators, DlFieldSource.DtClass );
+        }
+
+        static void ParsePreface( AO3Fanfic fanfic, HtmlNode html )
+        {
+            HtmlNode prefaceGroup = html.SelectSingleNode( "//div[@class='preface group']" );
+
+            fanfic.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();
+            fanfic.Authors = ParseAuthorsList( fanfic.Source, prefaceGroup.SelectSingleNode( "h3[@class = 'byline heading']" ) );
+
+            HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='summary module']/blockquote" );
+            if ( summaryBlockquote != null )
+            {
+                fanfic.Summary = summaryBlockquote.ReadableInnerText().Trim();
+            }
+
+            HtmlNode notesBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='notes module']/blockquote" );
+            if ( notesBlockquote != null )
+            {
+                fanfic.AuthorsNote = notesBlockquote.ReadableInnerText().Trim();
+            }
         }
     }
 }

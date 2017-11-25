@@ -20,7 +20,7 @@ namespace Alexandria.AO3.Model
     /// <summary>
     /// A concrete class for parsing a tag from AO3.
     /// </summary>
-    internal sealed class AO3Ship : AO3TagBase, IShip
+    internal sealed class AO3Ship : AO3TagBase<AO3Ship>, IShip
     {
         static readonly Regex _matchingParentheses = new Regex( @"\([^\)]*\)" );
 
@@ -122,7 +122,7 @@ namespace Alexandria.AO3.Model
             List<ICharacterRequestHandle> characters = new List<ICharacterRequestHandle>();
             HashSet<string> uniqueNames = new HashSet<string>( characterNames, StringComparer.InvariantCultureIgnoreCase );
 
-            foreach ( ITagRequestHandle tagRequest in ParseParentTags( mainDiv ) )
+            foreach ( ITagRequestHandle tagRequest in ParseParentTags( this, mainDiv ) )
             {
                 if ( IsCharacterTag( tagRequest, uniqueNames ) )
                 {

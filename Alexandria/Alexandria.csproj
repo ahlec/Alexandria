@@ -59,7 +59,7 @@
     <Compile Include="Exceptions\InvalidTagTypeAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\UnknownParsingErrorAlexandriaException.cs" />
     <Compile Include="Model\IQueryable.cs" />
-    <Compile Include="Model\RequestableBase.cs" />
+    <Compile Include="AO3\Model\AO3ModelBase.cs" />
     <Compile Include="Website.cs" />
     <None Include="..\Alexandria.ruleset">
       <Link>Alexandria.ruleset</Link>
@@ -90,7 +90,6 @@
     <Compile Include="AO3\Utils\AO3ContentWarningUtils.cs" />
     <Compile Include="AO3\Utils\AO3LanguageUtils.cs" />
     <Compile Include="AO3\Utils\AO3MaturityRatingUtils.cs" />
-    <Compile Include="AO3\Utils\ParseUtils.cs" />
     <Compile Include="Caching\CachedDocument.cs" />
     <Compile Include="Documents\CacheableDocument.cs" />
     <Compile Include="Documents\HtmlCacheableDocument.cs" />

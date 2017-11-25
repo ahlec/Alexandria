@@ -20,11 +20,11 @@ namespace Alexandria.Tests.AO3
         readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
 
         [Test]
-        public void AO3Fanfic_AnonymousAuthorIsNull()
+        public void AO3Fanfic_AnonymousAuthorIsEmpty()
         {
             IFanficRequestHandle request = _source.MakeFanficRequest( UnitTestConstants.FicHandleTwoWeeksSleepIsADistantDream );
             IFanfic fanfic = request.Request();
-            Assert.IsNull( fanfic.Author );
+            Assert.That( fanfic.Authors, Is.Empty );
         }
     }
 }

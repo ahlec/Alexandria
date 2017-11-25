@@ -27,8 +27,14 @@ namespace Alexandria.AO3.Model
 
         public IFanficRequestHandle NextEntry { get; private set; }
 
-        public static AO3SeriesEntry Parse( AO3Source source, HtmlNode seriesSpan )
+        public static AO3SeriesEntry Parse( AO3Source source, HtmlNode seriesDd )
         {
+            HtmlNode seriesSpan = seriesDd?.Element( "span" );
+            if ( seriesSpan == null )
+            {
+                return null;
+            }
+
             AO3SeriesEntry parsed = new AO3SeriesEntry();
 
             HtmlNode positionSpan = seriesSpan.SelectSingleNode( "span[@class='position']" );

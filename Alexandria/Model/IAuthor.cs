@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
 {

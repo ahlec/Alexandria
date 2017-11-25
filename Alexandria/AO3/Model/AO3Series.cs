@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.RequestHandles;
-using Alexandria.AO3.Utils;
 using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -16,79 +15,73 @@ using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-    internal sealed class AO3Series : RequestableBase<AO3Source>, ISeries
+    internal sealed class AO3Series : AO3ModelBase<AO3Series>, ISeries
     {
+        static readonly IReadOnlyDictionary<string, TableFieldMutator> _seriesMetaGroupMutators = new Dictionary<string, TableFieldMutator>
+        {
+            { "Creator", ( series, value ) => series.Authors = ParseAuthorsList( series.Source, value ) },
+            { "Series Begun", ( series, value ) => series.DateStarted = DateTime.Parse( value.InnerText ) },
+            { "Series Updated", ( series, value ) => series._dateLastUpdated = DateTime.Parse( value.InnerText ) },
+            { "Stats", ParseStatsTable }
+        };
+
+        static readonly IReadOnlyDictionary<string, TableFieldMutator> _statsMutators = new Dictionary<string, TableFieldMutator>
+        {
+            { "Complete", ( series, value ) => series.IsCompleted = ParseCompletedDd( value ) }
+        };
+
+        DateTime? _dateLastUpdated;
+
         AO3Series( AO3Source source, Uri url )
             : base( source, url )
         {
         }
 
+        /// <inheritdoc />
         public IReadOnlyList<IAuthorRequestHandle> Authors { get; private set; }
 
+        /// <inheritdoc />
         public DateTime DateStarted { get; private set; }
 
-        public DateTime DateLastUpdated { get; private set; }
+        /// <inheritdoc />
+        public DateTime DateLastUpdated => _dateLastUpdated.GetValueOrDefault( DateStarted );
 
+        /// <inheritdoc />
         public bool IsCompleted { get; private set; }
 
+        /// <inheritdoc />
         public IReadOnlyList<IFanficRequestHandle> Fanfics { get; private set; }
 
         public static AO3Series Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            AO3Series parsed = new AO3Series( source, document.Url );
-
             HtmlNode mainDiv = document.Html.SelectSingleNode( "//div[@id='main']" );
 
+            AO3Series parsed = new AO3Series( source, document.Url )
+            {
+                Fanfics = ParseSeriesFanfics( source, mainDiv )
+            };
+
             HtmlNode seriesMetaGroupDl = mainDiv.SelectSingleNode( ".//dl[@class='series meta group']" );
-            bool hasDateLastUpdated = false;
-            foreach ( Tuple<string, HtmlNode> row in seriesMetaGroupDl.EnumerateDlTable() )
-            {
-                switch ( row.Item1 )
-                {
-                    case "Creator":
-                        {
-                            parsed.Authors = ParseAuthors( row.Item2, source );
-                            break;
-                        }
-
-                    case "Series Begun":
-                        {
-                            parsed.DateStarted = DateTime.Parse( row.Item2.InnerText );
-                            break;
-                        }
-
-                    case "Series Updated":
-                        {
-                            parsed.DateLastUpdated = DateTime.Parse( row.Item2.InnerText );
-                            hasDateLastUpdated = true;
-                            break;
-                        }
-
-                    case "Stats":
-                        {
-                            Tuple<string, HtmlNode> completeDd = row.Item2.EnumerateDlTable().FirstOrDefault( kvp => kvp.Item1.Equals( "Complete" ) );
-                            parsed.IsCompleted = ( completeDd?.Item2.InnerText.Equals( "Yes", StringComparison.InvariantCultureIgnoreCase ) == true );
-                            break;
-                        }
-                }
-            }
-
-            if ( !hasDateLastUpdated )
-            {
-                parsed.DateLastUpdated = parsed.DateStarted;
-            }
-
-            HtmlNode seriesWorkUl = mainDiv.SelectSingleNode( ".//ul[contains(@class, 'series work' )]" );
-            parsed.Fanfics = seriesWorkUl.Elements( "li" ).Select( li => AO3FanficRequestHandle.ParseFromWorkLi( source, li ) ).Cast<IFanficRequestHandle>().ToList();
+            ParseDlTable( parsed, seriesMetaGroupDl, _seriesMetaGroupMutators, DlFieldSource.DtText );
 
             return parsed;
         }
 
-        static IReadOnlyList<IAuthorRequestHandle> ParseAuthors( HtmlNode creatorsDd, AO3Source source )
+        static void ParseStatsTable( AO3Series series, HtmlNode statsTable )
         {
-            return creatorsDd.Elements( "a" )
-                .Select( authorA => AO3AuthorRequestHandle.Parse( source, authorA ) )
-                .ToList();
+            HtmlNode statsDl = statsTable.Element( "dl" );
+            ParseDlTable( series, statsDl, _statsMutators, DlFieldSource.DtText );
+        }
+
+        static IReadOnlyList<IFanficRequestHandle> ParseSeriesFanfics( AO3Source source, HtmlNode mainDiv )
+        {
+            HtmlNode seriesWorkUl = mainDiv.SelectSingleNode( ".//ul[contains(@class, 'series work' )]" );
+            return seriesWorkUl.Elements( "li" ).Select( li => AO3FanficRequestHandle.ParseFromWorkLi( source, li ) ).Cast<IFanficRequestHandle>().ToList();
+        }
+
+        static bool ParseCompletedDd( HtmlNode completedDd )
+        {
+            return ( completedDd?.InnerText.Equals( "Yes", StringComparison.InvariantCultureIgnoreCase ) == true );
         }
     }
 }

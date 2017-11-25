@@ -8,10 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.Querying;
-using Alexandria.AO3.Utils;
 using Alexandria.Caching;
 using Alexandria.Documents;
-using Alexandria.Exceptions.Parsing;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
@@ -23,9 +21,9 @@ namespace Alexandria.AO3.Model
     /// <summary>
     /// A concrete class for parsing an author from AO3.
     /// </summary>
-    internal sealed class AO3Author : RequestableBase<AO3Source>, IAuthor
+    internal sealed class AO3Author : AO3ModelBase<AO3Author>, IAuthor
     {
-        static readonly IReadOnlyDictionary<string, AuthorFieldMutator> _metaMutators = new Dictionary<string, AuthorFieldMutator>
+        static readonly IReadOnlyDictionary<string, TableFieldMutator> _metaMutators = new Dictionary<string, TableFieldMutator>
         {
             { "My pseuds", ( author, value ) => author.Nicknames = CollectPseuds( value ) },
             { "I joined on", ( author, value ) => author.DateJoined = DateTime.Parse( value.InnerText ) },
@@ -37,8 +35,6 @@ namespace Alexandria.AO3.Model
             : base( source, url )
         {
         }
-
-        delegate void AuthorFieldMutator( AO3Author author, HtmlNode value );
 
         /// <inheritdoc />
         public string Name { get; private set; }
@@ -119,15 +115,7 @@ namespace Alexandria.AO3.Model
         void ParseProfileMetaData( HtmlNode userHomeProfile )
         {
             HtmlNode metaDl = userHomeProfile.SelectSingleNode( ".//dl[@class='meta']" );
-            foreach ( Tuple<string, HtmlNode> row in metaDl.EnumerateDlTable() )
-            {
-                if ( !_metaMutators.TryGetValue( row.Item1, out AuthorFieldMutator mutator ) )
-                {
-                    throw new UnrecognizedFormatAlexandriaException( Source.Website, Url, $"There was an unrecognized author profile row '{row.Item1}'" );
-                }
-
-                mutator( this, row.Item2 );
-            }
+            ParseDlTable( this, metaDl, _metaMutators, DlFieldSource.DtText );
         }
     }
 }

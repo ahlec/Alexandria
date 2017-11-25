@@ -27,7 +27,7 @@ namespace Alexandria.Tests.AO3
 
             Assert.IsNotNull( fanfic );
             Assert.AreEqual( "Prince Among Wolves", fanfic.Title );
-            Assert.IsNotNull( fanfic.Author );
+            Assert.That( fanfic.Authors, Is.Not.Empty );
             Assert.AreEqual( MaturityRating.Explicit, fanfic.Rating );
             Assert.AreEqual( ContentWarnings.Undetermined, fanfic.ContentWarnings );
 
@@ -108,7 +108,7 @@ namespace Alexandria.Tests.AO3
 
             Assert.IsNotNull( fanfic );
             Assert.AreEqual( "The Possibility of Silence and the Reality of Sound", fanfic.Title );
-            Assert.IsNotNull( fanfic.Author );
+            Assert.That( fanfic.Authors, Is.Not.Empty );
             Assert.AreEqual( MaturityRating.Teen, fanfic.Rating );
             Assert.AreEqual( ContentWarnings.None, fanfic.ContentWarnings );
 
@@ -174,7 +174,7 @@ namespace Alexandria.Tests.AO3
 
             Assert.IsNotNull( fanfic );
             Assert.AreEqual( "It's Not My Lovestory", fanfic.Title );
-            Assert.IsNotNull( fanfic.Author );
+            Assert.That( fanfic.Authors, Is.Not.Empty );
             Assert.AreEqual( MaturityRating.General, fanfic.Rating );
             Assert.AreEqual( ContentWarnings.None, fanfic.ContentWarnings );
 
