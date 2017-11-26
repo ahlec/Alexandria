@@ -6,9 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Alexandria.AO3.RequestHandles;
-using Alexandria.Caching;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
@@ -19,15 +17,13 @@ namespace Alexandria.AO3.Querying
     internal sealed class AO3QueryResults : IQueryResultsPage<IFanfic, IFanficRequestHandle>
     {
         readonly AO3Source _source;
-        readonly CacheableObjects _objectType;
         readonly string _endpointCategory;
         readonly string _endpointQuery;
         readonly int _page;
 
-        AO3QueryResults( AO3Source source, CacheableObjects objectType, string endpointCategory, string endpointTag, int page )
+        AO3QueryResults( AO3Source source, string endpointCategory, string endpointTag, int page )
         {
             _source = source;
-            _objectType = objectType;
             _endpointCategory = endpointCategory;
             _endpointQuery = endpointTag;
             _page = page;
@@ -44,12 +40,12 @@ namespace Alexandria.AO3.Querying
                 throw new InvalidOperationException();
             }
 
-            return Retrieve( _source, _objectType, _endpointCategory, _endpointQuery, _page + 1 );
+            return Retrieve( _source, _endpointCategory, _endpointQuery, _page + 1 );
         }
 
-        internal static AO3QueryResults Retrieve( AO3Source source, CacheableObjects objectType, string endpointCategory, string endpointTag, int page )
+        internal static AO3QueryResults Retrieve( AO3Source source, string endpointCategory, string endpointTag, int page )
         {
-            AO3QueryResults results = new AO3QueryResults( source, objectType, endpointCategory, endpointTag, page );
+            AO3QueryResults results = new AO3QueryResults( source, endpointCategory, endpointTag, page );
             string endpoint = $"http://archiveofourown.org/{endpointCategory}/{endpointTag}/works";
             if ( page > 1 )
             {

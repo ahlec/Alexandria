@@ -47,7 +47,7 @@ namespace Alexandria.AO3.Model
         public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
         {
             string endpointTag = AO3TagUtils.EscapeTagForUrl( Text );
-            return AO3QueryResults.Retrieve( Source, CacheableObjects.TagFanficsHtml, "tags", endpointTag, 1 );
+            return AO3QueryResults.Retrieve( Source, "tags", endpointTag, 1 );
         }
 
         protected static HtmlNode GetMainDiv( HtmlCacheableDocument document )

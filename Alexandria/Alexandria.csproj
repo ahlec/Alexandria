@@ -90,7 +90,6 @@
     <Compile Include="Caching\CachedDocument.cs" />
     <Compile Include="Documents\CacheableDocument.cs" />
     <Compile Include="Documents\HtmlCacheableDocument.cs" />
-    <Compile Include="Caching\CacheableObjects.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\FilesystemCache.cs" />
     <Compile Include="Caching\MemoryCache.cs" />

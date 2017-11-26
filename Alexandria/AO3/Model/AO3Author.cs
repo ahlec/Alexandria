@@ -85,7 +85,7 @@ namespace Alexandria.AO3.Model
         /// <inheritdoc />
         public IQueryResultsPage<IFanfic, IFanficRequestHandle> QueryFanfics()
         {
-            return AO3QueryResults.Retrieve( Source, CacheableObjects.AuthorFanficsHtml, "users", Name, 1 );
+            return AO3QueryResults.Retrieve( Source, "users", Name, 1 );
         }
 
         static IReadOnlyList<string> CollectPseuds( HtmlNode pseudsDd )
