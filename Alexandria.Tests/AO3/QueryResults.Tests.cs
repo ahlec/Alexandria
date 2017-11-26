@@ -15,7 +15,6 @@ using NUnit.Framework;
 namespace Alexandria.Tests.AO3
 {
     [TestFixture]
-    [Category( UnitTestConstants.QueryResultsTestsCategory )]
     public class Test_QueryResults
     {
         readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );

@@ -14,7 +14,6 @@ using NUnit.Framework;
 namespace Alexandria.Tests.AO3
 {
     [TestFixture]
-    [Category( UnitTestConstants.FanficParsingTestsCategory )]
     public class FanficParsingTests
     {
         readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );

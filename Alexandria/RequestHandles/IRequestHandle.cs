@@ -18,7 +18,7 @@ namespace Alexandria.RequestHandles
     /// actually communicate with the server. Rather, it creates a shell class that itself has the capability
     /// of requesting data from the server through the <seealso cref="Request"/> function. After
     /// the initial request handle has been made, all the data that comes back in the form of whatever
-    /// model is will be additional request handles (for example, <seealso cref="IFanfic.Author"/>. This allows
+    /// model is will be additional request handles (for example, <seealso cref="IFanfic.Authors"/>. This allows
     /// for the enduser to explore the data somewhat seemlessly by using these request handles and having them
     /// request the data only if necessary (because accessing this data will always result in another endpoint
     /// being called).

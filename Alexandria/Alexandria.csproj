@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\Alexandria.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Alexandria.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile>..\build\Alexandria.xml</DocumentationFile>
     <NoWarn>0419</NoWarn>
   </PropertyGroup>
@@ -31,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\Alexandria.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Alexandria.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack, Version=1.5.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
@@ -63,9 +63,7 @@
     <Compile Include="Model\IQueryable.cs" />
     <Compile Include="AO3\Model\AO3ModelBase.cs" />
     <Compile Include="Website.cs" />
-    <None Include="..\Alexandria.ruleset">
-      <Link>Alexandria.ruleset</Link>
-    </None>
+    <None Include="Alexandria.ruleset" />
     <AdditionalFiles Include="..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
@@ -140,13 +138,8 @@
     <Compile Include="Searching\NumberSearchCriteriaType.cs" />
     <Compile Include="Searching\SearchField.cs" />
     <Compile Include="Searching\SortDirection.cs" />
-    <Compile Include="Utils\CacheableObjectsUtils.cs" />
-    <Compile Include="Utils\CharUtils.cs" />
-    <Compile Include="Utils\FlagUtils.cs" />
     <Compile Include="Utils\HtmlUtils.cs" />
     <Compile Include="Utils\LanguageUtils.cs" />
-    <Compile Include="Utils\MaturityRatingUtils.cs" />
-    <Compile Include="Utils\StringBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

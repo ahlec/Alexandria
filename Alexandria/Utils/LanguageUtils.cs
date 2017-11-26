@@ -88,7 +88,7 @@ namespace Alexandria.Utils
             new LanguageInfo( Language.Thai,                47, "Thai",                 "ไทย" ),
             new LanguageInfo( Language.Thermian,            48, "Thermian",             "Thermian" ),
             new LanguageInfo( Language.Klingon,             49, "Klingon",              "tlhIngan-Hol" ),
-            new LanguageInfo( Language.Elvish,              50, "Elvish",               "Quenya" ),
+            new LanguageInfo( Language.Quenya,              50, "Quenya",               "Quenya" ),
             new LanguageInfo( Language.Estonian,            51, "Estonian",             "eesti keel" ),
             new LanguageInfo( Language.Slovak,              53, "Slovak",               "Slovenčina" ),
             new LanguageInfo( Language.Malaysian,           56, "Malaysian",            "Bahasa Malaysia" ),

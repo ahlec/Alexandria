@@ -28,7 +28,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\Alexandria.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AlexandriaTests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,7 +37,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\Alexandria.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AlexandriaTests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="HtmlAgilityPack, Version=1.5.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
@@ -51,9 +51,7 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Alexandria.ruleset">
-      <Link>Alexandria.ruleset</Link>
-    </None>
+    <None Include="AlexandriaTests.ruleset" />
     <AdditionalFiles Include="..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
@@ -68,10 +66,7 @@
     <Compile Include="AO3\FullSeriesParsing.Tests.cs" />
     <Compile Include="AO3\FullTagParsing.Tests.cs" />
     <Compile Include="AO3\QueryResults.Tests.cs" />
-    <Compile Include="AO3\RequestUtils.Tests.cs" />
     <Compile Include="AO3\AO3UnitTestConstants.cs" />
-    <Compile Include="CacheableObjectsUtils.Tests.cs" />
-    <Compile Include="FlagUtils.Tests.cs" />
     <Compile Include="Utils\LanguageUtils.Tests.cs" />
     <Compile Include="Mocks\IgnoredWebClient.cs" />
     <Compile Include="AlexandriaTestConstants.cs" />

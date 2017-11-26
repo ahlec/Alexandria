@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3;
-using Alexandria.AO3.Utils;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
@@ -14,7 +13,6 @@ using NUnit.Framework;
 namespace Alexandria.Tests.AO3
 {
     [TestFixture]
-    [Category( UnitTestConstants.FullSeriesParsingTestsCategory )]
     public class Test_FullSeriesParsing
     {
         readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );

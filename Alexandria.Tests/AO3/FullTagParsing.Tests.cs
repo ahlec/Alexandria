@@ -17,7 +17,6 @@ using NUnit.Framework;
 namespace Alexandria.Tests.AO3
 {
     [TestFixture]
-    [Category( UnitTestConstants.FullTagParsingTestsCategory )]
     public class Test_FullTagParsing
     {
         readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );

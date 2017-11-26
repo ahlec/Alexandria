@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Alexandria.Utils;
 
 namespace Alexandria.AO3
 {
@@ -242,7 +241,7 @@ namespace Alexandria.AO3
                 return true;
             }
 
-            if ( CharUtils.IsSpace( character ) )
+            if ( IsSpace( character ) )
             {
                 return true;
             }
@@ -252,12 +251,35 @@ namespace Alexandria.AO3
                 return true;
             }
 
-            if ( CharUtils.IsDash( character ) )
+            if ( IsDash( character ) )
             {
                 return true;
             }
 
             return false;
+        }
+
+        static bool IsSpace( char character )
+        {
+            switch ( character )
+            {
+                case ' ':
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        static bool IsDash( char character )
+        {
+            switch ( character )
+            {
+                case '-': // hyphen minus
+                case 'ー': // CJK dash
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }
