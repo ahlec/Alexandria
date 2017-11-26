@@ -119,6 +119,12 @@ namespace Alexandria.Utils
             builder.Trim();
 
             string text = HttpUtility.HtmlDecode( builder.ToString() );
+
+            if ( string.IsNullOrEmpty( text ) )
+            {
+                return null;
+            }
+
             return text;
         }
 

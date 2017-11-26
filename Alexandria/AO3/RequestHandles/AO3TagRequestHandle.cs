@@ -19,9 +19,9 @@ namespace Alexandria.AO3.RequestHandles
         /// <summary>
         /// Initializes a new instance of the <see cref="AO3TagRequestHandle"/> class.
         /// </summary>
-        /// <param name="source">The source that the HTML page came from, which is then stored for
-        /// querying fanfics and also passed along to any nested request handles for them to parse
-        /// data with as well.</param>
+        /// <param name="source">The source that the HTML page came from, which is then used to
+        /// request the model from the website. It is also passed along to the model when parsed
+        /// as well in order to make future chained requests or query fanfics.</param>
         /// <param name="tagName">The name of the tag that can be requested.</param>
         public AO3TagRequestHandle( AO3Source source, string tagName )
             : base( source, tagName )

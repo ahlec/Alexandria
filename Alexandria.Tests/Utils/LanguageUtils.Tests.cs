@@ -4,7 +4,6 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
-using System;
 using Alexandria.Exceptions.Input;
 using Alexandria.Model;
 using Alexandria.Utils;
@@ -33,25 +32,25 @@ namespace Alexandria.Tests.Utils
         [Test]
         public void LanguageUtils_Parse_TrimsWhitespace()
         {
-            Assert.That( LanguageUtils.Parse( "  English  " ), Is.EqualTo( Language.English ) );
+            LanguageInfo info = LanguageUtils.GetInfo( Language.English );
+            Assert.That( LanguageUtils.Parse( "  English  " ), Is.EqualTo( info ) );
         }
 
         [Test]
         public void LanguageUtils_Parse_ParsesAllEnumValues()
         {
-            foreach ( Language language in Enum.GetValues( typeof( Language ) ) )
+            foreach ( LanguageInfo info in LanguageUtils.AllLanguages )
             {
-                Assert.That( LanguageUtils.Parse( language.ToString() ), Is.EqualTo( language ) );
+                Assert.That( LanguageUtils.Parse( info.Language.ToString() ), Is.EqualTo( info ) );
             }
         }
 
         [Test]
         public void LanguageUtils_Parse_ParsesAllNativeNameValues()
         {
-            foreach ( Language language in Enum.GetValues( typeof( Language ) ) )
+            foreach ( LanguageInfo info in LanguageUtils.AllLanguages )
             {
-                ILanguageInfo info = LanguageUtils.GetInfo( language );
-                Assert.That( LanguageUtils.Parse( info.NativeName ), Is.EqualTo( language ) );
+                Assert.That( LanguageUtils.Parse( info.NativeName ), Is.EqualTo( info ) );
             }
         }
     }

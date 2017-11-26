@@ -88,7 +88,7 @@ namespace Alexandria.Tests.AO3
             Assert.AreEqual( "1418973", fanfic.ChapterInfo.Chapters[18].Handle );
             Assert.AreEqual( "1453053", fanfic.ChapterInfo.Chapters[19].Handle );
 
-            Assert.AreEqual( Language.English, fanfic.Language );
+            Assert.AreEqual( Language.English, fanfic.Language.Language );
 
             Assert.AreEqual( @"Looking for full day/evening sitter. 2 twin boys age 4.  Must have exp. w/werewolves. Must be human. No pedophiles. No teenage girls. Pay negotiable.", fanfic.Summary );
             Assert.IsNull( fanfic.AuthorsNote );
@@ -157,7 +157,7 @@ namespace Alexandria.Tests.AO3
 
             Assert.IsNull( fanfic.ChapterInfo );
 
-            Assert.AreEqual( Language.English, fanfic.Language );
+            Assert.AreEqual( Language.English, fanfic.Language.Language );
 
             Assert.AreEqual( @"Derek grew up knowing that soulmates are something to be cherished, so when he got a voice in his head, childish thoughts and flashes of color and objects, he’d excitedly jumped on his mother’s bed to tell her. She had smiled, ruffled his hair and told him how she was proud of him, even though Derek hadn’t really done anything.", fanfic.Summary );
             Assert.AreEqual(
@@ -215,7 +215,7 @@ namespace Alexandria.Tests.AO3
 
             Assert.IsNull( fanfic.ChapterInfo );
 
-            Assert.AreEqual( Language.English, fanfic.Language );
+            Assert.AreEqual( Language.English, fanfic.Language.Language );
 
             Assert.AreEqual(
                 @"When your soulmate’s first words to you were supposed to be etched on your wrist, a blank wrist was quite intriguing and an open invitation to be teased.

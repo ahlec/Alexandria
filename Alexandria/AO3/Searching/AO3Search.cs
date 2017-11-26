@@ -6,12 +6,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Alexandria.AO3.Utils;
+using Alexandria.AO3.Data;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
+using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Searching
@@ -129,6 +131,22 @@ namespace Alexandria.AO3.Searching
             }
         }
 
+        static string GetLanguageId( Language language )
+        {
+            LanguageInfo info = LanguageUtils.GetInfo( language );
+            return info.AO3Id;
+        }
+
+        static string GetMaturityRatingId( MaturityRating rating )
+        {
+            return AO3Enums.MaturityRatings.First( def => def.EnumValue == rating ).Id;
+        }
+
+        static IEnumerable<string> GetContentWarningsId( ContentWarnings warning )
+        {
+            return AO3Enums.ContentWarnings.Where( def => warning.HasFlag( def.EnumValue ) ).Select( def => def.Id );
+        }
+
         static string GetSearchFieldUrlValue( SearchField field )
         {
             switch ( field )
@@ -176,10 +194,10 @@ namespace Alexandria.AO3.Searching
             AddOptionalSearchField( searchUrl, "complete", OnlyIncludeCompleteFanfics );
             AddOptionalSearchField( searchUrl, "single_chapter", OnlyIncludeSingleChapterFanfics );
             AddOptionalSearchField( searchUrl, "word_count", WordCount );
-            AddOptionalSearchField( searchUrl, "language_id", Language, AO3LanguageUtils.GetId );
+            AddOptionalSearchField( searchUrl, "language_id", Language, GetLanguageId );
             AddOptionalSearchField( searchUrl, "fandom_names", Fandoms );
-            AddOptionalSearchField( searchUrl, "rating_ids", Rating, AO3MaturityRatingUtils.GetId );
-            AddOptionalCheckboxSearchField( searchUrl, "warning_ids", ContentWarnings, ContentWarnings.None, AO3ContentWarningUtils.GetIds );
+            AddOptionalSearchField( searchUrl, "rating_ids", Rating, GetMaturityRatingId );
+            AddOptionalCheckboxSearchField( searchUrl, "warning_ids", ContentWarnings, ContentWarnings.None, GetContentWarningsId );
             AddOptionalSearchField( searchUrl, "character_names", CharacterNames );
             AddOptionalSearchField( searchUrl, "relationship_names", Ships );
             AddOptionalSearchField( searchUrl, "freeform_names", Tags );

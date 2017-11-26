@@ -58,7 +58,7 @@ namespace Alexandria.AO3.Model
 
         protected static string ParseTagText( HtmlNode mainDiv )
         {
-            return mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ).ReadableInnerText().Trim();
+            return mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ).ReadableInnerText();
         }
 
         protected static TagType ParseTagType( HtmlNode mainDiv, Website website, Uri url )

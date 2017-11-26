@@ -98,7 +98,7 @@ namespace Alexandria.Model
         /// <summary>
         /// Gets the language that this fanfic was written in.
         /// </summary>
-        Language Language { get; }
+        LanguageInfo Language { get; }
 
         /// <summary>
         /// Gets the author-provided summary of the fanfic, if one was provided.

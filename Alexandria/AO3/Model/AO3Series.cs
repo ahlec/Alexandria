@@ -76,7 +76,7 @@ namespace Alexandria.AO3.Model
         static IReadOnlyList<IFanficRequestHandle> ParseSeriesFanfics( AO3Source source, HtmlNode mainDiv )
         {
             HtmlNode seriesWorkUl = mainDiv.SelectSingleNode( ".//ul[contains(@class, 'series work' )]" );
-            return seriesWorkUl.Elements( "li" ).Select( li => AO3FanficRequestHandle.ParseFromWorkLi( source, li ) ).Cast<IFanficRequestHandle>().ToList();
+            return AO3FanficRequestHandle.ParseFanficLiList( source, seriesWorkUl );
         }
 
         static bool ParseCompletedDd( HtmlNode completedDd )

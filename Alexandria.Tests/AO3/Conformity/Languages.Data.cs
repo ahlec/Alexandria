@@ -60,7 +60,8 @@ namespace Alexandria.Tests.AO3.Conformity
 
                 try
                 {
-                    AlexandriaValue = LanguageUtils.Parse( ao3Name );
+                    LanguageInfo languageInfo = LanguageUtils.Parse( ao3Name );
+                    AlexandriaValue = languageInfo.Language;
                 }
                 catch ( NoSuchLanguageAlexandriaException )
                 {

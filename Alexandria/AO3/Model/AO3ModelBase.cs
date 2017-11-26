@@ -43,6 +43,14 @@ namespace Alexandria.AO3.Model
         /// <param name="value">The value of the &lt;dd&gt; cell in the &lt;dl&gt; table.</param>
         protected delegate void TableFieldMutator( TSelf self, HtmlNode value );
 
+        /// <summary>
+        /// A delegate that can be used to create a new instance of a specific request handle.
+        /// </summary>
+        /// <typeparam name="TModel">The interface of the model that is returned by the request handle.</typeparam>
+        /// <typeparam name="TRequestHandle">The interface of the specific request handle itself.</typeparam>
+        /// <param name="self">The instance of the <seealso cref="AO3ModelBase{TSelf}"/>.</param>
+        /// <param name="text">The tag that the request handle should request data on.</param>
+        /// <returns>A fully constructed and valid request handle that can be used to retrieve the data as desired.</returns>
         protected delegate TRequestHandle RequestHandleCreatorFunc<TModel, out TRequestHandle>( TSelf self, string text )
             where TModel : IRequestable
             where TRequestHandle : IRequestHandle<TModel>;
@@ -181,6 +189,15 @@ namespace Alexandria.AO3.Model
             return new AO3TagRequestHandle( self.Source, tag );
         }
 
+        /// <summary>
+        /// Parses through a container (of any type, AO3 uses a number of different containers here) that contain
+        /// &lt;a&gt; tags with @rel = "author" to create author request handles.
+        /// </summary>
+        /// <param name="source">The configured concrete class that can be used to make requests of
+        /// the particular website.</param>
+        /// <param name="container">The HTML container element that contains the authors (if any) that should be
+        /// parsed.</param>
+        /// <returns>A list, never null, of all of the authors that were mentioned in the HTML container.</returns>
         protected static IReadOnlyList<IAuthorRequestHandle> ParseAuthorsList( AO3Source source, HtmlNode container )
         {
             if ( container == null )

@@ -41,7 +41,7 @@ namespace Alexandria.AO3.Searching
             parsed.HasMoreResults = ( nextA != null );
 
             HtmlNode workIndexGroupOl = document.DocumentNode.SelectSingleNode( "//ol[@class='work index group']" );
-            parsed.Results = workIndexGroupOl.Elements( "li" ).Select( li => AO3FanficRequestHandle.ParseFromWorkLi( source, li ) ).Cast<IFanficRequestHandle>().ToList();
+            parsed.Results = AO3FanficRequestHandle.ParseFanficLiList( source, workIndexGroupOl );
 
             return parsed;
         }

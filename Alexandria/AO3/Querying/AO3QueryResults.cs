@@ -64,7 +64,7 @@ namespace Alexandria.AO3.Querying
             results.HasMoreResults = ( nextA != null );
 
             HtmlNode worksOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='work index group']" );
-            results.Results = worksOl.Elements( "li" ).Select( li => AO3FanficRequestHandle.ParseFromWorkLi( source, li ) ).Cast<IFanficRequestHandle>().ToList();
+            results.Results = AO3FanficRequestHandle.ParseFanficLiList( source, worksOl );
 
             return results;
         }

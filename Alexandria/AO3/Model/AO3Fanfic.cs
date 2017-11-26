@@ -6,7 +6,8 @@
 
 using System;
 using System.Collections.Generic;
-using Alexandria.AO3.Utils;
+using System.Linq;
+using Alexandria.AO3.Data;
 using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -22,12 +23,12 @@ namespace Alexandria.AO3.Model
     {
         static readonly IReadOnlyDictionary<string, TableFieldMutator> _workMetaGroupMutators = new Dictionary<string, TableFieldMutator>
         {
-            { "rating tags", ( fanfic, value ) => fanfic.Rating = AO3MaturityRatingUtils.Parse( value.InnerText.Trim() ) },
+            { "rating tags", ( fanfic, value ) => fanfic.Rating = ParseMaturityRating( value ) },
             { "warning tags", ( fanfic, value ) => fanfic.ContentWarnings = ParseContentWarning( value ) },
             { "relationship tags", ( fanfic, value ) => fanfic.Ships = ParseTagsFromDlTable<IShip, IShipRequestHandle>( fanfic, value, ShipRequestHandleCreator ) },
             { "character tags", ( fanfic, value ) => fanfic.Characters = ParseTagsFromDlTable<ICharacter, ICharacterRequestHandle>( fanfic, value, CharacterRequestHandleCreator ) },
             { "freeform tags", ( fanfic, value ) => fanfic.Tags = ParseTagsFromDlTable<ITag, ITagRequestHandle>( fanfic, value, TagRequestHandleCreator ) },
-            { "language", ( fanfic, value ) => fanfic.Language = LanguageUtils.Parse( value.ReadableInnerText().Trim() ) },
+            { "language", ( fanfic, value ) => fanfic.Language = LanguageUtils.Parse( value.ReadableInnerText() ) },
             { "series", ( fanfic, value ) => fanfic.SeriesInfo = AO3SeriesEntry.Parse( fanfic.Source, value ) },
             { "stats", ParseStatsTable }
         };
@@ -39,16 +40,6 @@ namespace Alexandria.AO3.Model
             { "words", ( fanfic, value ) => fanfic.NumberWords = int.Parse( value.InnerText ) },
             { "comments", ( fanfic, value ) => fanfic.NumberComments = int.Parse( value.InnerText ) },
             { "kudos", ( fanfic, value ) => fanfic.NumberLikes = int.Parse( value.InnerText ) }
-        };
-
-        static readonly IReadOnlyDictionary<string, ContentWarnings> _ao3ContentWarningLookup = new Dictionary<string, ContentWarnings>( StringComparer.InvariantCultureIgnoreCase )
-        {
-            { "no archive warnings apply", ContentWarnings.None },
-            { "creator chose not to use archive warnings", ContentWarnings.Undetermined },
-            { "graphic depictions of violence", ContentWarnings.Violence },
-            { "major character death", ContentWarnings.MajorCharacterDeath },
-            { "rape/non-con", ContentWarnings.Rape },
-            { "underage", ContentWarnings.Underage }
         };
 
         DateTime? _dateLastUpdated;
@@ -101,7 +92,7 @@ namespace Alexandria.AO3.Model
         public IChapterInfo ChapterInfo { get; private set; }
 
         /// <inheritdoc />
-        public Language Language { get; private set; }
+        public LanguageInfo Language { get; private set; }
 
         /// <inheritdoc />
         public string Summary { get; private set; }
@@ -115,29 +106,40 @@ namespace Alexandria.AO3.Model
         /// <inheritdoc />
         public string Text { get; private set; }
 
+        /// <summary>
+        /// Parses an HTML page into an instance of an <seealso cref="AO3Fanfic"/>.
+        /// </summary>
+        /// <param name="source">The source that the HTML page came from, which is then passed
+        /// along to any nested request handles for them to parse data with as well.</param>
+        /// <param name="document">The document that came from the website itself.</param>
+        /// <returns>An instance of <seealso cref="AO3Fanfic"/> that was parsed and configured using
+        /// the information provided.</returns>
         public static AO3Fanfic Parse( AO3Source source, HtmlCacheableDocument document )
         {
-            AO3Fanfic parsed = new AO3Fanfic( source, document.Url );
-
             HtmlNode workMetaGroup = document.Html.SelectSingleNode( "//dl[@class='work meta group']" );
+
+            AO3Fanfic parsed = new AO3Fanfic( source, document.Url )
+            {
+                ChapterInfo = AO3ChapterInfo.Parse( source, document, workMetaGroup ),
+                Footnote = ParseFootnote( document.Html ),
+                Text = ParseFanficText( document.Html )
+            };
+
             ParseDlTable( parsed, workMetaGroup, _workMetaGroupMutators, DlFieldSource.DtClass );
-
-            parsed.ChapterInfo = AO3ChapterInfo.Parse( source, document, workMetaGroup );
-
             ParsePreface( parsed, document.Html );
 
-            HtmlNode workEndnotesBlockquote = document.Html.SelectSingleNode( "//div[@id='work_endnotes']/blockquote" );
-            if ( workEndnotesBlockquote != null )
+            return parsed;
+        }
+
+        static MaturityRating ParseMaturityRating( HtmlNode value )
+        {
+            string ratingStr = value?.InnerText?.Trim();
+            if ( string.IsNullOrEmpty( ratingStr ) )
             {
-                parsed.Footnote = workEndnotesBlockquote.ReadableInnerText().Trim();
+                return MaturityRating.NotRated;
             }
 
-            HtmlNode userstuffModuleDiv = document.Html.SelectSingleNode( "//div[@class='userstuff module']" ) ??
-                                          document.Html.SelectSingleNode( "//div[@id='chapters']/div[contains( @class, 'userstuff' )]" );
-            userstuffModuleDiv.Element( "h3" )?.Remove();
-            parsed.Text = userstuffModuleDiv.ReadableInnerText().Trim();
-
-            return parsed;
+            return AO3Enums.MaturityRatings.First( def => def.Matches( ratingStr ) ).EnumValue;
         }
 
         static ContentWarnings ParseContentWarning( HtmlNode value )
@@ -154,11 +156,7 @@ namespace Alexandria.AO3.Model
             {
                 string tag = li.FirstChild.InnerText;
 
-                if ( !_ao3ContentWarningLookup.TryGetValue( tag, out ContentWarnings flag ) )
-                {
-                    throw new ArgumentException( $"Unable to parse the built-in AO3 content warning tag for '{tag}'" );
-                }
-
+                ContentWarnings flag = AO3Enums.ContentWarnings.First( def => def.Matches( tag ) ).EnumValue;
                 parsed |= flag;
             }
 
@@ -183,20 +181,34 @@ namespace Alexandria.AO3.Model
         {
             HtmlNode prefaceGroup = html.SelectSingleNode( "//div[@class='preface group']" );
 
-            fanfic.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText().Trim();
+            fanfic.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText();
             fanfic.Authors = ParseAuthorsList( fanfic.Source, prefaceGroup.SelectSingleNode( "h3[@class = 'byline heading']" ) );
 
             HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='summary module']/blockquote" );
             if ( summaryBlockquote != null )
             {
-                fanfic.Summary = summaryBlockquote.ReadableInnerText().Trim();
+                fanfic.Summary = summaryBlockquote.ReadableInnerText();
             }
 
             HtmlNode notesBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='notes module']/blockquote" );
             if ( notesBlockquote != null )
             {
-                fanfic.AuthorsNote = notesBlockquote.ReadableInnerText().Trim();
+                fanfic.AuthorsNote = notesBlockquote.ReadableInnerText();
             }
+        }
+
+        static string ParseFootnote( HtmlNode html )
+        {
+            HtmlNode workEndnotesBlockquote = html.SelectSingleNode( "//div[@id='work_endnotes']/blockquote" );
+            return workEndnotesBlockquote?.ReadableInnerText();
+        }
+
+        static string ParseFanficText( HtmlNode html )
+        {
+            HtmlNode userstuffModuleDiv = html.SelectSingleNode( "//div[@class='userstuff module']" ) ??
+                                          html.SelectSingleNode( "//div[@id='chapters']/div[contains( @class, 'userstuff' )]" );
+            userstuffModuleDiv.Element( "h3" )?.Remove();
+            return userstuffModuleDiv.ReadableInnerText();
         }
     }
 }

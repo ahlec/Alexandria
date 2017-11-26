@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Alexandria.AO3.Utils;
 using Alexandria.Model;
+using Alexandria.Utils;
 using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3.Conformity
@@ -37,14 +37,13 @@ namespace Alexandria.Tests.AO3.Conformity
         [Test]
         public void AO3_Languages_AllIdsMatchAO3()
         {
-            foreach ( Language language in Enum.GetValues( typeof( Language ) ) )
+            foreach ( LanguageInfo language in LanguageUtils.AllLanguages )
             {
-                string id = AO3LanguageUtils.GetId( language );
-                AO3Language ao3Language = _languages.FirstOrDefault( data => data.AlexandriaValue == language );
+                AO3Language ao3Language = _languages.FirstOrDefault( data => data.AlexandriaValue == language.Language );
 
                 if ( ao3Language != null )
                 {
-                    Assert.AreEqual( ao3Language.AO3Id, id );
+                    Assert.That( ao3Language.AO3Id, Is.EqualTo( language.AO3Id ) );
                 }
             }
         }
