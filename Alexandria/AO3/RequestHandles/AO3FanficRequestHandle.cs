@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using Alexandria.AO3.Model;
-using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -84,7 +83,7 @@ namespace Alexandria.AO3.RequestHandles
         }
 
         /// <inheritdoc />
-        protected override IFanfic ParseRequest( HtmlCacheableDocument requestDocument )
+        protected override IFanfic ParseRequest( Document requestDocument )
         {
             if ( requestDocument.Html.SelectSingleNode( "//div[@id='workskin']" ) == null )
             {

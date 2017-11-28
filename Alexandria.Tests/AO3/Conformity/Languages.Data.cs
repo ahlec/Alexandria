@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using Alexandria.Exceptions.Input;
 using Alexandria.Model;
 using Alexandria.Net;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.Tests.AO3.Conformity
@@ -19,15 +18,16 @@ namespace Alexandria.Tests.AO3.Conformity
         static IReadOnlyList<AO3Language> PullDownLanguages()
         {
             IWebClient webClient = new HttpWebClient();
-            HtmlDocument searchPage;
+            HtmlNode searchPageDocumentNode;
             using ( WebResult result = webClient.Get( "http://archiveofourown.org/works/search" ) )
             {
-                searchPage = HtmlUtils.ParseHtmlDocument( result.ResponseText );
+                Document searchPage = Document.ParseFromWebResult( Website.AO3, "%%%PullDownLanguages", result );
+                searchPageDocumentNode = searchPage.Html;
             }
 
-            HtmlNode languageSelect = searchPage.DocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
+            HtmlNode languageSelect = searchPageDocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
             List<AO3Language> ao3Languages = new List<AO3Language>();
-            foreach ( HtmlNode option in languageSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
+            foreach ( HtmlNode option in languageSelect.Elements( Document.OptionsHtmlTag ) )
             {
                 string idStr = option.GetAttributeValue( "value", null );
                 if ( string.IsNullOrWhiteSpace( idStr ) )

@@ -52,8 +52,8 @@ namespace Alexandria.AO3.Querying
                 endpoint += $"?page={page}";
             }
 
-            HtmlDocument document = source.GetHtmlWebPage( endpoint );
-            HtmlNode worksIndexDiv = document.DocumentNode.SelectSingleNode( "//div[contains(@class, 'works-index')]" );
+            HtmlNode documentNode = source.GetHtmlWebPage( endpoint );
+            HtmlNode worksIndexDiv = documentNode.SelectSingleNode( "//div[contains(@class, 'works-index')]" );
 
             HtmlNode paginationOl = worksIndexDiv.SelectSingleNode( ".//ol[@class='pagination actions']" );
             HtmlNode nextA = paginationOl?.SelectSingleNode( ".//a[@rel='next']" );

@@ -4,51 +4,35 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
-using System;
-using System.IO;
-using Alexandria.Documents;
-
 namespace Alexandria.Caching
 {
     public abstract class Cache
     {
-        internal abstract bool Contains<TDocument>( string handle )
-            where TDocument : CacheableDocument;
+        internal abstract bool Contains( string handle );
 
-        internal abstract void RemoveItem<TDocument>( string handle )
-            where TDocument : CacheableDocument;
+        internal abstract void RemoveItem( string handle );
 
-        internal bool TryReadFromCache<TDocument>( string handle, out TDocument document )
-            where TDocument : CacheableDocument
+        internal bool TryReadFromCache( string handle, out Document document )
         {
-            if ( !Contains<TDocument>( handle ) )
+            if ( !Contains( handle ) )
             {
-                document = default( TDocument );
+                document = null;
                 return false;
             }
 
-            document = ReadFromCache<TDocument>( handle );
+            document = ReadFromCache( handle );
             return true;
         }
 
-        internal abstract void WriteToCache<TDocument>( TDocument document )
-            where TDocument : CacheableDocument;
+        internal abstract void WriteToCache( Document document );
 
-        internal abstract CachedDocument GetCachedDocument<TDocument>( string handle )
-            where TDocument : CacheableDocument;
+        internal abstract CachedDocument GetCachedDocument( string handle );
 
-        // TODO: Come back here and figure out a way to handle this function better without so much casting
-        TDocument ReadFromCache<TDocument>( string handle )
-            where TDocument : CacheableDocument
+        Document ReadFromCache( string handle )
         {
-            using ( CachedDocument cachedDocument = GetCachedDocument<TDocument>( handle ) )
+            using ( CachedDocument cachedDocument = GetCachedDocument( handle ) )
             {
-                if ( typeof( TDocument ) == typeof( HtmlCacheableDocument ) )
-                {
-                    return (TDocument) (CacheableDocument) HtmlCacheableDocument.ReadFromStream( handle, cachedDocument.Url, cachedDocument.Stream );
-                }
-
-                throw new NotSupportedException( $"Unrecognized {nameof( CacheableDocument )}: {typeof( TDocument )}" );
+                return Document.ReadFromStream( handle, cachedDocument.Url, cachedDocument.Stream );
             }
         }
     }

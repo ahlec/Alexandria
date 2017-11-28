@@ -6,9 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Alexandria.AO3.RequestHandles;
-using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -52,7 +50,7 @@ namespace Alexandria.AO3.Model
         /// <inheritdoc />
         public IReadOnlyList<IFanficRequestHandle> Fanfics { get; private set; }
 
-        public static AO3Series Parse( AO3Source source, HtmlCacheableDocument document )
+        public static AO3Series Parse( AO3Source source, Document document )
         {
             HtmlNode mainDiv = document.Html.SelectSingleNode( "//div[@id='main']" );
 

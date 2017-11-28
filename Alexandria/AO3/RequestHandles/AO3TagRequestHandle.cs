@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3.Model;
-using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 
@@ -46,7 +45,7 @@ namespace Alexandria.AO3.RequestHandles
         }
 
         /// <inheritdoc />
-        protected override ITag ParseRequest( HtmlCacheableDocument requestDocument )
+        protected override ITag ParseRequest( Document requestDocument )
         {
             return AO3Tag.Parse( Source, requestDocument );
         }

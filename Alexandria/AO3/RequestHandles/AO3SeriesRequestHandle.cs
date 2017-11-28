@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3.Model;
-using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 
@@ -28,7 +27,7 @@ namespace Alexandria.AO3.RequestHandles
         protected override string RequestCacheHandle => $"ao3-series-{Handle}";
 
         /// <inheritdoc />
-        protected override ISeries ParseRequest( HtmlCacheableDocument requestDocument )
+        protected override ISeries ParseRequest( Document requestDocument )
         {
             return AO3Series.Parse( Source, requestDocument );
         }

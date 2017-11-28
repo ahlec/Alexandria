@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -57,7 +56,7 @@ namespace Alexandria.AO3.Model
         /// <param name="document">The document that came from the website itself.</param>
         /// <returns>An instance of <seealso cref="AO3Tag"/> that was parsed and configured using
         /// the information provided.</returns>
-        public static AO3Tag Parse( AO3Source source, HtmlCacheableDocument document )
+        public static AO3Tag Parse( AO3Source source, Document document )
         {
             HtmlNode mainDiv = GetMainDiv( document );
             return new AO3Tag( source, document.Url, mainDiv );

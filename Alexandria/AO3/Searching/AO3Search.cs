@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Alexandria.AO3.Data;
+using Alexandria.AO3.Querying;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Searching
@@ -35,8 +35,8 @@ namespace Alexandria.AO3.Searching
         public override IQueryResultsPage<IFanfic, IFanficRequestHandle> Search()
         {
             string searchUrl = CreateSearchUrl();
-            HtmlDocument document = _source.GetHtmlWebPage( searchUrl );
-            return AO3FanficSearchResults.Parse( _source, searchUrl, 1, document );
+            HtmlNode documentNode = _source.GetHtmlWebPage( searchUrl );
+            return AO3FanficSearchResults.Parse( _source, searchUrl, 1, documentNode );
         }
 
         static void OpenSearchKey( StringBuilder builder, string key, bool isPartOfCheckboxArray )

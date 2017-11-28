@@ -34,8 +34,8 @@
     <CodeAnalysisRuleSet>Alexandria.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack, Version=1.5.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.5.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    <Reference Include="HtmlAgilityPack, Version=1.6.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.6.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -59,6 +59,7 @@
     <Compile Include="Exceptions\Input\InvalidSeriesAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\AlexandriaParseException.cs" />
     <Compile Include="Exceptions\InvalidTagTypeAlexandriaException.cs" />
+    <Compile Include="Exceptions\Parsing\BadHtmlDataAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\UnknownParsingErrorAlexandriaException.cs" />
     <Compile Include="Model\IQueryable.cs" />
     <Compile Include="AO3\Model\AO3ModelBase.cs" />
@@ -88,8 +89,7 @@
     <Compile Include="AO3\RequestHandles\AO3TagRequestHandle.cs" />
     <Compile Include="AO3\Querying\AO3FanficSearchResults.cs" />
     <Compile Include="Caching\CachedDocument.cs" />
-    <Compile Include="Documents\CacheableDocument.cs" />
-    <Compile Include="Documents\HtmlCacheableDocument.cs" />
+    <Compile Include="Document.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\FilesystemCache.cs" />
     <Compile Include="Caching\MemoryCache.cs" />
@@ -138,7 +138,7 @@
     <Compile Include="Searching\SearchField.cs" />
     <Compile Include="Searching\SortDirection.cs" />
     <Compile Include="Utils\HtmlUtils.cs" />
-    <Compile Include="Utils\LanguageUtils.cs" />
+    <Compile Include="Model\Languages.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

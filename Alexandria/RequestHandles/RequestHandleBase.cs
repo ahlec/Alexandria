@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System;
-using Alexandria.Documents;
 using Alexandria.Exceptions;
 using Alexandria.Exceptions.Parsing;
 
@@ -56,7 +55,7 @@ namespace Alexandria.RequestHandles
         public TModel Request()
         {
             string url = RequestUri;
-            HtmlCacheableDocument document = Source.GetCacheableHtmlWebPage( RequestCacheHandle, url );
+            Document document = Source.GetCacheableHtmlWebPage( RequestCacheHandle, url );
 
             try
             {
@@ -77,6 +76,6 @@ namespace Alexandria.RequestHandles
         /// </summary>
         /// <param name="requestDocument">The document that was retrieved from the website/endpoint.</param>
         /// <returns>A complete, valid data model filled with the data retrieved from the website/endpoint.</returns>
-        protected abstract TModel ParseRequest( HtmlCacheableDocument requestDocument );
+        protected abstract TModel ParseRequest( Document requestDocument );
     }
 }

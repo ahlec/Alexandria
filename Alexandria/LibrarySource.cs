@@ -6,7 +6,6 @@
 
 using System;
 using Alexandria.Caching;
-using Alexandria.Documents;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
@@ -50,12 +49,12 @@ namespace Alexandria
 
         internal void PurgeHandleFromCache( string handle )
         {
-            _cache?.RemoveItem<HtmlCacheableDocument>( handle );
+            _cache?.RemoveItem( handle );
         }
 
-        internal HtmlCacheableDocument GetCacheableHtmlWebPage( string handle, string uri )
+        internal Document GetCacheableHtmlWebPage( string handle, string uri )
         {
-            HtmlCacheableDocument document;
+            Document document;
             if ( _cache != null )
             {
                 if ( _cache.TryReadFromCache( handle, out document ) )
@@ -66,19 +65,19 @@ namespace Alexandria
 
             using ( WebResult webResult = _webClient.Get( uri ) )
             {
-                HtmlDocument html = HtmlUtils.ParseHtmlDocument( webResult.ResponseText );
-                document = new HtmlCacheableDocument( handle, webResult.ResponseUri, html );
+                document = Document.ParseFromWebResult( Website, handle, webResult );
             }
 
             _cache?.WriteToCache( document );
             return document;
         }
 
-        internal HtmlDocument GetHtmlWebPage( string uri )
+        internal HtmlNode GetHtmlWebPage( string uri )
         {
             using ( WebResult webResult = _webClient.Get( uri ) )
             {
-                return HtmlUtils.ParseHtmlDocument( webResult.ResponseText );
+                Document doc = Document.ParseFromWebResult( Website, "$$ignore$$", webResult );
+                return doc.Html;
             }
         }
     }

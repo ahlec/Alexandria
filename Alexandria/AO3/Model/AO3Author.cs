@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.Querying;
-using Alexandria.Caching;
-using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
@@ -66,7 +64,7 @@ namespace Alexandria.AO3.Model
         /// <param name="document">The document that came from the website itself.</param>
         /// <returns>An instance of <seealso cref="AO3Author"/> that was parsed and configured using
         /// the information provided.</returns>
-        public static AO3Author Parse( AO3Source source, HtmlCacheableDocument document )
+        public static AO3Author Parse( AO3Source source, Document document )
         {
             HtmlNode userHomeProfile = document.Html.SelectSingleNode( "//div[@class='user home profile']" );
 

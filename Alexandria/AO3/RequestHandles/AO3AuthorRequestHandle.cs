@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3.Model;
-using Alexandria.Documents;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -41,7 +40,7 @@ namespace Alexandria.AO3.RequestHandles
         }
 
         /// <inheritdoc />
-        protected override IAuthor ParseRequest( HtmlCacheableDocument requestDocument )
+        protected override IAuthor ParseRequest( Document requestDocument )
         {
             return AO3Author.Parse( Source, requestDocument );
         }

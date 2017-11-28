@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Alexandria.AO3.RequestHandles;
-using Alexandria.Documents;
 using Alexandria.Exceptions;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -63,7 +62,7 @@ namespace Alexandria.AO3.Model
         /// <param name="document">The document that came from the website itself.</param>
         /// <returns>An instance of <seealso cref="AO3Ship"/> that was parsed and configured using
         /// the information provided.</returns>
-        internal static AO3Ship Parse( AO3Source source, HtmlCacheableDocument document )
+        internal static AO3Ship Parse( AO3Source source, Document document )
         {
             HtmlNode mainDiv = GetMainDiv( document );
 

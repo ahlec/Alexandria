@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.Data;
-using Alexandria.Documents;
+using Alexandria.Caching;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
@@ -114,7 +114,7 @@ namespace Alexandria.AO3.Model
         /// <param name="document">The document that came from the website itself.</param>
         /// <returns>An instance of <seealso cref="AO3Fanfic"/> that was parsed and configured using
         /// the information provided.</returns>
-        public static AO3Fanfic Parse( AO3Source source, HtmlCacheableDocument document )
+        public static AO3Fanfic Parse( AO3Source source, Document document )
         {
             HtmlNode workMetaGroup = document.Html.SelectSingleNode( "//dl[@class='work meta group']" );
 

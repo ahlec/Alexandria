@@ -8,9 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.Exceptions.Input;
-using Alexandria.Model;
 
-namespace Alexandria.Utils
+namespace Alexandria.Model
 {
     /// <summary>
     /// A set of utility functions for interacting with <see cref="Language"/> and <see cref="LanguageInfo"/>.

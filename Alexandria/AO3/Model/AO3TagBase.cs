@@ -8,8 +8,6 @@ using System;
 using System.Collections.Generic;
 using Alexandria.AO3.Querying;
 using Alexandria.AO3.Utils;
-using Alexandria.Caching;
-using Alexandria.Documents;
 using Alexandria.Exceptions.Parsing;
 using Alexandria.Model;
 using Alexandria.Querying;
@@ -50,7 +48,7 @@ namespace Alexandria.AO3.Model
             return AO3QueryResults.Retrieve( Source, "tags", endpointTag, 1 );
         }
 
-        protected static HtmlNode GetMainDiv( HtmlCacheableDocument document )
+        protected static HtmlNode GetMainDiv( Document document )
         {
             HtmlNode mainDiv = document.Html.SelectSingleNode( "//div[@class='tags-show region']" );
             return mainDiv;

@@ -5,21 +5,14 @@
 // -----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.Text;
-using Alexandria.Documents;
 
 namespace Alexandria.Caching
 {
     public sealed class FilesystemCache : Cache
     {
-        static readonly IReadOnlyDictionary<Type, string> _documentTypeExtensions = new Dictionary<Type, string>
-        {
-            { typeof( HtmlCacheableDocument ), "htm" }
-        };
-
         readonly IFileSystem _filesystem;
         readonly string _cacheDirectory;
 
@@ -72,23 +65,23 @@ namespace Alexandria.Caching
         }
 
         /// <inheritdoc />
-        internal override bool Contains<TDocument>( string handle )
+        internal override bool Contains( string handle )
         {
-            string filename = ConstructFileName<TDocument>( handle );
+            string filename = ConstructFileName( handle );
             return _filesystem.File.Exists( filename );
         }
 
         /// <inheritdoc />
-        internal override void RemoveItem<TDocument>( string handle )
+        internal override void RemoveItem( string handle )
         {
-            string filename = ConstructFileName<TDocument>( handle );
+            string filename = ConstructFileName( handle );
             _filesystem.File.Delete( filename );
         }
 
         /// <inheritdoc />
-        internal override void WriteToCache<TDocument>( TDocument document )
+        internal override void WriteToCache( Document document )
         {
-            string filename = ConstructFileName<TDocument>( document.Handle );
+            string filename = ConstructFileName( document.Handle );
             using ( Stream stream = _filesystem.File.Create( filename ) )
             {
                 WriteCacheFilePrefix( stream, document.Url );
@@ -97,23 +90,17 @@ namespace Alexandria.Caching
         }
 
         /// <inheritdoc />
-        internal override CachedDocument GetCachedDocument<TDocument>( string handle )
+        internal override CachedDocument GetCachedDocument( string handle )
         {
-            string filename = ConstructFileName<TDocument>( handle );
+            string filename = ConstructFileName( handle );
             Stream documentStream = _filesystem.File.OpenRead( filename );
             Uri url = ReadCacheFilePrefix( documentStream );
             return new CachedDocument( url, documentStream );
         }
 
-        string ConstructFileName<TDocument>( string handle )
-            where TDocument : CacheableDocument
+        string ConstructFileName( string handle )
         {
-            if ( !_documentTypeExtensions.TryGetValue( typeof( TDocument ), out string extension ) )
-            {
-                throw new NotImplementedException( $"Unsupported {nameof( CacheableDocument )}: {typeof( TDocument )}" );
-            }
-
-            string filename = handle + "." + extension;
+            string filename = handle + ".htm";
             return Path.Combine( _cacheDirectory, filename );
         }
     }

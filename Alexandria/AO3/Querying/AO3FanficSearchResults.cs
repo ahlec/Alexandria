@@ -6,14 +6,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Alexandria.AO3.RequestHandles;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
 
-namespace Alexandria.AO3.Searching
+namespace Alexandria.AO3.Querying
 {
     internal sealed class AO3FanficSearchResults : IQueryResultsPage<IFanfic, IFanficRequestHandle>
     {
@@ -32,15 +31,15 @@ namespace Alexandria.AO3.Searching
 
         public bool HasMoreResults { get; private set; }
 
-        public static AO3FanficSearchResults Parse( AO3Source source, string baseEndpoint, int currentPage, HtmlDocument document )
+        public static AO3FanficSearchResults Parse( AO3Source source, string baseEndpoint, int currentPage, HtmlNode documentNode )
         {
             AO3FanficSearchResults parsed = new AO3FanficSearchResults( source, baseEndpoint, currentPage );
 
-            HtmlNode paginationOl = document.DocumentNode.SelectSingleNode( "//ol[@class='pagination actions']" );
+            HtmlNode paginationOl = documentNode.SelectSingleNode( "//ol[@class='pagination actions']" );
             HtmlNode nextA = paginationOl?.SelectSingleNode( ".//a[@rel='next']" );
             parsed.HasMoreResults = ( nextA != null );
 
-            HtmlNode workIndexGroupOl = document.DocumentNode.SelectSingleNode( "//ol[@class='work index group']" );
+            HtmlNode workIndexGroupOl = documentNode.SelectSingleNode( "//ol[@class='work index group']" );
             parsed.Results = AO3FanficRequestHandle.ParseFanficLiList( source, workIndexGroupOl );
 
             return parsed;
@@ -54,8 +53,8 @@ namespace Alexandria.AO3.Searching
             }
 
             string endpoint = string.Concat( _baseEndpoint, "&page=", ( _currentPage + 1 ) );
-            HtmlDocument document = _source.GetHtmlWebPage( endpoint );
-            return Parse( _source, _baseEndpoint, _currentPage + 1, document );
+            HtmlNode documentNode = _source.GetHtmlWebPage( endpoint );
+            return Parse( _source, _baseEndpoint, _currentPage + 1, documentNode );
         }
     }
 }

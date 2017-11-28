@@ -6,7 +6,7 @@
 
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
-using Alexandria.Documents;
+using Alexandria.Caching;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
@@ -28,7 +28,7 @@ namespace Alexandria.AO3.Model
 
         public IReadOnlyList<IFanficRequestHandle> Chapters { get; private set; }
 
-        internal static AO3ChapterInfo Parse( AO3Source source, HtmlCacheableDocument document, HtmlNode workMetaGroup )
+        internal static AO3ChapterInfo Parse( AO3Source source, Document document, HtmlNode workMetaGroup )
         {
             HtmlNode chapterDropdownSelect = document.Html.SelectSingleNode( "//ul[@id='chapter_index']//select" );
             if ( chapterDropdownSelect == null )
@@ -39,7 +39,7 @@ namespace Alexandria.AO3.Model
             AO3ChapterInfo parsed = new AO3ChapterInfo();
             List<IFanficRequestHandle> chapters = new List<IFanficRequestHandle>( chapterDropdownSelect.ChildNodes.Count );
             int chapterNumber = 1;
-            foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( HtmlUtils.OptionsHtmlTag ) )
+            foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( Document.OptionsHtmlTag ) )
             {
                 string fanficHandle = chapterOption.GetAttributeValue( "value", null );
                 chapters.Add( new AO3FanficRequestHandle( source, fanficHandle ) );

@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
-using Alexandria.Documents;
 using Alexandria.Exceptions;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
@@ -37,7 +36,7 @@ namespace Alexandria.AO3.Model
         /// <inheritdoc />
         public IReadOnlyList<IShipRequestHandle> Relationships { get; }
 
-        public static AO3Character Parse( AO3Source source, HtmlCacheableDocument document )
+        public static AO3Character Parse( AO3Source source, Document document )
         {
             HtmlNode mainDiv = GetMainDiv( document );
 
