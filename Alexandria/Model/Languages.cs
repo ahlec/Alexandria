@@ -14,11 +14,11 @@ namespace Alexandria.Model
     /// <summary>
     /// A set of utility functions for interacting with <see cref="Language"/> and <see cref="LanguageInfo"/>.
     /// </summary>
-    public static class LanguageUtils
+    public static class Languages
     {
         static readonly IDictionary<string, LanguageInfo> _languageStrings = new Dictionary<string, LanguageInfo>( StringComparer.InvariantCultureIgnoreCase );
 
-        static LanguageUtils()
+        static Languages()
         {
             HashSet<string> uniqueNames = new HashSet<string>( StringComparer.InvariantCultureIgnoreCase );
             foreach ( LanguageInfo info in AllLanguages )

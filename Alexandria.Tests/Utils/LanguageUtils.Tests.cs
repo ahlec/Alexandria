@@ -6,7 +6,6 @@
 
 using Alexandria.Exceptions.Input;
 using Alexandria.Model;
-using Alexandria.Utils;
 using NUnit.Framework;
 
 namespace Alexandria.Tests.Utils
@@ -17,40 +16,40 @@ namespace Alexandria.Tests.Utils
         [Test]
         public void LanguageUtils_Parse_ThrowsOnNull()
         {
-            Assert.That( () => LanguageUtils.Parse( null ), Throws.ArgumentNullException );
+            Assert.That( () => Languages.Parse( null ), Throws.ArgumentNullException );
         }
 
         [Test]
         public void LanguageUtils_Parse_ThrowsOnInvalidLanguage()
         {
-            Assert.That( () => LanguageUtils.Parse( "C#" ), Throws.Exception.TypeOf<NoSuchLanguageAlexandriaException>() );
-            Assert.That( () => LanguageUtils.Parse( string.Empty ), Throws.Exception.TypeOf<NoSuchLanguageAlexandriaException>() );
-            Assert.That( () => LanguageUtils.Parse( "      " ), Throws.Exception.TypeOf<NoSuchLanguageAlexandriaException>() );
-            Assert.That( () => LanguageUtils.Parse( "Orrian" ), Throws.Exception.TypeOf<NoSuchLanguageAlexandriaException>() );
+            Assert.That( () => Languages.Parse( "C#" ), Throws.Exception.TypeOf<NoSuchLanguageAlexandriaException>() );
+            Assert.That( () => Languages.Parse( string.Empty ), Throws.Exception.TypeOf<NoSuchLanguageAlexandriaException>() );
+            Assert.That( () => Languages.Parse( "      " ), Throws.Exception.TypeOf<NoSuchLanguageAlexandriaException>() );
+            Assert.That( () => Languages.Parse( "Orrian" ), Throws.Exception.TypeOf<NoSuchLanguageAlexandriaException>() );
         }
 
         [Test]
         public void LanguageUtils_Parse_TrimsWhitespace()
         {
-            LanguageInfo info = LanguageUtils.GetInfo( Language.English );
-            Assert.That( LanguageUtils.Parse( "  English  " ), Is.EqualTo( info ) );
+            LanguageInfo info = Languages.GetInfo( Language.English );
+            Assert.That( Languages.Parse( "  English  " ), Is.EqualTo( info ) );
         }
 
         [Test]
         public void LanguageUtils_Parse_ParsesAllEnumValues()
         {
-            foreach ( LanguageInfo info in LanguageUtils.AllLanguages )
+            foreach ( LanguageInfo info in Languages.AllLanguages )
             {
-                Assert.That( LanguageUtils.Parse( info.Language.ToString() ), Is.EqualTo( info ) );
+                Assert.That( Languages.Parse( info.Language.ToString() ), Is.EqualTo( info ) );
             }
         }
 
         [Test]
         public void LanguageUtils_Parse_ParsesAllNativeNameValues()
         {
-            foreach ( LanguageInfo info in LanguageUtils.AllLanguages )
+            foreach ( LanguageInfo info in Languages.AllLanguages )
             {
-                Assert.That( LanguageUtils.Parse( info.NativeName ), Is.EqualTo( info ) );
+                Assert.That( Languages.Parse( info.NativeName ), Is.EqualTo( info ) );
             }
         }
     }

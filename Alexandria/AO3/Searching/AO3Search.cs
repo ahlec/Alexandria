@@ -133,7 +133,7 @@ namespace Alexandria.AO3.Searching
 
         static string GetLanguageId( Language language )
         {
-            LanguageInfo info = LanguageUtils.GetInfo( language );
+            LanguageInfo info = Languages.GetInfo( language );
             return info.AO3Id;
         }
 

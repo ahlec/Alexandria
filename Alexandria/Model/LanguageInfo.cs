@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Alexandria.Utils;
 
 namespace Alexandria.Model
 {
@@ -14,7 +13,7 @@ namespace Alexandria.Model
     /// <para />
     /// There is no public constructor for this class, and all data therein is immutable. Two languages
     /// will have the same reference to instances of their info, and instances of this data can be
-    /// retrieved through the use of <see cref="LanguageUtils"/>.
+    /// retrieved through the use of <see cref="Languages"/>.
     /// </summary>
     public sealed class LanguageInfo
     {
@@ -63,7 +62,7 @@ namespace Alexandria.Model
         /// Adds all unique string representations/names of this language to the provided hash set. This
         /// is done in this way to prevent a lot of unnecessary allocation of new hash sets on startup.
         /// <para />
-        /// NOTE: If you aren't the static constructor for <seealso cref="LanguageUtils"/>, you probably
+        /// NOTE: If you aren't the static constructor for <seealso cref="Languages"/>, you probably
         /// don't want this function.
         /// </summary>
         /// <param name="uniqueNames">The hash set which should be mutated in place.</param>

@@ -37,7 +37,7 @@ namespace Alexandria.Tests.AO3.Conformity
         [Test]
         public void AO3_Languages_AllIdsMatchAO3()
         {
-            foreach ( LanguageInfo language in LanguageUtils.AllLanguages )
+            foreach ( LanguageInfo language in Languages.AllLanguages )
             {
                 AO3Language ao3Language = _languages.FirstOrDefault( data => data.AlexandriaValue == language.Language );
 

@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.Data;
-using Alexandria.Caching;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using Alexandria.Utils;
@@ -28,7 +27,7 @@ namespace Alexandria.AO3.Model
             { "relationship tags", ( fanfic, value ) => fanfic.Ships = ParseTagsFromDlTable<IShip, IShipRequestHandle>( fanfic, value, ShipRequestHandleCreator ) },
             { "character tags", ( fanfic, value ) => fanfic.Characters = ParseTagsFromDlTable<ICharacter, ICharacterRequestHandle>( fanfic, value, CharacterRequestHandleCreator ) },
             { "freeform tags", ( fanfic, value ) => fanfic.Tags = ParseTagsFromDlTable<ITag, ITagRequestHandle>( fanfic, value, TagRequestHandleCreator ) },
-            { "language", ( fanfic, value ) => fanfic.Language = LanguageUtils.Parse( value.ReadableInnerText() ) },
+            { "language", ( fanfic, value ) => fanfic.Language = Languages.Parse( value.ReadableInnerText() ) },
             { "series", ( fanfic, value ) => fanfic.SeriesInfo = AO3SeriesEntry.Parse( fanfic.Source, value ) },
             { "stats", ParseStatsTable }
         };
