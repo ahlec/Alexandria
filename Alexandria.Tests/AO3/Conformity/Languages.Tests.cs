@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.Model;
-using Alexandria.Utils;
 using NUnit.Framework;
 
 namespace Alexandria.Tests.AO3.Conformity

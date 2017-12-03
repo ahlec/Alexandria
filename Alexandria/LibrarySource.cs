@@ -9,7 +9,6 @@ using Alexandria.Caching;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria

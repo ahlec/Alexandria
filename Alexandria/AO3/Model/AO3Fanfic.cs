@@ -10,7 +10,6 @@ using System.Linq;
 using Alexandria.AO3.Data;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
@@ -27,7 +26,7 @@ namespace Alexandria.AO3.Model
             { "relationship tags", ( fanfic, value ) => fanfic.Ships = ParseTagsFromDlTable<IShip, IShipRequestHandle>( fanfic, value, ShipRequestHandleCreator ) },
             { "character tags", ( fanfic, value ) => fanfic.Characters = ParseTagsFromDlTable<ICharacter, ICharacterRequestHandle>( fanfic, value, CharacterRequestHandleCreator ) },
             { "freeform tags", ( fanfic, value ) => fanfic.Tags = ParseTagsFromDlTable<ITag, ITagRequestHandle>( fanfic, value, TagRequestHandleCreator ) },
-            { "language", ( fanfic, value ) => fanfic.Language = Languages.Parse( value.ReadableInnerText() ) },
+            { "language", ( fanfic, value ) => fanfic.Language = Languages.Parse( value.InnerText.Trim() ) },
             { "series", ( fanfic, value ) => fanfic.SeriesInfo = AO3SeriesEntry.Parse( fanfic.Source, value ) },
             { "stats", ParseStatsTable }
         };
@@ -180,26 +179,26 @@ namespace Alexandria.AO3.Model
         {
             HtmlNode prefaceGroup = html.SelectSingleNode( "//div[@class='preface group']" );
 
-            fanfic.Title = prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ).ReadableInnerText();
+            fanfic.Title = GetReadableInnerText( prefaceGroup.SelectSingleNode( "h2[@class='title heading']" ) );
             fanfic.Authors = ParseAuthorsList( fanfic.Source, prefaceGroup.SelectSingleNode( "h3[@class = 'byline heading']" ) );
 
             HtmlNode summaryBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='summary module']/blockquote" );
             if ( summaryBlockquote != null )
             {
-                fanfic.Summary = summaryBlockquote.ReadableInnerText();
+                fanfic.Summary = GetReadableInnerText( summaryBlockquote );
             }
 
             HtmlNode notesBlockquote = prefaceGroup.SelectSingleNode( ".//div[@class='notes module']/blockquote" );
             if ( notesBlockquote != null )
             {
-                fanfic.AuthorsNote = notesBlockquote.ReadableInnerText();
+                fanfic.AuthorsNote = GetReadableInnerText( notesBlockquote );
             }
         }
 
         static string ParseFootnote( HtmlNode html )
         {
             HtmlNode workEndnotesBlockquote = html.SelectSingleNode( "//div[@id='work_endnotes']/blockquote" );
-            return workEndnotesBlockquote?.ReadableInnerText();
+            return GetReadableInnerText( workEndnotesBlockquote );
         }
 
         static string ParseFanficText( HtmlNode html )
@@ -207,7 +206,7 @@ namespace Alexandria.AO3.Model
             HtmlNode userstuffModuleDiv = html.SelectSingleNode( "//div[@class='userstuff module']" ) ??
                                           html.SelectSingleNode( "//div[@id='chapters']/div[contains( @class, 'userstuff' )]" );
             userstuffModuleDiv.Element( "h3" )?.Remove();
-            return userstuffModuleDiv.ReadableInnerText();
+            return GetReadableInnerText( userstuffModuleDiv );
         }
     }
 }

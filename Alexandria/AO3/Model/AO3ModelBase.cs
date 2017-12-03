@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
+using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
@@ -19,7 +19,7 @@ namespace Alexandria.AO3.Model
     /// </summary>
     /// <typeparam name="TSelf">The child class itself. We use this for working with other generic functions to
     /// pass in `this` (so to speak) in order to prevent boxing internally.</typeparam>
-    internal abstract class AO3ModelBase<TSelf> : IRequestable
+    internal abstract class AO3ModelBase<TSelf> : HtmlParserBase, IRequestable
         where TSelf : AO3ModelBase<TSelf>
     {
         /// <summary>
@@ -145,7 +145,7 @@ namespace Alexandria.AO3.Model
                     continue;
                 }
 
-                string tag = tagA.ReadableInnerText().Trim();
+                string tag = GetReadableInnerText( tagA ).Trim();
                 TRequestHandle requestHandle = requestHandleCreator( self, tag );
                 results.Add( requestHandle );
             }

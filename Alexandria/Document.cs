@@ -16,8 +16,6 @@ namespace Alexandria
 {
     internal sealed class Document
     {
-        public const string OptionsHtmlTag = "my_option";
-
         readonly HtmlDocument _htmlDocument;
 
         Document( string handle, Uri url, HtmlDocument document )
@@ -41,16 +39,9 @@ namespace Alexandria
 
         public static Document ParseFromWebResult( Website website, string handle, WebResult result )
         {
-            // There's some super-bizzaro thing with HtmlAgilityPack where it doesn't recognise </option>.
-            // http://stackoverflow.com/questions/293342/htmlagilitypack-drops-option-end-tags
-            // Just replacing the tag name altogether to something else, it doesn't matter, we're not going to pay attention
-            // to it right now.
-            const string OptionsOpenTagReplacement = "<" + OptionsHtmlTag + " ";
-            const string OptionsCloseTagReplacement = OptionsHtmlTag + ">";
-            string html = result.ResponseText.Replace( "<option ", OptionsOpenTagReplacement ).Replace( "option>", OptionsCloseTagReplacement );
-
             HtmlDocument document = new HtmlDocument();
-            byte[] bytes = Encoding.UTF8.GetBytes( html );
+            byte[] bytes = Encoding.UTF8.GetBytes( result.ResponseText );
+
             using ( Stream textStream = new MemoryStream( bytes ) )
             {
                 document.Load( textStream, Encoding.UTF8 );

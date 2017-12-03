@@ -27,7 +27,7 @@ namespace Alexandria.Tests.AO3.Conformity
 
             HtmlNode languageSelect = searchPageDocumentNode.SelectSingleNode( "//select[@id='work_search_language_id']" );
             List<AO3Language> ao3Languages = new List<AO3Language>();
-            foreach ( HtmlNode option in languageSelect.Elements( Document.OptionsHtmlTag ) )
+            foreach ( HtmlNode option in languageSelect.Elements( "option" ) )
             {
                 string idStr = option.GetAttributeValue( "value", null );
                 if ( string.IsNullOrWhiteSpace( idStr ) )

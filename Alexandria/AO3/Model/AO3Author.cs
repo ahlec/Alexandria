@@ -11,7 +11,6 @@ using Alexandria.AO3.Querying;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
@@ -25,7 +24,7 @@ namespace Alexandria.AO3.Model
         {
             { "My pseuds", ( author, value ) => author.Nicknames = CollectPseuds( value ) },
             { "I joined on", ( author, value ) => author.DateJoined = DateTime.Parse( value.InnerText ) },
-            { "I live in", ( author, value ) => author.Location = value.ReadableInnerText() },
+            { "I live in", ( author, value ) => author.Location = GetReadableInnerText( value ) },
             { "My birthday", ( author, value ) => author.Birthday = DateTime.Parse( value.InnerText ) }
         };
 
@@ -70,8 +69,8 @@ namespace Alexandria.AO3.Model
 
             AO3Author parsed = new AO3Author( source, document.Url )
             {
-                Name = userHomeProfile.SelectSingleNode( "div[@class='primary header module']/h2[@class='heading']/a" ).ReadableInnerText(),
-                Biography = userHomeProfile.SelectSingleNode( "div[@class='bio module']/blockquote" )?.ReadableInnerText(),
+                Name = GetReadableInnerText( userHomeProfile.SelectSingleNode( "div[@class='primary header module']/h2[@class='heading']/a" ) ),
+                Biography = GetReadableInnerText( userHomeProfile.SelectSingleNode( "div[@class='bio module']/blockquote" ) ),
                 NumberFanfics = ParseNumberAuthorWorks( document.Html )
             };
 
@@ -88,7 +87,7 @@ namespace Alexandria.AO3.Model
 
         static IReadOnlyList<string> CollectPseuds( HtmlNode pseudsDd )
         {
-            return pseudsDd.Elements( "a" ).Select( pseudA => pseudA.ReadableInnerText() ).ToList();
+            return pseudsDd.Elements( "a" ).Select( GetReadableInnerText ).ToList();
         }
 
         static int ParseNumberAuthorWorks( HtmlNode html )

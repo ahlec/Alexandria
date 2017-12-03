@@ -12,7 +12,6 @@ using Alexandria.Exceptions.Parsing;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
@@ -56,7 +55,7 @@ namespace Alexandria.AO3.Model
 
         protected static string ParseTagText( HtmlNode mainDiv )
         {
-            return mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ).ReadableInnerText();
+            return GetReadableInnerText( mainDiv.SelectSingleNode( ".//div[@class='primary header module']/h2" ) );
         }
 
         protected static TagType ParseTagType( HtmlNode mainDiv, Website website, Uri url )

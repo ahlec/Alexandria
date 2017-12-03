@@ -6,15 +6,13 @@
 
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
-using Alexandria.Caching;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
-using Alexandria.Utils;
 using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
-    internal sealed class AO3ChapterInfo : IChapterInfo
+    internal sealed class AO3ChapterInfo : HtmlParserBase, IChapterInfo
     {
         AO3ChapterInfo()
         {
@@ -39,7 +37,7 @@ namespace Alexandria.AO3.Model
             AO3ChapterInfo parsed = new AO3ChapterInfo();
             List<IFanficRequestHandle> chapters = new List<IFanficRequestHandle>( chapterDropdownSelect.ChildNodes.Count );
             int chapterNumber = 1;
-            foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( Document.OptionsHtmlTag ) )
+            foreach ( HtmlNode chapterOption in chapterDropdownSelect.Elements( "option" ) )
             {
                 string fanficHandle = chapterOption.GetAttributeValue( "value", null );
                 chapters.Add( new AO3FanficRequestHandle( source, fanficHandle ) );
@@ -69,7 +67,7 @@ namespace Alexandria.AO3.Model
             HtmlNode chapterTitleTextNode = chapterPrefaceGroup.LastChild;
             if ( chapterTitleTextNode.Name != "a" && chapterTitleTextNode.Name != "A" )
             {
-                string tentativeTitle = chapterTitleTextNode.ReadableInnerText();
+                string tentativeTitle = GetReadableInnerText( chapterTitleTextNode );
                 if ( !string.IsNullOrWhiteSpace( tentativeTitle ) )
                 {
                     parsed.ChapterTitle = tentativeTitle.Trim();
