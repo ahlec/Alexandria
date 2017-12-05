@@ -85,7 +85,7 @@ namespace Alexandria.Caching
             using ( Stream stream = _filesystem.File.Create( filename ) )
             {
                 WriteCacheFilePrefix( stream, document.Url );
-                document.Write( stream );
+                document.WriteHtmlToStream( stream );
             }
         }
 
