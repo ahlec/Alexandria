@@ -58,7 +58,7 @@ namespace Alexandria.Tests.AO3
             AO3Assert.IsDate( 2013, 04, 25, fanfic.DateLastUpdated );
             Assert.IsTrue( fanfic.NumberComments > 2000 );
             Assert.IsTrue( fanfic.NumberLikes > 17000 );
-            Assert.IsNull( fanfic.SeriesInfo );
+            Assert.That( fanfic.SeriesInfo, Is.Empty );
 
             Assert.IsNotNull( fanfic.ChapterInfo );
             Assert.AreEqual( 1, fanfic.ChapterInfo.ChapterNumber );
@@ -149,10 +149,11 @@ namespace Alexandria.Tests.AO3
             Assert.IsTrue( fanfic.NumberLikes > 2400 );
 
             Assert.IsNotNull( fanfic.SeriesInfo );
-            Assert.IsNotNull( fanfic.SeriesInfo.Series );
-            Assert.AreEqual( 8, fanfic.SeriesInfo.EntryNumber );
-            Assert.AreEqual( "3476975", fanfic.SeriesInfo.PreviousEntry.Handle );
-            Assert.AreEqual( "3626367", fanfic.SeriesInfo.NextEntry.Handle );
+            Assert.That( fanfic.SeriesInfo.Count, Is.EqualTo( 1 ) );
+            Assert.That( fanfic.SeriesInfo[0].Series, Is.Not.Null );
+            Assert.That( fanfic.SeriesInfo[0].EntryNumber, Is.EqualTo( 8 ) );
+            Assert.That( fanfic.SeriesInfo[0].PreviousEntry.Handle, Is.EqualTo( "3476975" ) );
+            Assert.That( fanfic.SeriesInfo[0].NextEntry.Handle, Is.EqualTo( "3626367" ) );
 
             Assert.IsNull( fanfic.ChapterInfo );
 
@@ -207,10 +208,11 @@ namespace Alexandria.Tests.AO3
             Assert.IsTrue( fanfic.NumberComments > 50 );
             Assert.IsTrue( fanfic.NumberLikes > 1800 );
             Assert.IsNotNull( fanfic.SeriesInfo );
-            Assert.IsNotNull( fanfic.SeriesInfo.Series );
-            Assert.AreEqual( 2, fanfic.SeriesInfo.EntryNumber );
-            Assert.AreEqual( "4034680", fanfic.SeriesInfo.PreviousEntry.Handle );
-            Assert.AreEqual( "8702479", fanfic.SeriesInfo.NextEntry.Handle );
+            Assert.That( fanfic.SeriesInfo.Count, Is.EqualTo( 1 ) );
+            Assert.That( fanfic.SeriesInfo[0].Series, Is.Not.Null );
+            Assert.That( fanfic.SeriesInfo[0].EntryNumber, Is.EqualTo( 2 ) );
+            Assert.That( fanfic.SeriesInfo[0].PreviousEntry.Handle, Is.EqualTo( "4034680" ) );
+            Assert.That( fanfic.SeriesInfo[0].NextEntry.Handle, Is.EqualTo( "8702479" ) );
 
             Assert.IsNull( fanfic.ChapterInfo );
 

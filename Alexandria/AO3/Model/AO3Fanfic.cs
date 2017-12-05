@@ -27,7 +27,7 @@ namespace Alexandria.AO3.Model
             { "character tags", ( fanfic, value ) => fanfic.Characters = ParseTagsFromDlTable<ICharacter, ICharacterRequestHandle>( fanfic, value, CharacterRequestHandleCreator ) },
             { "freeform tags", ( fanfic, value ) => fanfic.Tags = ParseTagsFromDlTable<ITag, ITagRequestHandle>( fanfic, value, TagRequestHandleCreator ) },
             { "language", ( fanfic, value ) => fanfic.Language = Languages.Parse( value.InnerText.Trim() ) },
-            { "series", ( fanfic, value ) => fanfic.SeriesInfo = AO3SeriesEntry.Parse( fanfic.Source, value ) },
+            { "series", ( fanfic, value ) => fanfic.SeriesInfo = ParseSeriesEntries( fanfic.Source, value ) },
             { "stats", ParseStatsTable }
         };
 
@@ -84,7 +84,7 @@ namespace Alexandria.AO3.Model
         public int NumberComments { get; private set; }
 
         /// <inheritdoc />
-        public ISeriesEntry SeriesInfo { get; private set; }
+        public IReadOnlyList<ISeriesEntry> SeriesInfo { get; private set; }
 
         /// <inheritdoc />
         public IChapterInfo ChapterInfo { get; private set; }
@@ -123,10 +123,19 @@ namespace Alexandria.AO3.Model
                 Text = ParseFanficText( document.Html )
             };
 
-            ParseDlTable( parsed, workMetaGroup, _workMetaGroupMutators, DlFieldSource.DtClass );
+            ParseWorkMetaGroup( parsed, workMetaGroup );
             ParsePreface( parsed, document.Html );
 
             return parsed;
+        }
+
+        static void ParseWorkMetaGroup( AO3Fanfic parsed, HtmlNode workMetaGroup )
+        {
+            ParseDlTable( parsed, workMetaGroup, _workMetaGroupMutators, DlFieldSource.DtClass );
+            if ( parsed.SeriesInfo == null )
+            {
+                parsed.SeriesInfo = new List<ISeriesEntry>( 0 );
+            }
         }
 
         static MaturityRating ParseMaturityRating( HtmlNode value )
@@ -167,6 +176,28 @@ namespace Alexandria.AO3.Model
         {
             HtmlNode ul = value?.Element( "ul" );
             return ParseTagsUl( fanfic, ul, requestHandleCreator );
+        }
+
+        static IReadOnlyList<ISeriesEntry> ParseSeriesEntries( AO3Source source, HtmlNode value )
+        {
+            if ( value == null )
+            {
+                return new List<ISeriesEntry>( 0 );
+            }
+
+            List<ISeriesEntry> series = new List<ISeriesEntry>();
+            foreach ( HtmlNode seriesSpan in value.Elements( "span" ) )
+            {
+                string classAttribute = seriesSpan?.GetAttributeValue( "class", string.Empty );
+                if ( !string.Equals( "series", classAttribute, StringComparison.InvariantCultureIgnoreCase ) )
+                {
+                    continue;
+                }
+
+                series.Add( AO3SeriesEntry.Parse( source, seriesSpan ) );
+            }
+
+            return series;
         }
 
         static void ParseStatsTable( AO3Fanfic fanfic, HtmlNode statsTable )

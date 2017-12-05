@@ -84,10 +84,10 @@ namespace Alexandria.Model
         int NumberComments { get; }
 
         /// <summary>
-        /// Gets information about the series that this fanfic is a part of. If the fanfic is not
-        /// part of any series, then this will be null.
+        /// Gets information about any series this fanfic is a part of. This will never be null;
+        /// if the fanfic is not part of any series, this will just be an empty list.
         /// </summary>
-        ISeriesEntry SeriesInfo { get; }
+        IReadOnlyList<ISeriesEntry> SeriesInfo { get; }
 
         /// <summary>
         /// Gets information about this fanfic as a particular chapter in a multi-chapter fanfic.
