@@ -6,38 +6,66 @@
 
 using System;
 using System.Net;
+using Alexandria.Exceptions.Net;
 
 namespace Alexandria.Net
 {
+    /// <summary>
+    /// A standard implementation of <seealso cref="IWebClient"/> that performs the HTTP requests
+    /// on the public internet using <seealso cref="HttpWebRequest"/>.
+    /// </summary>
     public sealed class HttpWebClient : IWebClient
     {
+        /// <inheritdoc />
         public WebResult Get( string uri )
         {
-            if ( string.IsNullOrWhiteSpace( uri ) )
+            if ( uri == null )
             {
                 throw new ArgumentNullException( nameof( uri ) );
             }
 
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create( uri );
-            request.Method = "GET";
-            HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-
-            if ( response.StatusCode != HttpStatusCode.OK )
+            if ( string.IsNullOrWhiteSpace( uri ) )
             {
-                throw CreateExceptionFromStatusCode( response.StatusCode, uri );
+                throw new ArgumentException( "The parameter must not be empty or whitespace.", nameof( uri ) );
             }
 
+            HttpWebRequest request = (HttpWebRequest) WebRequest.Create( uri );
+            request.Method = "GET";
+
+            HttpWebResponse response = PerformHttpWebRequest( uri, request );
             return new WebResult( response.ResponseUri, response.GetResponseStream() );
         }
 
-        static WebException CreateExceptionFromStatusCode( HttpStatusCode code, string uri )
+        static HttpWebResponse PerformHttpWebRequest( string uri, HttpWebRequest request )
+        {
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+
+                if ( response.StatusCode != HttpStatusCode.OK )
+                {
+                    throw CreateExceptionFromStatusCode( response.StatusCode, uri );
+                }
+
+                return response;
+            }
+            catch ( WebException e )
+            {
+                if ( e.Status == WebExceptionStatus.Timeout )
+                {
+                    throw new WebRequestTimedOutException( uri );
+                }
+
+                throw;
+            }
+        }
+
+        static NetException CreateExceptionFromStatusCode( HttpStatusCode code, string uri )
         {
             switch ( code )
             {
-                case HttpStatusCode.Unauthorized: return new WebException( $"[401] You must be authorized in order to access {uri}." );
-                case HttpStatusCode.Forbidden: return new WebException( $"[403] {uri} is forbidden." );
-                case HttpStatusCode.NotFound: return new WebException( $"[404] {uri} could not be found." );
-                default: return new WebException( $"[{(int) code}] Response code from {uri} was not OK." );
+                case HttpStatusCode.NotFound: return new WebsiteNotFoundNetException( uri );
+                default: return new HttpStatusNetException( uri, code );
             }
         }
     }

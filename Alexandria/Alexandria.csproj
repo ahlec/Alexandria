@@ -57,6 +57,9 @@
     <Compile Include="AO3\Utils\AO3TagUtils.cs" />
     <Compile Include="Exceptions\Input\InvalidFanficAlexandriaException.cs" />
     <Compile Include="Exceptions\Input\InvalidSeriesAlexandriaException.cs" />
+    <Compile Include="Exceptions\Net\HttpStatusNetException.cs" />
+    <Compile Include="Exceptions\Net\WebRequestTimedOutException.cs" />
+    <Compile Include="Exceptions\Net\WebsiteNotFoundNetException.cs" />
     <Compile Include="Exceptions\Parsing\AlexandriaParseException.cs" />
     <Compile Include="Exceptions\InvalidTagTypeAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\BadHtmlDataAlexandriaException.cs" />
@@ -107,7 +110,7 @@
     <Compile Include="Model\TagType.cs" />
     <Compile Include="Net\HttpWebClient.cs" />
     <Compile Include="Net\IWebClient.cs" />
-    <Compile Include="Net\WebException.cs" />
+    <Compile Include="Exceptions\Net\NetException.cs" />
     <Compile Include="Net\WebResult.cs" />
     <Compile Include="RequestHandles\IAuthorRequestHandle.cs" />
     <Compile Include="RequestHandles\IFanficRequestHandle.cs" />
