@@ -13,6 +13,9 @@ using HtmlAgilityPack;
 
 namespace Alexandria.AO3.Model
 {
+    /// <summary>
+    /// A concrete class for series from AO3.
+    /// </summary>
     internal sealed class AO3Series : AO3ModelBase<AO3Series>, ISeries
     {
         static readonly IReadOnlyDictionary<string, TableFieldMutator> _seriesMetaGroupMutators = new Dictionary<string, TableFieldMutator>
@@ -50,6 +53,14 @@ namespace Alexandria.AO3.Model
         /// <inheritdoc />
         public IReadOnlyList<IFanficRequestHandle> Fanfics { get; private set; }
 
+        /// <summary>
+        /// Parses an HTML page into an instance of an <seealso cref="AO3Series"/>.
+        /// </summary>
+        /// <param name="source">The source that the HTML page came from, which is then passed
+        /// along to any nested request handles for them to parse data with as well.</param>
+        /// <param name="document">The document that came from the website itself.</param>
+        /// <returns>An instance of <seealso cref="AO3Series"/> that was parsed and configured using
+        /// the information provided.</returns>
         public static AO3Series Parse( AO3Source source, Document document )
         {
             HtmlNode mainDiv = document.Html.SelectSingleNode( "//div[@id='main']" );

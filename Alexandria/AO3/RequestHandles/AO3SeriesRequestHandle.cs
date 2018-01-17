@@ -10,14 +10,25 @@ using Alexandria.RequestHandles;
 
 namespace Alexandria.AO3.RequestHandles
 {
+    /// <summary>
+    /// A concrete class for requesting a series from AO3.
+    /// </summary>
     internal sealed class AO3SeriesRequestHandle : RequestHandleBase<ISeries, AO3Source>, ISeriesRequestHandle
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AO3SeriesRequestHandle"/> class.
+        /// </summary>
+        /// <param name="source">The source that the HTML page came from, which is then used to
+        /// request the model from the website. It is also passed along to the model when parsed
+        /// as well in order to make future chained requests or query fanfics.</param>
+        /// <param name="handle">The handle of the series that is being requested.</param>
         public AO3SeriesRequestHandle( AO3Source source, string handle )
             : base( source )
         {
             Handle = handle;
         }
 
+        /// <inheritdoc />
         public string Handle { get; }
 
         /// <inheritdoc />

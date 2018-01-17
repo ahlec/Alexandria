@@ -32,11 +32,11 @@ namespace Alexandria.Net
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create( uri );
             request.Method = "GET";
 
-            HttpWebResponse response = PerformHttpWebRequest( uri, request );
-            return new WebResult( response.ResponseUri, response.GetResponseStream() );
+            WebResult result = PerformHttpWebRequest( uri, request );
+            return result;
         }
 
-        static HttpWebResponse PerformHttpWebRequest( string uri, HttpWebRequest request )
+        static WebResult PerformHttpWebRequest( string uri, HttpWebRequest request )
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Alexandria.Net
                     throw CreateExceptionFromStatusCode( response.StatusCode, uri );
                 }
 
-                return response;
+                return new WebResult( response.ResponseUri, response.GetResponseStream() );
             }
             catch ( WebException e )
             {

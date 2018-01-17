@@ -4,6 +4,7 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
+using Alexandria.Exceptions.Net;
 using Alexandria.Model;
 
 namespace Alexandria.RequestHandles
@@ -44,6 +45,8 @@ namespace Alexandria.RequestHandles
         /// in the <seealso cref="LibrarySource"/>) so it is adviseable to hold onto the result of this function if
         /// this will be used multiple times.
         /// </summary>
+        /// <exception cref="WebRequestTimedOutException">Thrown when the web request couldn't complete because it took too
+        /// long or because the internet wasn't available.</exception>
         /// <returns>Returns the data that was retrieved from the website for this request as configured.</returns>
         TModel Request();
     }
