@@ -43,12 +43,19 @@
     <Reference Include="HtmlAgilityPack, Version=1.6.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.6.6\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.framework, Version=3.8.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.8.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Abstractions, Version=2.1.0.178, Culture=neutral, PublicKeyToken=96bf224d23c43e59, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Abstractions.2.1.0.178\lib\net40\System.IO.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="System.XML" />
+    <Reference Include="TestingHelpers, Version=2.1.0.178, Culture=neutral, PublicKeyToken=96bf224d23c43e59, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Abstractions.TestingHelpers.2.1.0.178\lib\net40\TestingHelpers.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="AlexandriaTests.ruleset" />
@@ -67,6 +74,7 @@
     <Compile Include="AO3\FullTagParsing.Tests.cs" />
     <Compile Include="AO3\QueryResults.Tests.cs" />
     <Compile Include="AO3\AO3UnitTestConstants.cs" />
+    <Compile Include="Caching\FilesystemCache.Tests.cs" />
     <Compile Include="Utils\LanguageUtils.Tests.cs" />
     <Compile Include="Mocks\IgnoredWebClient.cs" />
     <Compile Include="AlexandriaTestConstants.cs" />
