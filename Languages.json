@@ -1,0 +1,532 @@
+{
+  "Entries": [
+    {
+      "EnglishName": "English",
+      "NativeName": "English",
+      "TwoLetterISOCode": "en",
+      "ThreeLetterISOCode": "eng",
+      "AO3Name": "English",
+      "AO3Id": 1
+    },
+    {
+      "EnglishName": "Persian",
+      "NativeName": "فارسی",
+      "TwoLetterISOCode": "fa",
+      "ThreeLetterISOCode": "fas",
+      "AO3Name": "فارسی",
+      "AO3Id": 2
+    },
+    {
+      "EnglishName": "Punjabi",
+      "NativeName": "ਪੰਜਾਬੀ",
+      "TwoLetterISOCode": "pa",
+      "ThreeLetterISOCode": "pan",
+      "AO3Name": "ਪੰਜਾਬੀ",
+      "AO3Id": 3
+    },
+    {
+      "EnglishName": "Catalan",
+      "NativeName": "Català",
+      "TwoLetterISOCode": "ca",
+      "ThreeLetterISOCode": "cat",
+      "AO3Name": "Català",
+      "AO3Id": 4
+    },
+    {
+      "EnglishName": "Czech",
+      "NativeName": "Čeština",
+      "TwoLetterISOCode": "cs",
+      "ThreeLetterISOCode": "ces",
+      "AO3Name": "Čeština",
+      "AO3Id": 5
+    },
+    {
+      "EnglishName": "Danish",
+      "NativeName": "Dansk",
+      "TwoLetterISOCode": "da",
+      "ThreeLetterISOCode": "dan",
+      "AO3Name": "Dansk",
+      "AO3Id": 6
+    },
+    {
+      "EnglishName": "German",
+      "NativeName": "Deutsch",
+      "TwoLetterISOCode": "de",
+      "ThreeLetterISOCode": "deu",
+      "AO3Name": "Deutsch",
+      "AO3Id": 7
+    },
+    {
+      "EnglishName": "French",
+      "NativeName": "Français",
+      "TwoLetterISOCode": "fr",
+      "ThreeLetterISOCode": "fra",
+      "AO3Name": "Français",
+      "AO3Id": 8
+    },
+    {
+      "EnglishName": "Spanish",
+      "NativeName": "Español",
+      "TwoLetterISOCode": "es",
+      "ThreeLetterISOCode": "spa",
+      "AO3Name": "Español",
+      "AO3Id": 9
+    },
+    {
+      "EnglishName": "Irish",
+      "NativeName": "Gaeilge",
+      "TwoLetterISOCode": "ga",
+      "ThreeLetterISOCode": "gle",
+      "AO3Name": "Gaeilge",
+      "AO3Id": 10
+    },
+    {
+      "EnglishName": "Croatian",
+      "NativeName": "Hrvatski",
+      "TwoLetterISOCode": "hr",
+      "ThreeLetterISOCode": "hrv",
+      "AO3Name": "Hrvatski",
+      "AO3Id": 11
+    },
+    {
+      "EnglishName": "Icelandic",
+      "NativeName": "Íslenska",
+      "TwoLetterISOCode": "is",
+      "ThreeLetterISOCode": "isl",
+      "AO3Name": "Íslenska",
+      "AO3Id": 12
+    },
+    {
+      "EnglishName": "Italian",
+      "NativeName": "Italiano",
+      "TwoLetterISOCode": "it",
+      "ThreeLetterISOCode": "ita",
+      "AO3Name": "Italiano",
+      "AO3Id": 13
+    },
+    {
+      "EnglishName": "Latvian",
+      "NativeName": "Latviešu valoda",
+      "TwoLetterISOCode": "lv",
+      "ThreeLetterISOCode": "lav",
+      "AO3Name": "Latviešu valoda",
+      "AO3Id": 14
+    },
+    {
+      "EnglishName": "Lithuanian",
+      "NativeName": "Lietuvių",
+      "TwoLetterISOCode": "lt",
+      "ThreeLetterISOCode": "lit",
+      "AO3Name": "Lietuvių",
+      "AO3Id": 15
+    },
+    {
+      "EnglishName": "Hungarian",
+      "NativeName": "Magyar",
+      "TwoLetterISOCode": "hu",
+      "ThreeLetterISOCode": "hun",
+      "AO3Name": "Magyar",
+      "AO3Id": 16
+    },
+    {
+      "EnglishName": "Dutch",
+      "NativeName": "Nederlands",
+      "TwoLetterISOCode": "nl",
+      "ThreeLetterISOCode": "nld",
+      "AO3Name": "Nederlands",
+      "AO3Id": 17
+    },
+    {
+      "EnglishName": "Norwegian",
+      "NativeName": "Norsk",
+      "TwoLetterISOCode": "no",
+      "ThreeLetterISOCode": "nor",
+      "AO3Name": "Norsk",
+      "AO3Id": 18
+    },
+    {
+      "EnglishName": "Polish",
+      "NativeName": "Polski",
+      "TwoLetterISOCode": "pl",
+      "ThreeLetterISOCode": "pol",
+      "AO3Name": "Polski",
+      "AO3Id": 19
+    },
+    {
+      "EnglishName": "Brazilian Portuguese",
+      "NativeName": "Português brasileiro",
+      "TwoLetterISOCode": "pt",
+      "ThreeLetterISOCode": "por",
+      "AO3Name": "Português brasileiro",
+      "AO3Id": 20
+    },
+    {
+      "EnglishName": "Romanian",
+      "NativeName": "Română",
+      "TwoLetterISOCode": "ro",
+      "ThreeLetterISOCode": "ron",
+      "AO3Name": "Română",
+      "AO3Id": 21
+    },
+    {
+      "EnglishName": "Albanian",
+      "NativeName": "Shqip",
+      "TwoLetterISOCode": "sq",
+      "ThreeLetterISOCode": "sqi",
+      "AO3Name": "Shqip",
+      "AO3Id": 22
+    },
+    {
+      "EnglishName": "Finnish",
+      "NativeName": "Suomi",
+      "TwoLetterISOCode": "fi",
+      "ThreeLetterISOCode": "fin",
+      "AO3Name": "Suomi",
+      "AO3Id": 23
+    },
+    {
+      "EnglishName": "Turkish",
+      "NativeName": "Türkçe",
+      "TwoLetterISOCode": "tr",
+      "ThreeLetterISOCode": "tur",
+      "AO3Name": "Türkçe",
+      "AO3Id": 24
+    },
+    {
+      "EnglishName": "Swedish",
+      "NativeName": "Svenska",
+      "TwoLetterISOCode": "sv",
+      "ThreeLetterISOCode": "swe",
+      "AO3Name": "Svenska",
+      "AO3Id": 25
+    },
+    {
+      "EnglishName": "Tagalog",
+      "NativeName": "Wikang Filipino",
+      "TwoLetterISOCode": "tl",
+      "ThreeLetterISOCode": "tgl",
+      "AO3Name": "Wikang Filipino",
+      "AO3Id": 26
+    },
+    {
+      "EnglishName": "Greek",
+      "NativeName": "Ελληνικά",
+      "TwoLetterISOCode": "el",
+      "ThreeLetterISOCode": "ell",
+      "AO3Name": "Ελληνικά",
+      "AO3Id": 27
+    },
+    {
+      "EnglishName": "Belarusian",
+      "NativeName": "беларуская",
+      "TwoLetterISOCode": "be",
+      "ThreeLetterISOCode": "bel",
+      "AO3Name": "беларуская",
+      "AO3Id": 28
+    },
+    {
+      "EnglishName": "Bulgarian",
+      "NativeName": "Български език",
+      "TwoLetterISOCode": "bg",
+      "ThreeLetterISOCode": "bul",
+      "AO3Name": "Български език",
+      "AO3Id": 29
+    },
+    {
+      "EnglishName": "Russian",
+      "NativeName": "Русский",
+      "TwoLetterISOCode": "ru",
+      "ThreeLetterISOCode": "rus",
+      "AO3Name": "Русский",
+      "AO3Id": 30
+    },
+    {
+      "EnglishName": "Serbian",
+      "NativeName": "srpski",
+      "TwoLetterISOCode": "sr",
+      "ThreeLetterISOCode": "srp",
+      "AO3Name": "srpski",
+      "AO3Id": 31
+    },
+    {
+      "EnglishName": "Ukranian",
+      "NativeName": "українська",
+      "TwoLetterISOCode": "uk",
+      "ThreeLetterISOCode": "ukr",
+      "AO3Name": "українська",
+      "AO3Id": 32
+    },
+    {
+      "EnglishName": "Hebrew",
+      "NativeName": "עברית",
+      "TwoLetterISOCode": "he",
+      "ThreeLetterISOCode": "heb",
+      "AO3Name": "עברית",
+      "AO3Id": 33
+    },
+    {
+      "EnglishName": "Arabic",
+      "NativeName": "العربية",
+      "TwoLetterISOCode": "ar",
+      "ThreeLetterISOCode": "ara",
+      "AO3Name": "العربية",
+      "AO3Id": 34
+    },
+    {
+      "EnglishName": "Korean",
+      "NativeName": "한국어",
+      "TwoLetterISOCode": "ko",
+      "ThreeLetterISOCode": "kor",
+      "AO3Name": "한국어",
+      "AO3Id": 35
+    },
+    {
+      "EnglishName": "Japanese",
+      "NativeName": "日本語",
+      "TwoLetterISOCode": "ja",
+      "ThreeLetterISOCode": "jpn",
+      "AO3Name": "日本語",
+      "AO3Id": 36
+    },
+    {
+      "EnglishName": "Hindi",
+      "NativeName": "हिन्दी",
+      "TwoLetterISOCode": "hi",
+      "ThreeLetterISOCode": "hin",
+      "AO3Name": "हिन्दी",
+      "AO3Id": 37
+    },
+    {
+      "EnglishName": "Indonesian",
+      "NativeName": "Bahasa Indonesia",
+      "TwoLetterISOCode": "id",
+      "ThreeLetterISOCode": "ind",
+      "AO3Name": "Bahasa Indonesia",
+      "AO3Id": 38
+    },
+    {
+      "EnglishName": "Chinese",
+      "NativeName": "中文",
+      "TwoLetterISOCode": "zh",
+      "ThreeLetterISOCode": "zho",
+      "AO3Name": "中文",
+      "AO3Id": 40
+    },
+    {
+      "EnglishName": "Latin",
+      "NativeName": "Lingua latina",
+      "TwoLetterISOCode": "la",
+      "ThreeLetterISOCode": "lat",
+      "AO3Name": "Lingua latina",
+      "AO3Id": 41
+    },
+    {
+      "EnglishName": "Scottish Gaelic",
+      "NativeName": "Gàidhlig",
+      "TwoLetterISOCode": "gd",
+      "ThreeLetterISOCode": "gla",
+      "AO3Name": "Gàidhlig",
+      "AO3Id": 42
+    },
+    {
+      "EnglishName": "Welsh",
+      "NativeName": "Cymraeg",
+      "TwoLetterISOCode": "cy",
+      "ThreeLetterISOCode": "cym",
+      "AO3Name": "Cymraeg",
+      "AO3Id": 43
+    },
+    {
+      "EnglishName": "Vietnamese",
+      "NativeName": "Tiếng Việt",
+      "TwoLetterISOCode": "vi",
+      "ThreeLetterISOCode": "vie",
+      "AO3Name": "Tiếng Việt",
+      "AO3Id": 44
+    },
+    {
+      "EnglishName": "Esperanto",
+      "NativeName": "Esperanto",
+      "TwoLetterISOCode": "eo",
+      "ThreeLetterISOCode": "epo",
+      "AO3Name": "Esperanto",
+      "AO3Id": 45
+    },
+    {
+      "EnglishName": "Marathi",
+      "NativeName": "मराठी",
+      "TwoLetterISOCode": "mr",
+      "ThreeLetterISOCode": "mar",
+      "AO3Name": "मराठी",
+      "AO3Id": 46
+    },
+    {
+      "EnglishName": "Thai",
+      "NativeName": "ไทย",
+      "TwoLetterISOCode": "th",
+      "ThreeLetterISOCode": "tha",
+      "AO3Name": "ไทย",
+      "AO3Id": 47
+    },
+    {
+      "EnglishName": "Thermian",
+      "NativeName": "Thermian",
+      "TwoLetterISOCode": null,
+      "ThreeLetterISOCode": null,
+      "AO3Name": "Thermian",
+      "AO3Id": 48
+    },
+    {
+      "EnglishName": "Klingon",
+      "NativeName": "tlhIngan-Hol",
+      "TwoLetterISOCode": null,
+      "ThreeLetterISOCode": null,
+      "AO3Name": "tlhIngan-Hol",
+      "AO3Id": 49
+    },
+    {
+      "EnglishName": "Quenya",
+      "NativeName": "Quenya",
+      "TwoLetterISOCode": null,
+      "ThreeLetterISOCode": null,
+      "AO3Name": "Quenya",
+      "AO3Id": 50
+    },
+    {
+      "EnglishName": "Estonian",
+      "NativeName": "eesti keel",
+      "TwoLetterISOCode": "et",
+      "ThreeLetterISOCode": "est",
+      "AO3Name": "eesti keel",
+      "AO3Id": 51
+    },
+    {
+      "EnglishName": "Slovak",
+      "NativeName": "Slovenčina",
+      "TwoLetterISOCode": "sk",
+      "ThreeLetterISOCode": "slk",
+      "AO3Name": "Slovenčina",
+      "AO3Id": 53
+    },
+    {
+      "EnglishName": "Malay",
+      "NativeName": "Bahasa Melayu",
+      "TwoLetterISOCode": "ms",
+      "ThreeLetterISOCode": "msa",
+      "AO3Name": "Bahasa Malaysia",
+      "AO3Id": 56
+    },
+    {
+      "EnglishName": "Swahili",
+      "NativeName": "Kiswahili",
+      "TwoLetterISOCode": "sw",
+      "ThreeLetterISOCode": "swa",
+      "AO3Name": "Kiswahili",
+      "AO3Id": 58
+    },
+    {
+      "EnglishName": "Somali",
+      "NativeName": "af Soomaali",
+      "TwoLetterISOCode": "so",
+      "ThreeLetterISOCode": "som",
+      "AO3Name": "af Soomaali",
+      "AO3Id": 64
+    },
+    {
+      "EnglishName": "European Portuguese",
+      "NativeName": "Português europeu",
+      "TwoLetterISOCode": "pt",
+      "ThreeLetterISOCode": "por",
+      "AO3Name": "Português europeu",
+      "AO3Id": 65
+    },
+    {
+      "EnglishName": "Proto-Germanic",
+      "NativeName": "Sprēkō Þiudiskō",
+      "TwoLetterISOCode": null,
+      "ThreeLetterISOCode": null,
+      "AO3Name": "Sprēkō Þiudiskō",
+      "AO3Id": 69
+    },
+    {
+      "EnglishName": "Low German",
+      "NativeName": "Plattdüütsch",
+      "TwoLetterISOCode": null,
+      "ThreeLetterISOCode": null,
+      "AO3Name": "Plattdüütsch",
+      "AO3Id": 70
+    },
+    {
+      "EnglishName": "Slovenian",
+      "NativeName": "Slovenščina",
+      "TwoLetterISOCode": "sl",
+      "ThreeLetterISOCode": "slv",
+      "AO3Name": "Slovenščina",
+      "AO3Id": 72
+    },
+    {
+      "EnglishName": "Afrikaans",
+      "NativeName": "Afrikaans",
+      "TwoLetterISOCode": "af",
+      "ThreeLetterISOCode": "afr",
+      "AO3Name": "Afrikaans",
+      "AO3Id": 73
+    },
+    {
+      "EnglishName": "Sindarin",
+      "NativeName": "Sindarin",
+      "TwoLetterISOCode": null,
+      "ThreeLetterISOCode": null,
+      "AO3Name": "Sindarin",
+      "AO3Id": 75
+    },
+    {
+      "EnglishName": "Khuzdul",
+      "NativeName": "Khuzdul",
+      "TwoLetterISOCode": null,
+      "ThreeLetterISOCode": null,
+      "AO3Name": "Khuzdul",
+      "AO3Id": 76
+    },
+    {
+      "EnglishName": "Bengali",
+      "NativeName": "বাংলা",
+      "TwoLetterISOCode": "bn",
+      "ThreeLetterISOCode": "ben",
+      "AO3Name": "বাংলা",
+      "AO3Id": 79
+    },
+    {
+      "EnglishName": "Bosnian",
+      "NativeName": "Bosanski",
+      "TwoLetterISOCode": "bs",
+      "ThreeLetterISOCode": "bos",
+      "AO3Name": "Bosanski",
+      "AO3Id": 82
+    },
+    {
+      "EnglishName": "Interlingua",
+      "NativeName": "Interlingua",
+      "TwoLetterISOCode": "ia",
+      "ThreeLetterISOCode": "ina",
+      "AO3Name": "Interlingua",
+      "AO3Id": 84
+    },
+    {
+      "EnglishName": "Luxembourgish",
+      "NativeName": "Lëtzebuergesch",
+      "TwoLetterISOCode": "lb",
+      "ThreeLetterISOCode": "ltz",
+      "AO3Name": "Lëtzebuergesch",
+      "AO3Id": 87
+    },
+    {
+      "EnglishName": "Tamil",
+      "NativeName": "தமிழ்",
+      "TwoLetterISOCode": "ta",
+      "ThreeLetterISOCode": "tam",
+      "AO3Name": "தமிழ்",
+      "AO3Id": 90
+    }
+  ]
+}
