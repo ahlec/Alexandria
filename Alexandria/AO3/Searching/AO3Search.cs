@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using Alexandria.AO3.Data;
 using Alexandria.AO3.Querying;
+using Alexandria.Languages;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
@@ -119,6 +120,15 @@ namespace Alexandria.AO3.Searching
             }
         }
 
+        static void AddOptionalSearchField<T>( StringBuilder builder, string key, T value, ToSearchStringValueFunc<T> toStringFunc )
+            where T : class
+        {
+            if ( value != null )
+            {
+                AssignSearchKeyValue( builder, key, false, toStringFunc( value ) );
+            }
+        }
+
         static void AddOptionalCheckboxSearchField<T>( StringBuilder builder, string key, T value, T skipIfEqualTo, ToManySearchStringValueFunc<T> toStringFunc )
             where T : struct
         {
@@ -133,8 +143,7 @@ namespace Alexandria.AO3.Searching
 
         static string GetLanguageId( Language language )
         {
-            LanguageInfo info = Languages.GetInfo( language );
-            return info.AO3Id;
+            return language.AO3Id.ToString();
         }
 
         static string GetMaturityRatingId( MaturityRating rating )

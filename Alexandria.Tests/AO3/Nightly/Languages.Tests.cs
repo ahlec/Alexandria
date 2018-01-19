@@ -4,24 +4,27 @@
 // Archive of Our Own (https://archiveofourown.org) is owned by the Organization for Transformative Works (http://www.transformativeworks.org/).
 // -----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Alexandria.Model;
+using Alexandria.Languages;
+using Alexandria.Net;
 using NUnit.Framework;
 
-namespace Alexandria.Tests.AO3.Conformity
+namespace Alexandria.Tests.AO3.Nightly
 {
     [TestFixture]
-    [Category( AlexandriaTestConstants.ConformityTestsCategory )]
+    [Category( AlexandriaTestConstants.NightlyTestsCategory )]
     public partial class LanguagesTests
     {
         IReadOnlyList<AO3Language> _languages;
+        WebLanguageManager _languageManager;
 
         [OneTimeSetUp]
         public void Setup()
         {
-            _languages = PullDownLanguages();
+            HttpWebClient webClient = new HttpWebClient();
+            _languageManager = new WebLanguageManager( webClient );
+            _languages = PullDownLanguages( webClient, _languageManager );
         }
 
         [Test]
@@ -36,14 +39,9 @@ namespace Alexandria.Tests.AO3.Conformity
         [Test]
         public void AO3_Languages_AllIdsMatchAO3()
         {
-            foreach ( LanguageInfo language in Languages.AllLanguages )
+            foreach ( AO3Language language in _languages )
             {
-                AO3Language ao3Language = _languages.FirstOrDefault( data => data.AlexandriaValue == language.Language );
-
-                if ( ao3Language != null )
-                {
-                    Assert.That( ao3Language.AO3Id, Is.EqualTo( language.AO3Id ) );
-                }
+                Assert.That( language.AO3Id, Is.EqualTo( language.AlexandriaValue.AO3Id ) );
             }
         }
 
@@ -51,10 +49,8 @@ namespace Alexandria.Tests.AO3.Conformity
         public void AO3_Languages_NoExtraLanguages()
         {
             HashSet<Language> allDefinedAO3Languages = new HashSet<Language>( _languages.Select( data => data.AlexandriaValue )
-                                                                                        .Where( lang => lang != null )
-                                                                                        .Select( lang => lang.Value ) );
-            IEnumerable<Language> alexandriaLanguages = Enum.GetValues( typeof( Language ) ).Cast<Language>();
-            IEnumerable<Language> extraLanguages = alexandriaLanguages.Except( allDefinedAO3Languages );
+                                                                                        .Where( lang => lang != null ) );
+            IEnumerable<Language> extraLanguages = _languageManager.AllLanguages.Except( allDefinedAO3Languages );
             Assert.That( extraLanguages, Is.Empty );
         }
     }

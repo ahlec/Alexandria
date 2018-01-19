@@ -22,10 +22,10 @@ namespace Alexandria.AO3.Model
     {
         static readonly IReadOnlyDictionary<string, TableFieldMutator> _metaMutators = new Dictionary<string, TableFieldMutator>
         {
-            { "My pseuds", ( author, value ) => author.Nicknames = CollectPseuds( value ) },
-            { "I joined on", ( author, value ) => author.DateJoined = DateTime.Parse( value.InnerText ) },
-            { "I live in", ( author, value ) => author.Location = GetReadableInnerText( value ) },
-            { "My birthday", ( author, value ) => author.Birthday = DateTime.Parse( value.InnerText ) }
+            { "My pseuds", ( source, author, value ) => author.Nicknames = CollectPseuds( value ) },
+            { "I joined on", ( source, author, value ) => author.DateJoined = DateTime.Parse( value.InnerText ) },
+            { "I live in", ( source, author, value ) => author.Location = GetReadableInnerText( value ) },
+            { "My birthday", ( source, author, value ) => author.Birthday = DateTime.Parse( value.InnerText ) }
         };
 
         AO3Author( AO3Source source, Uri url )
@@ -74,7 +74,7 @@ namespace Alexandria.AO3.Model
                 NumberFanfics = ParseNumberAuthorWorks( document.Html )
             };
 
-            parsed.ParseProfileMetaData( userHomeProfile );
+            parsed.ParseProfileMetaData( source, userHomeProfile );
 
             return parsed;
         }
@@ -109,10 +109,10 @@ namespace Alexandria.AO3.Model
             return 0;
         }
 
-        void ParseProfileMetaData( HtmlNode userHomeProfile )
+        void ParseProfileMetaData( AO3Source source, HtmlNode userHomeProfile )
         {
             HtmlNode metaDl = userHomeProfile.SelectSingleNode( ".//dl[@class='meta']" );
-            ParseDlTable( this, metaDl, _metaMutators, DlFieldSource.DtText );
+            ParseDlTable( source, this, metaDl, _metaMutators, DlFieldSource.DtText );
         }
     }
 }

@@ -6,6 +6,7 @@
 
 using System;
 using Alexandria.AO3;
+using Alexandria.Languages;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.Querying;
@@ -17,7 +18,14 @@ namespace Alexandria.Tests.AO3
     [TestFixture]
     public class Test_QueryResults
     {
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+        readonly LibrarySource _source;
+
+        public Test_QueryResults()
+        {
+            HttpWebClient webClient = new HttpWebClient();
+            WebLanguageManager languageManager = new WebLanguageManager( webClient );
+            _source = new AO3Source( webClient, languageManager, null );
+        }
 
         [Test]
         public void AO3QueryResults_ThrowsWhenRetrievingAtEnd()

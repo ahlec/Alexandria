@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using Alexandria.AO3;
+using Alexandria.Languages;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
@@ -15,7 +16,14 @@ namespace Alexandria.Tests.AO3
     [TestFixture]
     public class Test_FullSeriesParsing
     {
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+        readonly LibrarySource _source;
+
+        public Test_FullSeriesParsing()
+        {
+            HttpWebClient webClient = new HttpWebClient();
+            WebLanguageManager languageManager = new WebLanguageManager( webClient );
+            _source = new AO3Source( webClient, languageManager, null );
+        }
 
         [Test]
         public void AO3Tag_JanuaryJackrabbitWeek2014()

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Alexandria.AO3.Data;
+using Alexandria.Languages;
 using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
@@ -21,23 +22,23 @@ namespace Alexandria.AO3.Model
     {
         static readonly IReadOnlyDictionary<string, TableFieldMutator> _workMetaGroupMutators = new Dictionary<string, TableFieldMutator>
         {
-            { "rating tags", ( fanfic, value ) => fanfic.Rating = ParseMaturityRating( value ) },
-            { "warning tags", ( fanfic, value ) => fanfic.ContentWarnings = ParseContentWarning( value ) },
-            { "relationship tags", ( fanfic, value ) => fanfic.Ships = ParseTagsFromDlTable<IShip, IShipRequestHandle>( fanfic, value, ShipRequestHandleCreator ) },
-            { "character tags", ( fanfic, value ) => fanfic.Characters = ParseTagsFromDlTable<ICharacter, ICharacterRequestHandle>( fanfic, value, CharacterRequestHandleCreator ) },
-            { "freeform tags", ( fanfic, value ) => fanfic.Tags = ParseTagsFromDlTable<ITag, ITagRequestHandle>( fanfic, value, TagRequestHandleCreator ) },
-            { "language", ( fanfic, value ) => fanfic.Language = Languages.Parse( value.InnerText.Trim() ) },
-            { "series", ( fanfic, value ) => fanfic.SeriesInfo = ParseSeriesEntries( fanfic.Source, value ) },
+            { "rating tags", ( source, fanfic, value ) => fanfic.Rating = ParseMaturityRating( value ) },
+            { "warning tags", ( source, fanfic, value ) => fanfic.ContentWarnings = ParseContentWarning( value ) },
+            { "relationship tags", ( source, fanfic, value ) => fanfic.Ships = ParseTagsFromDlTable<IShip, IShipRequestHandle>( fanfic, value, ShipRequestHandleCreator ) },
+            { "character tags", ( source, fanfic, value ) => fanfic.Characters = ParseTagsFromDlTable<ICharacter, ICharacterRequestHandle>( fanfic, value, CharacterRequestHandleCreator ) },
+            { "freeform tags", ( source, fanfic, value ) => fanfic.Tags = ParseTagsFromDlTable<ITag, ITagRequestHandle>( fanfic, value, TagRequestHandleCreator ) },
+            { "language", ( source, fanfic, value ) => fanfic.Language = source.LanguageManager.GetLanguage( value.InnerText ) },
+            { "series", ( source, fanfic, value ) => fanfic.SeriesInfo = ParseSeriesEntries( fanfic.Source, value ) },
             { "stats", ParseStatsTable }
         };
 
         static readonly IReadOnlyDictionary<string, TableFieldMutator> _statsMutators = new Dictionary<string, TableFieldMutator>
         {
-            { "published", ( fanfic, value ) => fanfic.DateStarted = DateTime.Parse( value.InnerText ) },
-            { "status", ( fanfic, value ) => fanfic._dateLastUpdated = DateTime.Parse( value.InnerText ) },
-            { "words", ( fanfic, value ) => fanfic.NumberWords = int.Parse( value.InnerText ) },
-            { "comments", ( fanfic, value ) => fanfic.NumberComments = int.Parse( value.InnerText ) },
-            { "kudos", ( fanfic, value ) => fanfic.NumberLikes = int.Parse( value.InnerText ) }
+            { "published", ( source, fanfic, value ) => fanfic.DateStarted = DateTime.Parse( value.InnerText ) },
+            { "status", ( source, fanfic, value ) => fanfic._dateLastUpdated = DateTime.Parse( value.InnerText ) },
+            { "words", ( source, fanfic, value ) => fanfic.NumberWords = int.Parse( value.InnerText ) },
+            { "comments", ( source, fanfic, value ) => fanfic.NumberComments = int.Parse( value.InnerText ) },
+            { "kudos", ( source, fanfic, value ) => fanfic.NumberLikes = int.Parse( value.InnerText ) }
         };
 
         DateTime? _dateLastUpdated;
@@ -90,7 +91,7 @@ namespace Alexandria.AO3.Model
         public IChapterInfo ChapterInfo { get; private set; }
 
         /// <inheritdoc />
-        public LanguageInfo Language { get; private set; }
+        public Language Language { get; private set; }
 
         /// <inheritdoc />
         public string Summary { get; private set; }
@@ -123,15 +124,15 @@ namespace Alexandria.AO3.Model
                 Text = ParseFanficText( document.Html )
             };
 
-            ParseWorkMetaGroup( parsed, workMetaGroup );
+            ParseWorkMetaGroup( source, parsed, workMetaGroup );
             ParsePreface( parsed, document.Html );
 
             return parsed;
         }
 
-        static void ParseWorkMetaGroup( AO3Fanfic parsed, HtmlNode workMetaGroup )
+        static void ParseWorkMetaGroup( AO3Source source, AO3Fanfic parsed, HtmlNode workMetaGroup )
         {
-            ParseDlTable( parsed, workMetaGroup, _workMetaGroupMutators, DlFieldSource.DtClass );
+            ParseDlTable( source, parsed, workMetaGroup, _workMetaGroupMutators, DlFieldSource.DtClass );
             if ( parsed.SeriesInfo == null )
             {
                 parsed.SeriesInfo = new List<ISeriesEntry>( 0 );
@@ -200,10 +201,10 @@ namespace Alexandria.AO3.Model
             return series;
         }
 
-        static void ParseStatsTable( AO3Fanfic fanfic, HtmlNode statsTable )
+        static void ParseStatsTable( AO3Source source, AO3Fanfic fanfic, HtmlNode statsTable )
         {
             HtmlNode statsDl = statsTable.Element( "dl" );
-            ParseDlTable( fanfic, statsDl, _statsMutators, DlFieldSource.DtClass );
+            ParseDlTable( source, fanfic, statsDl, _statsMutators, DlFieldSource.DtClass );
         }
 
         static void ParsePreface( AO3Fanfic fanfic, HtmlNode html )

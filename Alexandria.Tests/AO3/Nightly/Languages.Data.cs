@@ -6,18 +6,16 @@
 
 using System;
 using System.Collections.Generic;
-using Alexandria.Exceptions.Input;
-using Alexandria.Model;
+using Alexandria.Languages;
 using Alexandria.Net;
 using HtmlAgilityPack;
 
-namespace Alexandria.Tests.AO3.Conformity
+namespace Alexandria.Tests.AO3.Nightly
 {
     public partial class LanguagesTests
     {
-        static IReadOnlyList<AO3Language> PullDownLanguages()
+        static IReadOnlyList<AO3Language> PullDownLanguages( HttpWebClient webClient, WebLanguageManager languageManager )
         {
-            IWebClient webClient = new HttpWebClient();
             HtmlNode searchPageDocumentNode;
             using ( WebResult result = webClient.Get( "http://archiveofourown.org/works/search" ) )
             {
@@ -35,7 +33,8 @@ namespace Alexandria.Tests.AO3.Conformity
                     continue;
                 }
 
-                ao3Languages.Add( new AO3Language( option.InnerText, idStr ) );
+                int id = int.Parse( idStr );
+                ao3Languages.Add( new AO3Language( languageManager, option.InnerText, id ) );
             }
 
             return ao3Languages;
@@ -43,37 +42,23 @@ namespace Alexandria.Tests.AO3.Conformity
 
         class AO3Language
         {
-            public AO3Language( string ao3Name, string ao3Id )
+            public AO3Language( WebLanguageManager languageManager, string ao3Name, int ao3Id )
             {
                 if ( string.IsNullOrWhiteSpace( ao3Name ) )
                 {
                     throw new ArgumentNullException( nameof( ao3Name ) );
                 }
 
-                if ( string.IsNullOrWhiteSpace( ao3Id ) )
-                {
-                    AO3Id = ao3Id;
-                }
-
                 AO3Name = ao3Name;
                 AO3Id = ao3Id;
-
-                try
-                {
-                    LanguageInfo languageInfo = Languages.Parse( ao3Name );
-                    AlexandriaValue = languageInfo.Language;
-                }
-                catch ( NoSuchLanguageAlexandriaException )
-                {
-                    AlexandriaValue = null;
-                }
+                AlexandriaValue = languageManager.GetLanguage( AO3Name );
             }
 
             public string AO3Name { get; }
 
-            public string AO3Id { get; }
+            public int AO3Id { get; }
 
-            public Language? AlexandriaValue { get; }
+            public Language AlexandriaValue { get; }
         }
     }
 }

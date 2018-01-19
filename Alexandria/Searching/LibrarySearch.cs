@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Alexandria.Languages;
 using Alexandria.Model;
 using Alexandria.Querying;
 using Alexandria.RequestHandles;
@@ -35,7 +36,7 @@ namespace Alexandria.Searching
 
         public NumberSearchCriteria WordCount { get; set; }
 
-        public Language? Language { get; set; }
+        public Language Language { get; set; }
 
         public List<string> Fandoms { get; private set; } = new List<string>();
 

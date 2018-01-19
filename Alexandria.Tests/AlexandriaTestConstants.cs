@@ -9,12 +9,10 @@ namespace Alexandria.Tests
     internal static class AlexandriaTestConstants
     {
         /// <summary>
-        /// A category for tests whose purpose is to ensure that all of our code still matches
-        /// what the various websites have (for instance, making sure that our enums match the
-        /// values that the websites have). These are sort of like integration tests, but instead
-        /// of us integrating two of our own components, we're checking to make sure that our components
-        /// and their components can integrate successfully.
+        /// A category for tests that should be run every 24 hours. These are usually
+        /// tests that ensure that data that is liable to change without notice is kept
+        /// up to date.
         /// </summary>
-        public const string ConformityTestsCategory = "Conformity Tests";
+        public const string NightlyTestsCategory = "Nightly Tests";
     }
 }

@@ -6,6 +6,7 @@
 
 using Alexandria.AO3;
 using Alexandria.AO3.Utils;
+using Alexandria.Languages;
 using Alexandria.Model;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
@@ -16,7 +17,14 @@ namespace Alexandria.Tests.AO3
     [TestFixture]
     public class Test_AO3FanficParsing
     {
-        readonly LibrarySource _source = new AO3Source( new HttpWebClient(), null );
+        readonly LibrarySource _source;
+
+        public Test_AO3FanficParsing()
+        {
+            HttpWebClient webClient = new HttpWebClient();
+            WebLanguageManager languageManager = new WebLanguageManager( webClient );
+            _source = new AO3Source( webClient, languageManager, null );
+        }
 
         [Test]
         public void AO3Fanfic_PrinceAmongWolves()
@@ -87,8 +95,6 @@ namespace Alexandria.Tests.AO3
             Assert.AreEqual( "1418973", fanfic.ChapterInfo.Chapters[18].Handle );
             Assert.AreEqual( "1453053", fanfic.ChapterInfo.Chapters[19].Handle );
 
-            Assert.AreEqual( Language.English, fanfic.Language.Language );
-
             Assert.AreEqual( @"Looking for full day/evening sitter. 2 twin boys age 4.  Must have exp. w/werewolves. Must be human. No pedophiles. No teenage girls. Pay negotiable.", fanfic.Summary );
             Assert.IsNull( fanfic.AuthorsNote );
             Assert.IsNull( fanfic.Footnote );
@@ -157,8 +163,6 @@ namespace Alexandria.Tests.AO3
 
             Assert.IsNull( fanfic.ChapterInfo );
 
-            Assert.AreEqual( Language.English, fanfic.Language.Language );
-
             Assert.AreEqual( @"Derek grew up knowing that soulmates are something to be cherished, so when he got a voice in his head, childish thoughts and flashes of color and objects, he’d excitedly jumped on his mother’s bed to tell her. She had smiled, ruffled his hair and told him how she was proud of him, even though Derek hadn’t really done anything.", fanfic.Summary );
             Assert.AreEqual(
                 @"From the prompt:
@@ -215,8 +219,6 @@ namespace Alexandria.Tests.AO3
             Assert.That( fanfic.SeriesInfo[0].NextEntry.Handle, Is.EqualTo( "8702479" ) );
 
             Assert.IsNull( fanfic.ChapterInfo );
-
-            Assert.AreEqual( Language.English, fanfic.Language.Language );
 
             Assert.AreEqual(
                 @"When your soulmate’s first words to you were supposed to be etched on your wrist, a blank wrist was quite intriguing and an open invitation to be teased.

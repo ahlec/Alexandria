@@ -9,6 +9,7 @@ using Alexandria.AO3.RequestHandles;
 using Alexandria.AO3.Searching;
 using Alexandria.Caching;
 using Alexandria.Exceptions.Input;
+using Alexandria.Languages;
 using Alexandria.Net;
 using Alexandria.RequestHandles;
 using Alexandria.Searching;
@@ -17,8 +18,8 @@ namespace Alexandria.AO3
 {
     public class AO3Source : LibrarySource
     {
-        public AO3Source( IWebClient webClient, Cache cache )
-            : base( webClient, cache )
+        public AO3Source( IWebClient webClient, ILanguageManager languageManager, Cache cache )
+            : base( webClient, languageManager, cache )
         {
         }
 

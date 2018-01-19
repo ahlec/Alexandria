@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using Alexandria.AO3.RequestHandles;
-using Alexandria.Model;
 using Alexandria.RequestHandles;
 using HtmlAgilityPack;
 
@@ -41,7 +40,7 @@ namespace Alexandria.AO3.Model
         /// <param name="self">The instance of the concrete class that should be mutated based on what the
         /// value of the &lt;dd&gt; cell in the &lt;dl&gt; table was.</param>
         /// <param name="value">The value of the &lt;dd&gt; cell in the &lt;dl&gt; table.</param>
-        protected delegate void TableFieldMutator( TSelf self, HtmlNode value );
+        protected delegate void TableFieldMutator( AO3Source source, TSelf self, HtmlNode value );
 
         /// <summary>
         /// A delegate that can be used to create a new instance of a specific request handle.
@@ -98,7 +97,7 @@ namespace Alexandria.AO3.Model
         /// should be invoked that will mutate the appropriate field on <paramref name="self"/> using the value of the row.</param>
         /// <param name="fieldSource">Indicates how each &lt;dt&gt; should be processed in order to get a key for the
         /// <paramref name="mutators"/> dictionary.</param>
-        protected static void ParseDlTable( TSelf self, HtmlNode dl, IReadOnlyDictionary<string, TableFieldMutator> mutators, DlFieldSource fieldSource )
+        protected static void ParseDlTable( AO3Source source, TSelf self, HtmlNode dl, IReadOnlyDictionary<string, TableFieldMutator> mutators, DlFieldSource fieldSource )
         {
             foreach ( Tuple<string, HtmlNode> row in EnumerateDlTable( dl, fieldSource ) )
             {
@@ -107,7 +106,7 @@ namespace Alexandria.AO3.Model
                     continue;
                 }
 
-                mutator( self, row.Item2 );
+                mutator( source, self, row.Item2 );
             }
         }
 

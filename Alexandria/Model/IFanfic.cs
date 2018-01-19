@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Alexandria.Languages;
 using Alexandria.RequestHandles;
 
 namespace Alexandria.Model
@@ -98,7 +99,7 @@ namespace Alexandria.Model
         /// <summary>
         /// Gets the language that this fanfic was written in.
         /// </summary>
-        LanguageInfo Language { get; }
+        Language Language { get; }
 
         /// <summary>
         /// Gets the author-provided summary of the fanfic, if one was provided.
