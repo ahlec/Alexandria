@@ -6,11 +6,43 @@
 
 namespace Alexandria.Searching
 {
+    /// <summary>
+    /// An enum that describes the relationship between <seealso cref="NumberSearchCriteria.Number1"/>
+    /// and <seealso cref="NumberSearchCriteria.Number2"/> when used to perform a search for
+    /// <seealso cref="LibrarySearch"/>.
+    /// </summary>
     public enum NumberSearchCriteriaType
     {
+        /// <summary>
+        /// Only values which exactly match <seealso cref="NumberSearchCriteria.Number1"/>
+        /// will be included in the results from <seealso cref="LibrarySearch"/>.
+        /// <para />
+        /// <seealso cref="NumberSearchCriteria.Number2"/> is not used by this type.
+        /// </summary>
         ExactMatch,
+
+        /// <summary>
+        /// Only values which are less than <seealso cref="NumberSearchCriteria.Number1"/>
+        /// will be included in the results from <seealso cref="LibrarySearch"/>.
+        /// <para />
+        /// <seealso cref="NumberSearchCriteria.Number2"/> is not used by this type.
+        /// </summary>
         LessThan,
+
+        /// <summary>
+        /// Only values which are greater than <seealso cref="NumberSearchCriteria.Number1"/>
+        /// will be included in the results from <seealso cref="LibrarySearch"/>.
+        /// <para />
+        /// <seealso cref="NumberSearchCriteria.Number2"/> is not used by this type.
+        /// </summary>
         GreaterThan,
+
+        /// <summary>
+        /// Only values which are between a range of <seealso cref="NumberSearchCriteria.Number1"/>
+        /// and <seealso cref="NumberSearchCriteria.Number2"/> (greater than or equal to the value
+        /// of the former and less than or equal to the value of the latter) will be included in the
+        /// results from <seealso cref="LibrarySearch"/>.
+        /// </summary>
         Range
     }
 }

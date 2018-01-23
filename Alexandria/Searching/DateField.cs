@@ -6,12 +6,35 @@
 
 namespace Alexandria.Searching
 {
+    /// <summary>
+    /// An enum that determines what unit of time measurement the units of
+    /// <seealso cref="DateSearchCriteria"/> are measured in.
+    /// </summary>
     public enum DateField
     {
+        /// <summary>
+        /// The units are measured in hours.
+        /// </summary>
         Hour,
+
+        /// <summary>
+        /// The units are measured in days.
+        /// </summary>
         Day,
+
+        /// <summary>
+        /// The units are measured in weeks.
+        /// </summary>
         Week,
+
+        /// <summary>
+        /// The units are measured in months.
+        /// </summary>
         Month,
+
+        /// <summary>
+        /// The units are measured in years.
+        /// </summary>
         Year
     }
 }
