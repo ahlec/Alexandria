@@ -58,6 +58,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Searching\NumberSearchCriteria.Tests.cs" />
+    <Compile Include="Searching\SearchCriteriaBase.Tests.cs" />
+    <Compile Include="Searching\SearchCriteriaBaseMock.cs" />
     <None Include="AlexandriaTests.ruleset" />
     <AdditionalFiles Include="..\stylecop.json">
       <Link>stylecop.json</Link>
