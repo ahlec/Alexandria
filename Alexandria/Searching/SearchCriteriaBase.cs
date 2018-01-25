@@ -131,7 +131,7 @@ namespace Alexandria.Searching
         /// <inheritdoc />
         public sealed override bool Equals( object obj )
         {
-            if ( ReferenceEquals( obj, null ) )
+            if ( obj == null )
             {
                 return false;
             }

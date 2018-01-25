@@ -19,27 +19,72 @@ namespace Alexandria.Searching
         static uint _nextInternalId = 1;
         readonly uint _internalId;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LibrarySearch"/> class.
+        /// </summary>
         protected LibrarySearch()
         {
             _internalId = _nextInternalId++;
         }
 
+        /// <summary>
+        /// Gets or sets text that should be compared against the title of fanfics
+        /// to narrow down the search results. Different websites might support different
+        /// operators and keywords in this field.
+        /// </summary>
         public string Title { get; set; }
 
+        /// <summary>
+        /// Gets or sets a string query that should be applied to authors of fanfics
+        /// in order to narrow down the search results. Different websites might support
+        /// different operators and keywords in this field.
+        /// </summary>
         public string Author { get; set; }
 
+        /// <summary>
+        /// Gets or sets a date criteria for filtering fanfics by the date that it was last
+        /// updated (or posted, if the fanfic has not been edited or added to since it was
+        /// first posted).
+        /// </summary>
         public DateSearchCriteria Date { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether only fanfics that have been marked by
+        /// the author as being completed should be the only fanfics returned (true) or if
+        /// fanfics which are still in progress can also be included in the search results (false).
+        /// </summary>
         public bool OnlyIncludeCompleteFanfics { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether only fanfics which are only a single
+        /// standalone chapter should be the only fanfics returned (true) or if fanfics which
+        /// are more than one chapter can also be included in the search results (false).
+        /// </summary>
         public bool OnlyIncludeSingleChapterFanfics { get; set; }
 
+        /// <summary>
+        /// Gets or sets a numeric search criteria for filtering fanfics by how many words they
+        /// contain.
+        /// </summary>
         public NumberSearchCriteria WordCount { get; set; }
 
+        /// <summary>
+        /// Gets or sets the specific language that fanfics should be filtered against.
+        /// </summary>
         public Language Language { get; set; }
 
-        public List<string> Fandoms { get; private set; } = new List<string>();
+        /// <summary>
+        /// Gets a mutable list of fandoms that all fanfics must contain in order to be returned.
+        /// The individual fandom strings do not support keywords or search operators; they must be
+        /// a valid name of a fandom in full.
+        /// </summary>
+        public List<string> Fandoms { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets or sets an optional rating that fanfics must be in order to be included in the
+        /// search results. However, this is an EXACT rating requirement; specifying a higher
+        /// maturity rating will not include more general/lower maturity ratings.
+        /// </summary>
         public MaturityRating? Rating { get; set; }
 
         public ContentWarnings ContentWarnings { get; set; }
@@ -158,7 +203,7 @@ namespace Alexandria.Searching
         /// <inheritdoc />
         public override bool Equals( object obj )
         {
-            if ( ReferenceEquals( obj, null ) )
+            if ( obj == null )
             {
                 return false;
             }

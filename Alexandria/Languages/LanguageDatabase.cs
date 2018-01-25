@@ -15,7 +15,7 @@ namespace Alexandria.Languages
     internal sealed class LanguageDatabase
     {
         /// <summary>
-        /// Gets the individual, defined language entries stored in this database.
+        /// Gets or sets the individual, defined language entries stored in this database.
         /// </summary>
         [JsonProperty( Required = Required.Always )]
         internal LanguageDatabaseEntry[] Entries { get; set; }

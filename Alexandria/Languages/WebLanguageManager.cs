@@ -16,7 +16,7 @@ namespace Alexandria.Languages
     /// <summary>
     /// An implementation of <see cref="ILanguageManager"/> that will download a Language.json file
     /// from a URL using HTTP requests. This Language.json file has all of the data needed to populate
-    /// the full list of recognized <see cref="Language"/> instances. 
+    /// the full list of recognized <see cref="Language"/> instances.
     /// </summary>
     public sealed class WebLanguageManager : ILanguageManager
     {

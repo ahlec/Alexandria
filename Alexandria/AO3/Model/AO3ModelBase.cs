@@ -37,6 +37,8 @@ namespace Alexandria.AO3.Model
         /// A mutator function that can be used with <seealso cref="ParseDlTable"/> in order to parse
         /// any of AO3's &lt;dl&gt; tables efficiently.
         /// </summary>
+        /// <param name="source">The configured concrete class that can be used to make requests of
+        /// the particular website.</param>
         /// <param name="self">The instance of the concrete class that should be mutated based on what the
         /// value of the &lt;dd&gt; cell in the &lt;dl&gt; table was.</param>
         /// <param name="value">The value of the &lt;dd&gt; cell in the &lt;dl&gt; table.</param>
@@ -91,6 +93,8 @@ namespace Alexandria.AO3.Model
         /// value in the table is supposed to mean, which field it should be going to, and how that particular data value should be
         /// parsed.
         /// </summary>
+        /// <param name="source">The configured concrete class that can be used to make requests of
+        /// the particular website.</param>
         /// <param name="self">The instance of the concrete class that should be mutated.</param>
         /// <param name="dl">The HTML table node that the children should be iterated over.</param>
         /// <param name="mutators">A dictionary where the key is the name of a field in the table and the value is a function that
