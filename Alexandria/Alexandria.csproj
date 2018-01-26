@@ -141,7 +141,7 @@
     <Compile Include="Searching\LibrarySearch.cs" />
     <Compile Include="Searching\NumberSearchCriteria.cs" />
     <Compile Include="Searching\NumberSearchCriteriaType.cs" />
-    <Compile Include="Searching\SearchField.cs" />
+    <Compile Include="Searching\SortField.cs" />
     <Compile Include="Searching\SortDirection.cs" />
   </ItemGroup>
   <ItemGroup />

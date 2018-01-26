@@ -7,7 +7,7 @@
 namespace Alexandria.Searching
 {
     /// <summary>
-    /// A direction for sorting results of queries. See also: <seealso cref="SearchField"/>, which are
+    /// A direction for sorting results of queries. See also: <seealso cref="SortField"/>, which are
     /// the fields that can be sorted upon.
     /// </summary>
     public enum SortDirection

@@ -33,6 +33,9 @@ namespace Alexandria.AO3.Searching
         delegate IEnumerable<string> ToManySearchStringValueFunc<in T>( T value );
 
         /// <inheritdoc />
+        public override Website Website => Website.AO3;
+
+        /// <inheritdoc />
         public override IQueryResultsPage<IFanfic, IFanficRequestHandle> Search()
         {
             string searchUrl = CreateSearchUrl();
@@ -129,15 +132,17 @@ namespace Alexandria.AO3.Searching
             }
         }
 
-        static void AddOptionalCheckboxSearchField<T>( StringBuilder builder, string key, T value, T skipIfEqualTo, ToManySearchStringValueFunc<T> toStringFunc )
+        static void AddOptionalCheckboxSearchField<T>( StringBuilder builder, string key, T? value, ToManySearchStringValueFunc<T> toStringFunc )
             where T : struct
         {
-            if ( !value.Equals( skipIfEqualTo ) )
+            if ( value == null )
             {
-                foreach ( string strVal in toStringFunc( value ) )
-                {
-                    AssignSearchKeyValue( builder, key, true, strVal );
-                }
+                return;
+            }
+
+            foreach ( string strVal in toStringFunc( value.Value ) )
+            {
+                AssignSearchKeyValue( builder, key, true, strVal );
             }
         }
 
@@ -156,25 +161,25 @@ namespace Alexandria.AO3.Searching
             return AO3Enums.ContentWarnings.Where( def => warning.HasFlag( def.EnumValue ) ).Select( def => def.Id );
         }
 
-        static string GetSearchFieldUrlValue( SearchField field )
+        static string GetSearchFieldUrlValue( SortField field )
         {
             switch ( field )
             {
-                case SearchField.BestMatch:
+                case SortField.BestMatch:
                     return null;
-                case SearchField.Author:
+                case SortField.Author:
                     return "authors_to_sort_on";
-                case SearchField.Title:
+                case SortField.Title:
                     return "title_to_sort_on";
-                case SearchField.DatedPosted:
+                case SortField.DatedPosted:
                     return "created_at";
-                case SearchField.DateLastUpdated:
+                case SortField.DateLastUpdated:
                     return "revisted_at";
-                case SearchField.WordCount:
+                case SortField.WordCount:
                     return "word_count";
-                case SearchField.NumberLikes:
+                case SortField.NumberLikes:
                     return "kudos_count";
-                case SearchField.NumberComments:
+                case SortField.NumberComments:
                     return "comments_count";
                 default:
                     throw new NotImplementedException();
@@ -206,7 +211,7 @@ namespace Alexandria.AO3.Searching
             AddOptionalSearchField( searchUrl, "language_id", Language, GetLanguageId );
             AddOptionalSearchField( searchUrl, "fandom_names", Fandoms );
             AddOptionalSearchField( searchUrl, "rating_ids", Rating, GetMaturityRatingId );
-            AddOptionalCheckboxSearchField( searchUrl, "warning_ids", ContentWarnings, ContentWarnings.None, GetContentWarningsId );
+            AddOptionalCheckboxSearchField( searchUrl, "warning_ids", ContentWarnings, GetContentWarningsId );
             AddOptionalSearchField( searchUrl, "character_names", CharacterNames );
             AddOptionalSearchField( searchUrl, "relationship_names", Ships );
             AddOptionalSearchField( searchUrl, "freeform_names", Tags );

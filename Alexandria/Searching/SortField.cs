@@ -10,8 +10,12 @@ namespace Alexandria.Searching
     /// A field that can be sorted upon when retrieving results of a query. See also: <seealso cref="SortDirection"/>,
     /// which will indicate in which order the results should be returned based upon the selected field here.
     /// </summary>
-    public enum SearchField
+    public enum SortField
     {
+        /// <summary>
+        /// A website-dependent criteria which will take into account various points of data configured in the search in
+        /// a (presumably) heuristic value to determine the best matches for each fanfic.
+        /// </summary>
         BestMatch,
 
         /// <summary>

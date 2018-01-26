@@ -14,6 +14,11 @@ using Alexandria.RequestHandles;
 
 namespace Alexandria.Searching
 {
+    /// <summary>
+    /// A base class for any search for fanfics of a repository. This class allows the user
+    /// to search through all of the fanfics provided by a website and filter to a target
+    /// set of fanfics based on a complex series of customizable properties.
+    /// </summary>
     public abstract class LibrarySearch : IEquatable<LibrarySearch>
     {
         static uint _nextInternalId = 1;
@@ -26,6 +31,11 @@ namespace Alexandria.Searching
         {
             _internalId = _nextInternalId++;
         }
+
+        /// <summary>
+        /// Gets the website that this search will be executed against.
+        /// </summary>
+        public abstract Website Website { get; }
 
         /// <summary>
         /// Gets or sets text that should be compared against the title of fanfics
@@ -87,24 +97,81 @@ namespace Alexandria.Searching
         /// </summary>
         public MaturityRating? Rating { get; set; }
 
-        public ContentWarnings ContentWarnings { get; set; }
+        /// <summary>
+        /// Gets or sets an optional set of content warning tags that can be requested of all fanfics
+        /// that are included in the search results.
+        /// <para />
+        /// Keeping this property null means that content warnings will not be used to filter any results;
+        /// that is, that fanfics with all, none, or any content warnings will be returned. To produce a
+        /// search that does NOT contain ANY fanfic listed with content warnings, you can use
+        /// <see cref="Model.ContentWarnings.None"/>.
+        /// </summary>
+        public ContentWarnings? ContentWarnings { get; set; }
 
-        public List<string> CharacterNames { get; private set; } = new List<string>();
+        /// <summary>
+        /// Gets a mutable list of characters that all fanfics must feature in order to be returned.
+        /// The individual character strings do not support keywords or search operators; they must be
+        /// a valid character name in full (partial names are not guaranteed to succeed).
+        /// </summary>
+        public List<string> CharacterNames { get; } = new List<string>();
 
-        public List<string> Ships { get; private set; } = new List<string>();
+        /// <summary>
+        /// Gets a mutable list of relationships (ships) that all fanfics must feature in order to be
+        /// returned. The individual ships do not support keywords or search operators; they must be
+        /// a valid ship name (or alias for a ship) in full, as partial names are not guaranteed to
+        /// succeed.
+        /// </summary>
+        public List<string> Ships { get; } = new List<string>();
 
-        public List<string> Tags { get; private set; } = new List<string>();
+        /// <summary>
+        /// Gets a mutable list of tags (such as tropes, locations, AUs, etc) that all fanfics must
+        /// include in order to be returned. The individual tags do not support keywords or search
+        /// operators; t hey must be a valid tag name (or alias for a tag) in full, as partial tags
+        /// are not guaranteed to succeed.
+        /// </summary>
+        public List<string> Tags { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets or sets a numeric criteria for filtering fanfics by the number of likes that
+        /// have been given to the fanfic.
+        /// </summary>
         public NumberSearchCriteria NumberLikes { get; set; }
 
+        /// <summary>
+        /// Gets or sets a numeric criteria for filtering fanfics by the number of comments that
+        /// are posted for the fanfic.
+        /// </summary>
         public NumberSearchCriteria NumberComments { get; set; }
 
-        public SearchField SortField { get; set; }
+        /// <summary>
+        /// Gets or sets the method of ordering that should be used for the results of this
+        /// search.
+        /// </summary>
+        public SortField SortField { get; set; }
 
+        /// <summary>
+        /// Gets or sets the direction that the results should be ordered in based on the
+        /// <see cref="SortField"/>.
+        /// </summary>
         public SortDirection SortDirection { get; set; }
 
+        /// <summary>
+        /// Performs the search as configured by the properties above. After the search has
+        /// been performed, the results returned can continue to query additional pages of
+        /// results; the originating <see cref="LibrarySearch"/> can be reused for another
+        /// search, or can be released, without affecting the any searches it has already
+        /// began.
+        /// </summary>
+        /// <returns>Returns the first page of search results for the search as configured.</returns>
         public abstract IQueryResultsPage<IFanfic, IFanficRequestHandle> Search();
 
+        /// <summary>
+        /// Determines whether this search is equal to another search.
+        /// </summary>
+        /// <param name="other">The other <see cref="LibrarySearch"/> to compare this instance
+        /// to.</param>
+        /// <returns>Returns true if both instances have the same configuration of data, or false
+        /// if there is some difference between them or if <paramref name="other"/> is null.</returns>
         public bool Equals( LibrarySearch other )
         {
             if ( other == null )
@@ -142,7 +209,7 @@ namespace Alexandria.Searching
                 return false;
             }
 
-            if ( Language != other.Language )
+            if ( ( Language == null ) != ( other.Language == null ) || ( Language != null && !Language.Equals( other.Language ) ) )
             {
                 return false;
             }
