@@ -527,6 +527,14 @@
       "ThreeLetterISOCode": "tam",
       "AO3Name": "தமிழ்",
       "AO3Id": 90
+    },
+    {
+      "EnglishName": "Galician",
+      "NativeName": "galego",
+      "TwoLetterISOCode": "gl",
+      "ThreeLetterISOCode": "glg",
+      "AO3Name": "Galego",
+      "AO3Id": 93
     }
   ]
 }

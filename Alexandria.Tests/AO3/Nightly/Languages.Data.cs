@@ -14,7 +14,7 @@ namespace Alexandria.Tests.AO3.Nightly
 {
     public partial class LanguagesTests
     {
-        static IReadOnlyList<AO3Language> PullDownLanguages( HttpWebClient webClient, WebLanguageManager languageManager )
+        static IReadOnlyList<AO3Language> PullDownLanguages( HttpWebClient webClient, ILanguageManager languageManager )
         {
             HtmlNode searchPageDocumentNode;
             using ( WebResult result = webClient.Get( "http://archiveofourown.org/works/search" ) )
@@ -42,7 +42,7 @@ namespace Alexandria.Tests.AO3.Nightly
 
         class AO3Language
         {
-            public AO3Language( WebLanguageManager languageManager, string ao3Name, int ao3Id )
+            public AO3Language( ILanguageManager languageManager, string ao3Name, int ao3Id )
             {
                 if ( string.IsNullOrWhiteSpace( ao3Name ) )
                 {

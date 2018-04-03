@@ -17,7 +17,7 @@ namespace Alexandria.Tests.AO3.Nightly
     public partial class LanguagesTests
     {
         IReadOnlyList<AO3Language> _languages;
-        WebLanguageManager _languageManager;
+        ILanguageManager _languageManager;
 
         [OneTimeSetUp]
         public void Setup()

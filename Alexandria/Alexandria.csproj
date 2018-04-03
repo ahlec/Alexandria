@@ -62,6 +62,7 @@
     <Compile Include="Exceptions\InvalidTagTypeAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\BadHtmlDataAlexandriaException.cs" />
     <Compile Include="Exceptions\Parsing\UnknownParsingErrorAlexandriaException.cs" />
+    <Compile Include="Languages\FileLanguageManager.cs" />
     <Compile Include="Languages\ILanguageManager.cs" />
     <Compile Include="Languages\LanguageDatabase.cs" />
     <Compile Include="Languages\LanguageDatabaseEntry.cs" />
