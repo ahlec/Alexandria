@@ -535,6 +535,14 @@
       "ThreeLetterISOCode": "glg",
       "AO3Name": "Galego",
       "AO3Id": 93
-    }
+    },
+	{
+		"EnglishName": "Malayalam",
+		"NativeName": "മലയാളം",
+		"TwoLetterISOCode": "ml",
+		"ThreeLetterISOCode": "mal",
+		"AO3Name": "മലയാളം",
+		"AO3Id": 95
+	}
   ]
 }
